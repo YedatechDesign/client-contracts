@@ -220,6 +220,10 @@ async function loadContract(slot) {
     if (!r.ok) throw new Error();
     const d = await r.json();
     if (!d.content) throw new Error('empty');
+    if (d.signed === true) {
+  showErr('ההסכם כבר נחתם');
+  return;
+}
     slotData = { ...d, slot };
     document.getElementById('cBadge').textContent = d.client_name || 'הלקוח';
     document.getElementById('cTitle').textContent = d.title || 'הסכם התקשרות';
