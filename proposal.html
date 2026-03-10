@@ -122,12 +122,10 @@ body{font-family:'Heebo',sans-serif;background:var(--white);color:var(--sub);dir
 .why-text-wrap{flex:1}
 .why-title{font-size:.95rem;font-weight:800;color:var(--navy);line-height:1.4}
 .why-icons{display:flex;align-items:center;gap:8px}
-.why-outline-icon{width:36px;height:36px;border-radius:8px;background:var(--bg);
-                  border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;
-                  font-size:1rem;color:var(--muted)}
+.why-outline-icon{width:34px;height:34px;display:flex;align-items:center;justify-content:center}
+.why-outline-icon svg{width:22px;height:22px;stroke:var(--blue);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .why-check{width:44px;height:44px;border-radius:10px;background:var(--blue);flex-shrink:0;
-           display:flex;align-items:center;justify-content:center;
-           color:#fff;font-size:1.2rem;font-weight:900}
+           display:flex;align-items:center;justify-content:center}
 
 /* ═══════ SECTION: PRICING ═══════ */
 .price-card{overflow:hidden}
@@ -370,7 +368,7 @@ footer a{color:rgba(255,255,255,.5);text-decoration:none}
         <div class="ms-spacer"></div>
         <div class="ms-center"><div class="ms-num">1</div></div>
         <div class="card ms-card">
-          <div class="ms-card-icon ibx sm"><svg viewBox="0 0 24 24"><circle cx="17" cy="7" r="3"/><path d="M14 11H5a2 2 0 0 0-2 2v6h2v-2h10v2h2v-6a2 2 0 0 0-2-2h-1z"/><circle cx="7" cy="7" r="3"/></svg></div>
+          <div class="ms-card-icon ibx sm"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
           <div class="ms-card-title">פגישת אפיון</div>
           <div class="ms-card-desc">פגישה מקיפה עם נציגי הלקוח לתיאור מלא של דרישות המערכת, היכולות הנדרשות, מבנה ההיררכיות הארגוניות וצרכי המשתמשים.</div>
         </div>
@@ -640,7 +638,6 @@ footer a{color:rgba(255,255,255,.5);text-decoration:none}
         <div class="party-card">
           <div class="party-top">
             <div class="party-title">נותן השירות</div>
-            <div class="party-ibx"><svg viewBox="0 0 24 24" width="20" height="20" stroke="var(--blue)" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="1"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></div>
           </div>
           <div class="party-row"><div class="party-key">חברה</div><div class="party-val">חברת ידע פיתוח סביבות לימוד בע"מ</div></div>
           <div class="party-row"><div class="party-key">ח.פ</div><div class="party-val">516072253</div></div>
@@ -789,31 +786,28 @@ function buildClientParty(clientName) {
   fillFields = [];
   let i = 0;
   const fields = [
-    { key:'שם החברה / הלקוח', icon:'🏢', pre:clientName||'' },
-    { key:'ח.פ של הלקוח', icon:'🔢' },
-    { key:'כתובת הלקוח', icon:'📍' }
+    { key:'שם החברה / הלקוח', pre:clientName||'' },
+    { key:'ח.פ של הלקוח' },
+    { key:'כתובת הלקוח' }
   ];
   const rows = fields.map(f => {
     const id = 'ff' + (i++);
     const w = Math.max(80, f.key.length * 12);
     fillFields.push({ id, label: f.key });
     return `<div class="party-row">
-      <div class="party-key">${f.icon} ${f.key}</div>
+      <div class="party-key">${f.key}</div>
       <input class="fi" id="${id}" placeholder="${f.key}" value="${f.pre||''}" style="width:${w}px;max-width:260px">
     </div>`;
   }).join('');
-  // hoval
-  const hid = 'ff' + (i++); const hid2 = 'ff' + (i++);
-  fillFields.push({ id: hid, label:'שם החברה' }, { id: hid2, label:'שם החברה2' });
+  // hoval - only ONE company name field
+  const hid = 'ff' + (i++);
+  fillFields.push({ id: hid, label:'שם החברה' });
   document.getElementById('client-party').innerHTML = `
-    <div class="party-top"><div class="party-title">הלקוח</div><div class="party-ibx"><svg viewBox="0 0 24 24" width="20" height="20" stroke="var(--blue)" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div></div>
+    <div class="party-top"><div class="party-title">הלקוח</div></div>
     ${rows}`;
   document.getElementById('hoval-text').innerHTML =
-    `חברת ידע פיתחה מערכת לניהול סביבות לימוד (להלן "המערכת"). חברת 
-    <input class="fi" id="${hid}" placeholder="שם החברה" style="width:140px">
-    מעוניינת להשתמש במערכת, נציגים מוסמכים מטעם חברת
-    <input class="fi" id="${hid2}" placeholder="שם החברה" style="width:140px">
-    , בחנו את המערכת ויכולותיה.`;
+    `חברת ידע פיתחה מערכת לניהול סביבות לימוד (להלן "המערכת" או/ו "הפלטפורמה").<br><br>
+    חברת <input class="fi" id="${hid}" placeholder="שם החברה" style="width:140px"> מעוניינת להשתמש במערכת; נציגים מוסמכים מטעמה בחנו את המערכת ויכולותיה.`;
 }
 
 // ── SIG PAD ──
