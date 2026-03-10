@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="he">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>yeda — הצעת מחיר והסכם</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/dist/signature_pad.umd.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0f2d6b;--blue:#1a56db;--pale:#eff6ff;--b100:#dbeafe;
+  --text:#111827;--sub:#374151;--muted:#6b7280;
+  --border:#e5e7eb;--bg:#f8fafc;--w:#fff;
+  --green:#059669;--red:#dc2626
+}
+html{scroll-behavior:smooth}
+body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);direction:rtl;-webkit-font-smoothing:antialiased}
+
+/* LOADING */
+#ls{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;
+    align-items:center;justify-content:center;gap:16px;z-index:9999}
+.load-logo{font-size:2.4rem;font-weight:900;color:var(--navy);letter-spacing:-1.5px}
+.load-spin{width:28px;height:28px;border:2.5px solid #e2e8f0;border-top-color:var(--blue);
+           border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ERROR */
+#es{display:none;position:fixed;inset:0;background:var(--bg);flex-direction:column;
+    align-items:center;justify-content:center;text-align:center;padding:32px}
+.err-icon{font-size:3.5rem;margin-bottom:16px}
+.err-title{font-size:1.4rem;font-weight:800;color:var(--navy);margin-bottom:10px}
+.err-sub{color:var(--muted);font-size:.95rem;max-width:360px;line-height:1.6}
+
+/* MAIN */
+#main{display:none}
+
+/* NAV */
+.nav{position:sticky;top:0;z-index:200;background:var(--navy);height:62px;
+     display:flex;align-items:center;padding:0 48px;justify-content:space-between;
+     box-shadow:0 2px 10px rgba(0,0,0,.25)}
+.nav-logo{font-size:1.65rem;font-weight:900;color:#fff;letter-spacing:-1px}
+.nav-badge{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);
+           color:rgba(255,255,255,.88);font-size:.72rem;font-weight:600;padding:5px 14px;border-radius:20px}
+
+/* HERO */
+.hero{background:linear-gradient(148deg,#0a1e4f 0%,#0f2d6b 45%,#1a56db 100%);
+      padding:62px 48px 100px;text-align:center;position:relative}
+.hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:56px;
+             background:var(--bg);clip-path:ellipse(58% 100% at 50% 100%)}
+.hero-for{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.1);
+          border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.82);
+          font-size:.82rem;padding:6px 18px;border-radius:20px;margin-bottom:18px}
+.hero-client{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);
+             color:#fff;font-weight:800;padding:2px 12px;border-radius:6px;margin:0 4px}
+.hero-title{font-size:2.4rem;font-weight:900;color:#fff;line-height:1.2;letter-spacing:-.5px}
+
+/* WRAP */
+.wrap{max-width:900px;margin:0 auto;padding:0 24px}
+
+/* CONTRACT SECTION */
+.contract-sec{background:var(--bg);padding:52px 0}
+.cbox{background:var(--w);border-radius:14px;border:1px solid var(--border);
+      box-shadow:0 2px 16px rgba(0,0,0,.05);padding:40px 46px;
+      font-size:.93rem;line-height:1.95;color:var(--sub)}
+.cbox h2{color:var(--navy);font-size:1.05rem;font-weight:800;
+         margin:24px 0 10px;padding-bottom:7px;border-bottom:2px solid var(--b100)}
+.cbox h2:first-child{margin-top:0}
+.cbox table{width:100%;border-collapse:collapse;margin:12px 0;font-size:.88rem}
+.cbox td{border:1px solid var(--border);padding:9px 13px}
+.cbox thead td,.cbox th{background:#f1f5f9;font-weight:700;color:var(--navy)}
+.cbox p{margin-bottom:10px}
+.cbox del{color:#9ca3af}
+
+/* INLINE FILL FIELDS */
+.fi{border:none;border-bottom:2.5px solid #f59e0b;background:#fffbeb;
+    font-family:'Heebo',sans-serif;font-size:.93rem;font-weight:700;color:var(--text);
+    padding:2px 7px 3px;border-radius:3px 3px 0 0;transition:all .2s;
+    direction:rtl;vertical-align:bottom}
+.fi:focus{outline:none;border-bottom-color:var(--blue);background:#eff6ff}
+.fi::placeholder{color:#d97706;font-weight:400}
+.fi.bad{border-bottom-color:var(--red);background:#fff1f2;animation:shake .3s}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+
+/* SIGNATURE SECTION */
+.sig-sec{background:var(--w);border-top:1px solid var(--border);padding:52px 0}
+.sec-title{font-size:1.7rem;font-weight:900;color:var(--navy);text-align:center;
+           margin-bottom:32px;letter-spacing:-.5px}
+.sigcard{border-radius:14px;border:1px solid var(--border);box-shadow:0 2px 14px rgba(0,0,0,.06);overflow:hidden}
+.sigh{background:linear-gradient(135deg,#eff6ff 0%,#e0eaff 100%);
+      border-bottom:1px solid var(--b100);padding:18px 26px;
+      display:flex;align-items:center;gap:10px}
+.sigh-t{color:var(--navy);font-size:1rem;font-weight:800}
+
+/* SIG FORM */
+.sigbody{padding:28px 30px}
+.field-row{padding:13px 0;border-bottom:1px solid #f3f4f6}
+.field-row:last-of-type{border-bottom:none}
+.field-label{font-size:.72rem;font-weight:700;text-transform:uppercase;
+             letter-spacing:.5px;color:var(--muted);margin-bottom:7px}
+.field-input{width:100%;border:none;border-bottom:1.5px solid #e5e7eb;background:transparent;
+             font-family:'Heebo',sans-serif;font-size:.97rem;font-weight:500;color:var(--text);
+             padding:4px 0;direction:rtl;transition:border-color .2s}
+.field-input:focus{outline:none;border-bottom-color:var(--blue)}
+.field-input::placeholder{color:#d1d5db;font-weight:400}
+.field-input.bad{border-bottom-color:var(--red)}
+
+/* TWO COLS */
+.fields-2{display:grid;grid-template-columns:1fr 1fr;gap:0 40px}
+.fields-3{display:grid;grid-template-columns:140px 1fr 180px;gap:0 30px;align-items:start}
+
+.decl{background:var(--pale);border:1px solid var(--b100);border-radius:10px;
+      padding:13px 20px;font-size:.875rem;color:var(--navy);text-align:center;margin:20px 0}
+
+/* SIGNATURE PAD */
+.sig-label-row{font-size:.72rem;font-weight:700;text-transform:uppercase;
+               letter-spacing:.5px;color:var(--muted);margin-bottom:8px}
+.sig-label-row span{color:var(--blue)}
+.sigpad-wrap{border:1.5px dashed #cbd5e1;border-radius:10px;background:#fafbff;
+             position:relative;overflow:hidden;transition:border-color .2s}
+.sigpad-wrap:hover{border-color:#93c5fd}
+.sigpad-wrap.bad{border-color:var(--red)!important}
+#sigCanvas{display:block;width:100%;height:120px;cursor:crosshair;touch-action:none}
+.pad-hint{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+          color:#d1d5db;font-size:.85rem;pointer-events:none}
+.clr-btn{position:absolute;top:6px;left:10px;background:rgba(255,255,255,.9);
+         border:1px solid var(--border);border-radius:5px;padding:3px 10px;
+         font-size:.7rem;color:var(--muted);cursor:pointer;font-family:'Heebo',sans-serif;
+         transition:all .15s}
+.clr-btn:hover{color:var(--red);border-color:var(--red)}
+
+.stamp-box{border:1.5px dashed #cbd5e1;border-radius:10px;height:80px;
+           display:flex;align-items:center;justify-content:center;
+           color:#d1d5db;font-size:.78rem;margin-bottom:12px}
+
+/* SUBMIT */
+.submit-area{padding:8px 30px 30px}
+#serr{display:none;background:#fff1f2;border:1px solid #fecdd3;border-radius:9px;
+      padding:12px 16px;color:var(--red);font-size:.85rem;margin-bottom:14px}
+.submit-btn{width:100%;padding:17px;background:linear-gradient(135deg,var(--blue) 0%,#1e40af 100%);
+            color:#fff;border:none;border-radius:10px;font-family:'Heebo',sans-serif;
+            font-size:1rem;font-weight:800;cursor:pointer;
+            display:flex;align-items:center;justify-content:center;gap:10px;
+            transition:all .25s;box-shadow:0 4px 16px rgba(26,86,219,.3)}
+.submit-btn:hover:not(:disabled){filter:brightness(1.08);transform:translateY(-1px);
+                                  box-shadow:0 6px 22px rgba(26,86,219,.42)}
+.submit-btn:disabled{opacity:.6;cursor:not-allowed;transform:none;box-shadow:none}
+.btn-spin{width:17px;height:17px;border:2px solid rgba(255,255,255,.3);
+          border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;display:none}
+
+/* SUCCESS */
+#succ{display:none;min-height:100vh;background:var(--bg);align-items:center;justify-content:center;padding:32px}
+.succ-card{background:var(--w);border-radius:18px;border:1px solid var(--border);
+           box-shadow:0 6px 28px rgba(0,0,0,.08);padding:56px 44px;text-align:center;max-width:560px;width:100%}
+.succ-icon{width:72px;height:72px;border-radius:50%;
+           background:linear-gradient(135deg,var(--blue),var(--navy));
+           display:flex;align-items:center;justify-content:center;
+           margin:0 auto 22px;font-size:2.2rem;color:#fff;box-shadow:0 4px 18px rgba(26,86,219,.3)}
+.succ-title{font-size:1.75rem;font-weight:900;color:var(--navy);margin-bottom:10px}
+.succ-sub{color:var(--muted);font-size:.95rem;line-height:1.7;margin-bottom:26px}
+.succ-meta{background:var(--pale);border-radius:10px;padding:16px 22px;
+           text-align:right;font-size:.875rem;color:var(--sub);
+           max-width:380px;margin:0 auto 30px;line-height:1.9}
+.dl-btn{display:inline-flex;align-items:center;gap:8px;padding:14px 32px;
+        background:var(--navy);color:#fff;border:none;border-radius:10px;
+        font-family:'Heebo',sans-serif;font-size:.95rem;font-weight:700;
+        cursor:pointer;transition:background .2s;box-shadow:0 4px 14px rgba(15,45,107,.22)}
+.dl-btn:hover{background:var(--blue)}
+
+/* FOOTER */
+footer{background:var(--navy);color:rgba(255,255,255,.4);text-align:center;
+       padding:28px 24px;font-size:.78rem;line-height:1.9}
+footer a{color:rgba(255,255,255,.5);text-decoration:none}
+
+/* SCROLL UP */
+#scrollup{position:fixed;bottom:28px;left:28px;width:40px;height:40px;
+          border-radius:50%;background:var(--blue);color:#fff;border:none;
+          display:flex;align-items:center;justify-content:center;cursor:pointer;
+          font-size:.9rem;box-shadow:0 4px 12px rgba(0,0,0,.2);
+          opacity:0;pointer-events:none;transition:opacity .3s;z-index:100}
+#scrollup.show{opacity:1;pointer-events:auto}
+
+@media(max-width:640px){
+  .nav{padding:0 16px}.hero{padding:40px 20px 80px}.hero-title{font-size:1.75rem}
+  .cbox{padding:22px 18px}.sigbody{padding:18px 16px}
+  .fields-2,.fields-3{grid-template-columns:1fr}
+  .submit-area{padding:8px 16px 20px}
+}
+</style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div id="ls">
+  <div class="load-logo">yeda</div>
+  <div class="load-spin"></div>
+</div>
+
+<!-- ERROR -->
+<div id="es">
+  <div class="err-icon">📄</div>
+  <div class="err-title">ההסכם לא זמין</div>
+  <div class="err-sub" id="emsg">הקישור שגוי או שההסכם עדיין לא הוכן. פנה לנציג Yeda.</div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div id="main">
+  <nav class="nav">
+    <div class="nav-logo">yeda</div>
+    <div class="nav-badge">🔒 מסמך מאובטח</div>
+  </nav>
+
+  <div class="hero">
+    <div class="hero-for">הצעת מחיר והסכם עבור: <span class="hero-client" id="cBadge">...</span></div>
+    <div class="hero-title" id="cTitle">הסכם התקשרות</div>
+  </div>
+
+  <section class="contract-sec">
+    <div class="wrap">
+      <div class="cbox" id="cbox"></div>
+    </div>
+  </section>
+
+  <section class="sig-sec">
+    <div class="wrap">
+      <div class="sec-title">חתימה</div>
+      <div class="sigcard">
+        <div class="sigh">
+          <span style="font-size:1.3rem">✍️</span>
+          <div class="sigh-t">פרטי החותם מטעם הלקוח</div>
+        </div>
+        <div class="sigbody">
+          <div class="fields-2">
+            <div class="field-row">
+              <div class="field-label">שם מלא איש קשר</div>
+              <input class="field-input" id="sigName" placeholder="ישראל ישראלי">
+            </div>
+            <div class="field-row">
+              <div class="field-label">תפקיד בחברה</div>
+              <input class="field-input" id="sigRole" placeholder="מנכ״ל / מנהל כספים">
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field-label">מייל</div>
+            <input class="field-input" id="sigEmail" type="email" placeholder="name@company.co.il">
+          </div>
+
+          <div class="decl">הנני מצהיר/ה כי כל הפרטים שמסרתי נכונים ומחייבים.</div>
+
+          <div class="fields-3">
+            <!-- תאריך -->
+            <div>
+              <div class="sig-label-row">תאריך</div>
+              <input class="field-input" id="sigDate" style="max-width:130px">
+            </div>
+            <!-- חתימה -->
+            <div>
+              <div class="sig-label-row"><span>חתימה *</span></div>
+              <div class="sigpad-wrap" id="padWrap">
+                <canvas id="sigCanvas"></canvas>
+                <div class="pad-hint" id="padHint">חתמו כאן באצבע או בעכבר</div>
+                <button class="clr-btn" type="button" onclick="clearSig()">מחק ✕</button>
+              </div>
+            </div>
+            <!-- חותמת + ת.ז -->
+            <div>
+              <div class="sig-label-row">חותמת חברה</div>
+              <div class="stamp-box">(אופציונלי)</div>
+              <div class="sig-label-row">ת"ז / ח.פ</div>
+              <input class="field-input" id="sigId" placeholder="000000000">
+            </div>
+          </div>
+        </div>
+
+        <div class="submit-area">
+          <div id="serr"></div>
+          <button class="submit-btn" id="submitBtn" onclick="doSubmit()">
+            <div class="btn-spin" id="btnSpin"></div>
+            <span id="btnTxt">אני מאשר/ת ומסכים/ה לתנאי ההסכם ✍️</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    © חברת ידע פיתוח סביבות למידה בע"מ · ח.פ. 516072253<br>
+    יגאל אלון 123, תל אביב · <a href="mailto:coo@yedalms.io">coo@yedalms.io</a>
+  </footer>
+</div>
+
+<!-- SUCCESS -->
+<div id="succ" style="display:none;min-height:100vh;display:none;align-items:center;justify-content:center;padding:40px">
+  <div class="succ-card">
+    <div class="succ-icon">✓</div>
+    <div class="succ-title">ההסכם נחתם בהצלחה!</div>
+    <div class="succ-sub">תודה! ההסכם נשמר ונשלח למייל שלך.<br>ניתן להוריד את ה-PDF לשמירה.</div>
+    <div class="succ-meta" id="succMeta"></div>
+    <button class="dl-btn" id="dlBtn" onclick="downloadPDF()">
+      <div class="btn-spin" id="dlSpin"></div>
+      <span id="dlTxt">⬇ הורד PDF של ההסכם</span>
+    </button>
+  </div>
+</div>
+
+<button id="scrollup" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+// ═══════════════════════════════════════════
+//  ⚙ CONFIG
+// ═══════════════════════════════════════════
+const N8N_LOAD = 'https://yedauto.com/webhook/yeda-load';
+const N8N_SIGN = 'https://yedauto.com/webhook/yeda-sign';
+// ═══════════════════════════════════════════
+
+const SLOT = 1; // single slot — always slot 1
+let SP, contractData, pdfUrl = '', fillFields = [];
+
+// ─────────────────────────
+window.addEventListener('DOMContentLoaded', async () => {
+  // auto-fill date
+  const t = new Date();
+  document.getElementById('sigDate').value =
+    String(t.getDate()).padStart(2,'0') + '/' +
+    String(t.getMonth()+1).padStart(2,'0') + '/' + t.getFullYear();
+
+  await loadContract();
+
+  window.addEventListener('scroll', () =>
+    document.getElementById('scrollup').classList.toggle('show', scrollY > 400));
+});
+
+// ─────────────────────────
+async function loadContract() {
+  try {
+    const r = await fetch(N8N_LOAD, {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ slot: SLOT, mode: 'client' })
+    });
+    if (!r.ok) throw new Error('שגיאת שרת ' + r.status);
+    const d = await r.json();
+
+    if (!d.content) {
+      showError('ההסכם עדיין לא מוכן. פנה לנציג Yeda.');
+      return;
+    }
+    // Block re-signing
+    if (d.signed === true) {
+      showError('ההסכם כבר נחתם. לפרטים פנה לנציג Yeda.');
+      return;
+    }
+
+    contractData = d;
+    document.getElementById('cBadge').textContent = d.client_name || 'הלקוח';
+    document.getElementById('cTitle').textContent = d.title || 'הסכם התקשרות';
+    renderContract(d.content);
+    initSignaturePad();
+
+    document.getElementById('ls').style.display = 'none';
+    document.getElementById('main').style.display = 'block';
+  } catch(e) {
+    showError('שגיאה בטעינת ההסכם. נסה לרענן או פנה לנציג Yeda.');
+  }
+}
+
+// ─────────────────────────
+// Replace {{placeholder}} → editable <input> fields
+function renderContract(html) {
+  fillFields = [];
+  let i = 0;
+  const out = html.replace(/\{\{([^}]+)\}\}/g, (_, label) => {
+    const id = 'ff' + (i++);
+    const w = Math.max(100, label.length * 13);
+    fillFields.push({ id, label });
+    return `<input class="fi" id="${id}" placeholder="${label}" data-label="${label}" style="width:${w}px;max-width:280px">`;
+  });
+  document.getElementById('cbox').innerHTML = out;
+}
+
+// ─────────────────────────
+function initSignaturePad() {
+  const canvas = document.getElementById('sigCanvas');
+  const wrap   = document.getElementById('padWrap');
+  canvas.width  = wrap.offsetWidth || 500;
+  canvas.height = 120;
+  SP = new SignaturePad(canvas, {
+    backgroundColor: 'rgb(250,251,255)',
+    penColor: '#0f2d6b', minWidth: 1.4, maxWidth: 2.8
+  });
+  SP.addEventListener('beginStroke', () => {
+    document.getElementById('padHint').style.display = 'none';
+    document.getElementById('padWrap').classList.remove('bad');
+  });
+  window.addEventListener('resize', () => {
+    const data = SP.toData();
+    canvas.width = wrap.offsetWidth;
+    SP.fromData(data);
+  });
+}
+function clearSig() {
+  SP.clear();
+  document.getElementById('padHint').style.display = 'flex';
+  document.getElementById('padWrap').classList.remove('bad');
+}
+
+// ─────────────────────────
+function validate() {
+  let ok = true, missing = [];
+
+  // inline fill fields
+  fillFields.forEach(({id, label}) => {
+    const el = document.getElementById(id);
+    const bad = !el?.value.trim();
+    if (el) el.classList.toggle('bad', bad);
+    if (bad) { ok = false; missing.push(label); }
+  });
+
+  // signer fields
+  [
+    { id:'sigName',  label:'שם מלא' },
+    { id:'sigId',    label:'ת.ז. / ח.פ' },
+    { id:'sigDate',  label:'תאריך' },
+    { id:'sigEmail', label:'מייל', email:true }
+  ].forEach(({id, label, email}) => {
+    const el = document.getElementById(id);
+    const v  = el.value.trim();
+    const bad = !v || (email && !v.includes('@'));
+    el.classList.toggle('bad', bad);
+    if (bad) { ok = false; missing.push(label); }
+  });
+
+  // signature
+  if (SP.isEmpty()) {
+    document.getElementById('padWrap').classList.add('bad');
+    ok = false; missing.push('חתימה');
+  }
+
+  const errEl = document.getElementById('serr');
+  if (!ok) {
+    errEl.textContent = 'נא למלא: ' + missing.join(', ');
+    errEl.style.display = 'block';
+    // scroll to first bad field
+    const first = document.querySelector('.fi.bad,.field-input.bad') ||
+                  document.getElementById('padWrap');
+    first?.scrollIntoView({ behavior:'smooth', block:'center' });
+  } else {
+    errEl.style.display = 'none';
+  }
+  return ok;
+}
+
+// ─────────────────────────
+async function doSubmit() {
+  if (!validate()) return;
+  const btn = document.getElementById('submitBtn');
+  const sp  = document.getElementById('btnSpin');
+  const tx  = document.getElementById('btnTxt');
+  btn.disabled = true; sp.style.display = 'block'; tx.textContent = 'שולח...';
+
+  // Collect filled values
+  const vals = {};
+  fillFields.forEach(({id, label}) => {
+    vals[label] = document.getElementById(id)?.value.trim() || '';
+  });
+  // Replace placeholders with values in final HTML
+  let finalHtml = contractData.content;
+  fillFields.forEach(({label}) => {
+    finalHtml = finalHtml.replaceAll('{{'+label+'}}', `<strong>${vals[label]}</strong>`);
+  });
+
+  const payload = {
+    slot:              SLOT,
+    title:             contractData.title || 'הסכם התקשרות',
+    client_name:       contractData.client_name || '',
+    contract_html:     finalHtml,
+    filled_values:     vals,
+    signer_name:       document.getElementById('sigName').value.trim(),
+    signer_role:       document.getElementById('sigRole').value.trim(),
+    signer_email:      document.getElementById('sigEmail').value.trim(),
+    signer_id:         document.getElementById('sigId').value.trim(),
+    signer_date:       document.getElementById('sigDate').value,
+    signature_base64:  SP.toDataURL('image/png'),
+    signed_at:         new Date().toISOString()
+  };
+
+  try {
+    const r = await fetch(N8N_SIGN, {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify(payload)
+    });
+    if (!r.ok) throw new Error('שגיאת שרת ' + r.status);
+    const d = await r.json();
+    pdfUrl = d.pdf_url || '';
+
+    // Show success
+    document.getElementById('main').style.display = 'none';
+    const succEl = document.getElementById('succ');
+    succEl.style.display = 'flex';
+    document.getElementById('succMeta').innerHTML =
+      `<div><strong>שם:</strong> ${payload.signer_name}</div>
+       <div><strong>תפקיד:</strong> ${payload.signer_role}</div>
+       <div><strong>מייל:</strong> ${payload.signer_email}</div>
+       <div><strong>תאריך:</strong> ${payload.signer_date}</div>`;
+    if (!pdfUrl) document.getElementById('dlBtn').style.display = 'none';
+    window.scrollTo(0, 0);
+  } catch(e) {
+    const errEl = document.getElementById('serr');
+    errEl.textContent = 'שגיאה בשליחה: ' + e.message;
+    errEl.style.display = 'block';
+    btn.disabled = false; sp.style.display = 'none';
+    tx.textContent = 'אני מאשר/ת ומסכים/ה לתנאי ההסכם ✍️';
+  }
+}
+
+// ─────────────────────────
+async function downloadPDF() {
+  if (!pdfUrl) return;
+  const btn = document.getElementById('dlBtn');
+  const sp  = document.getElementById('dlSpin');
+  const tx  = document.getElementById('dlTxt');
+  btn.disabled = true; sp.style.display = 'block'; tx.textContent = 'מכין...';
+  try {
+    const r    = await fetch(pdfUrl);
+    const blob = await r.blob();
+    const a    = Object.assign(document.createElement('a'), {
+      href: URL.createObjectURL(blob), download: 'yeda-contract.pdf'
+    });
+    a.click(); URL.revokeObjectURL(a.href);
+    tx.textContent = 'הורד ✓'; sp.style.display = 'none';
+  } catch {
+    sp.style.display = 'none'; tx.textContent = '⬇ הורד PDF של ההסכם';
+    btn.disabled = false; window.open(pdfUrl, '_blank');
+  }
+}
+
+// ─────────────────────────
+function showError(msg) {
+  document.getElementById('ls').style.display = 'none';
+  document.getElementById('emsg').textContent = msg;
+  const es = document.getElementById('es');
+  es.style.display = 'flex';
+}
+</script>
+</body>
+</html>

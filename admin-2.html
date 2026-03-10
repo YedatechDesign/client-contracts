@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="he">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>yeda — עריכת הסכם</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
+<script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0f2d6b;--blue:#1a56db;--pale:#eff6ff;--b100:#dbeafe;
+  --text:#111827;--sub:#374151;--muted:#6b7280;
+  --border:#e5e7eb;--bg:#f8fafc;--w:#fff;
+  --green:#059669;--red:#dc2626;--orange:#d97706
+}
+body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);direction:rtl;-webkit-font-smoothing:antialiased}
+
+/* ── LOGIN ── */
+#lg{min-height:100vh;display:flex;align-items:center;justify-content:center;
+    background:linear-gradient(155deg,var(--navy) 0%,#1e40af 100%)}
+.lb{background:var(--w);border-radius:16px;padding:44px 40px;width:340px;
+    text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.ll{font-size:2.2rem;font-weight:900;color:var(--navy);letter-spacing:-1.5px;margin-bottom:4px}
+.ls{color:var(--muted);font-size:.85rem;margin-bottom:28px}
+.li{width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:8px;
+    font-family:'Heebo',sans-serif;font-size:.95rem;direction:ltr;text-align:center;
+    margin-bottom:12px;transition:border-color .2s}
+.li:focus{outline:none;border-color:var(--blue)}.li.err{border-color:var(--red)}
+.lb-btn{width:100%;padding:13px;background:var(--blue);color:#fff;border:none;
+        border-radius:8px;font-family:'Heebo',sans-serif;font-size:1rem;font-weight:700;
+        cursor:pointer;transition:background .2s}
+.lb-btn:hover{background:var(--navy)}
+.lerr{color:var(--red);font-size:.82rem;margin-top:8px;display:none}
+
+/* ── MAIN LAYOUT ── */
+#mn{display:none;min-height:100vh;display:grid;grid-template-rows:60px 1fr}
+.tb{background:var(--navy);display:flex;align-items:center;padding:0 32px;
+    justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 6px rgba(0,0,0,.2)}
+.tl{font-size:1.5rem;font-weight:900;color:#fff;letter-spacing:-1px}
+.tr{display:flex;align-items:center;gap:14px}
+.tbg{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);
+     color:rgba(255,255,255,.8);font-size:.72rem;padding:4px 12px;border-radius:20px}
+.out{background:none;border:1px solid rgba(255,255,255,.3);color:rgba(255,255,255,.7);
+     padding:5px 14px;border-radius:6px;cursor:pointer;font-family:'Heebo',sans-serif;font-size:.8rem}
+.out:hover{border-color:rgba(255,255,255,.7);color:#fff}
+
+/* ── CONTENT AREA ── */
+.content{padding:28px 36px;display:flex;flex-direction:column;gap:16px;max-width:1100px;width:100%}
+
+/* ── SIGNED BANNER ── */
+.signed-banner{background:#fffbeb;border:2px solid #fcd34d;border-radius:12px;
+    padding:16px 22px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.sbn-left{display:flex;align-items:center;gap:12px}
+.sbn-icon{font-size:1.6rem}
+.sbn-body strong{display:block;color:#78350f;font-size:.95rem;font-weight:800;margin-bottom:3px}
+.sbn-body span{color:#92400e;font-size:.82rem;line-height:1.5}
+.sbn-right{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.btn-view-pdf{display:inline-flex;align-items:center;gap:6px;background:var(--navy);color:#fff;
+    border:none;border-radius:7px;font-family:'Heebo',sans-serif;font-size:.8rem;font-weight:600;
+    padding:7px 14px;cursor:pointer;text-decoration:none;transition:background .2s}
+.btn-view-pdf:hover{background:var(--blue)}
+.btn-clear{background:#fff;border:2px solid #f59e0b;color:#b45309;font-family:'Heebo',sans-serif;
+    font-size:.82rem;font-weight:700;padding:7px 16px;border-radius:7px;cursor:pointer;transition:all .2s}
+.btn-clear:hover{background:#fef3c7;border-color:#d97706}
+
+/* ── TITLE ROW ── */
+.title-row{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.sti{font-family:'Heebo',sans-serif;font-size:1.2rem;font-weight:700;color:var(--navy);
+     border:none;border-bottom:2px solid transparent;background:transparent;
+     padding:2px 4px;direction:rtl;min-width:200px;flex:1;transition:border-color .2s}
+.sti:focus{outline:none;border-bottom-color:var(--blue)}
+.sti::placeholder{color:#d1d5db;font-weight:400}
+.sti:disabled{color:var(--muted);cursor:not-allowed}
+.action-row{display:flex;gap:8px}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border-radius:8px;border:none;
+     font-family:'Heebo',sans-serif;font-size:.875rem;font-weight:600;cursor:pointer;
+     transition:all .2s;white-space:nowrap}
+.bp{background:var(--blue);color:#fff}.bp:hover{background:var(--navy)}
+.bp:disabled{opacity:.5;cursor:not-allowed}
+.bg{background:var(--bg);color:var(--sub);border:1px solid var(--border)}.bg:hover{background:#f1f5f9}
+
+/* ── CLIENT ROW ── */
+.client-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.cl{font-size:.8rem;font-weight:600;color:var(--muted);white-space:nowrap}
+.ci{flex:0 0 260px;padding:9px 13px;border:1.5px solid var(--border);border-radius:7px;
+    font-family:'Heebo',sans-serif;font-size:.875rem;direction:rtl;transition:border-color .2s}
+.ci:focus{outline:none;border-color:var(--blue)}
+.ci:disabled{background:var(--bg);color:var(--muted);cursor:not-allowed}
+.link-box{flex:1;min-width:200px;display:flex;align-items:center;gap:8px;background:var(--pale);
+          border:1px solid var(--b100);border-radius:7px;padding:8px 13px}
+.link-url{font-size:.78rem;color:var(--blue);flex:1;direction:ltr;text-align:left;
+          overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.copy-btn{background:var(--blue);color:#fff;border:none;border-radius:5px;padding:4px 11px;
+          font-size:.72rem;font-weight:600;cursor:pointer;font-family:'Heebo',sans-serif;
+          transition:background .2s;flex-shrink:0}
+.copy-btn:hover{background:var(--navy)}.copy-btn.ok{background:var(--green)}
+
+/* ── STATUS BAR ── */
+.stbar{display:flex;align-items:center;gap:8px}
+.sdot{width:8px;height:8px;border-radius:50%;background:var(--border)}
+.sdot.saving{background:#f59e0b;animation:pulse 1s infinite}
+.sdot.saved{background:var(--green)}.sdot.err{background:var(--red)}
+.sdot.signed{background:var(--orange)}
+.stxt{font-size:.78rem;color:var(--muted)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* ── QUILL EDITOR ── */
+.editor-card{background:var(--w);border-radius:12px;border:1px solid var(--border);
+             box-shadow:0 1px 4px rgba(0,0,0,.05);overflow:hidden}
+#qtb{border:none!important;border-bottom:1px solid var(--border)!important;
+     padding:10px 14px;background:var(--bg)}
+.ql-container{border:none!important}
+.ql-editor{direction:rtl;text-align:right;padding:24px 28px;min-height:500px;
+           font-family:'Heebo',sans-serif;font-size:.9rem;line-height:1.9}
+.ql-editor h2{color:var(--navy);margin:18px 0 8px;font-size:1.05rem}
+.ql-editor table{width:100%;border-collapse:collapse;margin:10px 0}
+.ql-editor td{border:1px solid var(--border);padding:7px 11px}
+
+/* ── PLACEHOLDERS ── */
+.ph{background:var(--w);border:1px solid var(--border);border-radius:10px;padding:14px 18px}
+.pht{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;
+     color:var(--muted);margin-bottom:10px}
+.phg{display:flex;flex-wrap:wrap;gap:6px}
+.phtg{background:#fef9c3;border:1px solid #fcd34d;color:#92400e;font-size:.78rem;font-weight:600;
+      padding:3px 10px;border-radius:20px;cursor:pointer;transition:background .15s}
+.phtg:hover{background:#fde047}
+
+/* ── TOAST ── */
+#toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(80px);
+       background:var(--navy);color:#fff;padding:10px 24px;border-radius:8px;
+       font-size:.875rem;font-weight:600;transition:transform .3s;z-index:999}
+#toast.show{transform:translateX(-50%) translateY(0)}
+#toast.green{background:var(--green)}#toast.red{background:var(--red)}
+
+@media(max-width:700px){.content{padding:16px 14px}.title-row{flex-direction:column;align-items:stretch}.action-row{flex-wrap:wrap}}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="lg">
+  <div class="lb">
+    <div class="ll">yeda</div>
+    <div class="ls">עריכת הסכם</div>
+    <input type="password" class="li" id="lpass" placeholder="סיסמה" autocomplete="current-password">
+    <button class="lb-btn" onclick="doLogin()">כניסה</button>
+    <div class="lerr" id="lerr">סיסמה שגויה</div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div id="mn" style="display:none">
+  <div class="tb">
+    <div class="tl">yeda</div>
+    <div class="tr">
+      <div class="tbg">עריכת הסכם</div>
+      <button class="out" onclick="doLogout()">יציאה</button>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- SIGNED BANNER -->
+    <div class="signed-banner" id="signedBanner" style="display:none">
+      <div class="sbn-left">
+        <div class="sbn-icon">✅</div>
+        <div class="sbn-body">
+          <strong>ההסכם הנוכחי כבר נחתם</strong>
+          <span id="signedMeta">טוען...</span>
+        </div>
+      </div>
+      <div class="sbn-right">
+        <a class="btn-view-pdf" id="pdfLink" href="#" target="_blank" style="display:none">📄 צפה ב-PDF</a>
+        <button class="btn-clear" onclick="clearClientFields()">🗑 נקה שדות לקוח</button>
+      </div>
+    </div>
+
+    <!-- TITLE + SAVE ROW -->
+    <div class="title-row">
+      <input type="text" class="sti" id="title" placeholder="שם ההסכם">
+      <div class="action-row">
+        <button class="btn bg" onclick="loadContract()">↺ טען מחדש</button>
+        <button class="btn bp" id="sbtn" onclick="saveContract()">💾 שמור</button>
+      </div>
+    </div>
+
+    <!-- CLIENT + LINK ROW -->
+    <div class="client-row">
+      <div class="cl">שם לקוח:</div>
+      <input type="text" class="ci" id="cname" placeholder="שם הלקוח / החברה">
+      <div class="link-box">
+        <span class="link-url" id="linkUrl">— שמור קודם —</span>
+        <button class="copy-btn" id="copyBtn" onclick="copyLink()">העתק קישור</button>
+      </div>
+    </div>
+
+    <!-- STATUS -->
+    <div class="stbar">
+      <div class="sdot" id="sdot"></div>
+      <div class="stxt" id="stxt">טוען...</div>
+    </div>
+
+    <!-- QUILL -->
+    <div class="editor-card">
+      <div id="qtb">
+        <span class="ql-formats"><select class="ql-header"><option selected></option><option value="1"></option><option value="2"></option></select></span>
+        <span class="ql-formats"><button class="ql-bold"></button><button class="ql-italic"></button><button class="ql-underline"></button></span>
+        <span class="ql-formats"><button class="ql-list" value="ordered"></button><button class="ql-list" value="bullet"></button></span>
+        <span class="ql-formats"><select class="ql-align"><option selected></option><option value="right"></option><option value="center"></option><option value="left"></option></select></span>
+        <span class="ql-formats"><button class="ql-clean"></button></span>
+      </div>
+      <div id="qed"></div>
+    </div>
+
+    <!-- PLACEHOLDER HELPER -->
+    <div class="ph">
+      <div class="pht">שדות שהלקוח ממלא — לחץ להוספה בעורך</div>
+      <div class="phg">
+        <div class="phtg" onclick="ins('{{שם החברה / הלקוח}}')">{{שם החברה / הלקוח}}</div>
+        <div class="phtg" onclick="ins('{{ח.פ של הלקוח}}')">{{ח.פ של הלקוח}}</div>
+        <div class="phtg" onclick="ins('{{כתובת הלקוח}}')">{{כתובת הלקוח}}</div>
+        <div class="phtg" onclick="ins('{{שם החברה}}')">{{שם החברה}}</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════
+//  ⚙ CONFIG
+// ═══════════════════════════════════════════
+const PASS         = 'yedacontracts2026';
+const N8N_SAVE     = 'https://yedauto.com/webhook/yeda-save';
+const N8N_LOAD     = 'https://yedauto.com/webhook/yeda-load';
+const PROPOSAL_URL = 'https://yedatechdesign.github.io/client-contracts/proposal.html';
+// ═══════════════════════════════════════════
+
+const SLOT = 1; // single slot system
+
+const DEFAULT_CONTENT = `<h2>מטרה</h2><p>פיתוח מערכת מותאמת אישית ליצירת תכנים עם AI לפי אפיון מאושר מראש, הקמת אתר לניהול למידה ומעקב ביצועים תחת מערכת Yeda. המערכת תאפשר ניהול תהליכי למידה ומעקב אחר התקדמות ההכשרות, כולל רישום, צפייה בתכנים, ומדידה של התקדמות המשתתפים לאורך זמן.</p><h2>אבני דרך</h2><p><strong>0. חתימה והעברת תשלום ראשון</strong><br>חתימת חוזה בין הצדדים והעברת התשלום הראשון, המאשרים התחייבות הצדדים להפעלת הפרויקט.</p><p><strong>1. פגישת אפיון</strong><br>פגישה מקיפה עם נציגי הלקוח לתיאור מלא של דרישות המערכת, היכולות הנדרשות, מבנה ההיררכיות הארגוניות וצרכי המשתמשים.</p><p><strong>2. אישור אפיון</strong><br>הכנת מסמך אפיון מפורט המפרט את כל הדרישות, ההיכולות והתכונות המערכת. אישור מטעם הלקוח על התאמת האפיון לצרכיו.</p><p><strong>3. הקמת אתר התאחדות ארצית אחד</strong><br>ביצוע חיבור טכני של דומיין, הגדרת מבנה תכנים והרשאות, עיצוב והתאמת הפורטל למיתוג ההתאחדות, הכנת תבנית להזנת ההדרכות.</p><p><strong>4. פיתוח</strong><br>פיתוח מערכת יצירת חומרי למידה עם AI בהתאם לאפיון המאושר, והעלאה לאוויר.</p><h2>למה אנחנו?</h2><p>הפלטפורמה מאפשרת למכללות להקים ולהפעיל מערך קורסים דיגיטליים ופרונטליים, תוך שילוב כלים מתקדמים למעקב אחר התקדמות המשתמשים וביצועיהם. המערכת כוללת דוחות מפורטים עם נתוני צפייה, תוצאות מבחנים וסטטיסטיקות שימוש, ומספקת תמונה מלאה על תהליך הלמידה. כל זאת, תוך שמירה על אבטחת מידע ברמה הגבוהה ותמיכה מלאה בניהול התכנים וליווי שוטף.</p><h2>עלויות ותנאי תשלום</h2><p><strong>מחירון — הקמת מערכת ניהול למידה ופיתוח מערכת יצירת חומרי למידה</strong></p><table><tbody><tr><td><strong>פריט</strong></td><td><strong>עלות</strong></td></tr><tr><td>פיתוח</td><td>250 ₪ לשעה</td></tr><tr><td>מערכת ניהול למידה (שנה ראשונה)</td><td>11,988 ₪ (כולל 100GB אחסון ו-200GB תעבורה)</td></tr><tr><td>10,000 קרדיטים לכלי AI וצ'אטבוטים</td><td>2,310 ₪</td></tr></tbody></table><p><strong>תשלום 1 — חתימה והעברת תשלום ראשון:</strong> 100 שעות פיתוח (25,000 ₪) + 1/3 עלות מערכת ניהול למידה (3,996 ₪) סה"כ: 28,996 ₪</p><p><strong>תשלום 2 — לאחר אישור אפיון:</strong> 1/3 עלות מערכת ניהול למידה (3,996 ₪) סה"כ: 3,996 ₪</p><p><strong>תשלום 3 — לאחר הקמת אתר התאחדות ארצית אחד:</strong> 1/3 עלות מערכת ניהול למידה (3,996 ₪) + עלות קרדיטים לשימוש ב-AI (2,310 ₪) סה"כ: 6,306 ₪</p><p><strong>תשלום 4 — בסיום הפיתוח:</strong> 100 שעות פיתוח לאחר ה-100 שעות הראשונות + שעות נוספות לפי 250 ₪ לשעה.</p><p><strong>סיכום תשלומים משוער</strong></p><table><tbody><tr><td><strong>תשלום</strong></td><td><strong>סכום</strong></td></tr><tr><td>תשלום 1</td><td>28,996 ₪</td></tr><tr><td>תשלום 2</td><td>3,996 ₪</td></tr><tr><td>תשלום 3</td><td>6,306 ₪</td></tr><tr><td>תשלום 4</td><td>ישתנה</td></tr></tbody></table><p>כל המחירים ללא מע"מ</p><h2>שירותים אופציונליים לפי שימוש בפועל</h2><p>אחסון נוסף עד 1TB: 250 ₪ לחודש.<br>תעבורה נוספת עד 2TB: 250 ₪ לחודש.<br>טוקנים נוספים: 0.07$ × 3.3 ₪.</p><h2>חבילות טוקנים לשימוש ב-AI וצ'אטבוט</h2><table><tbody><tr><td><strong>10,000 טוקנים</strong></td><td><strong>20,000 טוקנים</strong></td><td><strong>40,000 טוקנים</strong></td></tr><tr><td>3,420 ₪ <del>3,600 ₪</del></td><td>6,480 ₪ <del>7,200 ₪</del></td><td>12,960 ₪ <del>14,400 ₪</del></td></tr></tbody></table><h2>תנאי ההסכם</h2><p>● הלקוח יקבל אתרים אישיים המוקמים על גבי פלטפורמת Yeda ומחוברים לדומיינים של הלקוח, בהתאם למבנה ולמספר האתרים שנרכשו. הפלטפורמה כוללת אתרים מלאים, מערכת ניהול למידה (LMS), אפשרות לחיבור מערכת תשלומים, עדכוני גרסה, תמיכה טכנית מלאה, קבוצת ווטסאפ ייעודית והדרכות. בהתאם להסכם, ההתקשרות היא בהתחייבות ללא אפשרות יציאה מוקדמת, והמחיר מפורט בהצעת המחיר. החבילה מאפשרת שימוש ללא הגבלת כמות משתמשים פעילים למשך שלוש שנות פעילות. בתום התקופה, המחיר עשוי להשתנות בהתאם להיקף השימוש בפועל.</p><p>● בנוסף, הלקוח יקבל גישה לפלטפורמה המיועדת לבנייה, עיצוב, הקלטה ואחסון של מצגות, וידאו, לומדות אינטראקטיביות ועוזרי למידה מבוססי AI. העלויות מפורטות בסיכום המחירים בהתאם לנפחי השימוש, וייתכנו חיובים נוספים במקרה של חריגה מהיקפי השימוש הכלולים בתקופת ההתקשרות.</p><p>● חברת ידע פיתוח סביבות למידה בע"מ ו/או מי מטעמה אינם נושאים כל אחריות בקשר לכל תביעה משפטית או כל תלונה אחרת שהלקוח עלול לקבל בגין עבירה על חוקים ומגבלות הקשורים בדיני אינטרנט, לרבות הנושא נגישות, רישום דטאות, שמירה על פרטיות, חוק הספאם ועוד. מומלץ ללקוח להיוועץ בעו"ד המתמחה בתחום, על מנת להבטיח שלא תוגש כנגדו תלונה. השימוש באתר כפוף למדיניות פרטיות ותקנון תנאי שימוש בנוסחו מעת לעת.</p><p>● מובהר כי הקניין הרוחני המלא של המוצרי תוכן באתר וזכויות היוצרים יהיו שייכים ללקוח.</p><p>● חברת ידע בע"מ מתחייבת לשמירה על סודיות וזכויות היוצרים — לא לשלוח ולשתף חומרים מתוך הקורסים או / ו דטאות משתמשים או / ו מידע הנחשף כלשהו וחומרים אחרים שאינם נחלת הכלל עם צד שלישי ללא רשותו של הלקוח.</p><h2>הסכם התקשרות</h2><p>בין: חברת ידע פיתוח סביבות לימוד בע"מ (להלן "חברת ידע" או "נותן השירות" או "הספק")<br>ח.פ 516072253<br>כתובת: יגאל אלון 123, תל אביב<br>איש קשר: אלכסיי קוגן</p><p>לבין: {{שם החברה / הלקוח}} (להלן "הלקוח")<br>ח.פ: {{ח.פ של הלקוח}}<br>כתובת: {{כתובת הלקוח}}</p><p><strong>הואיל ו:</strong> חברת ידע פיתחה מערכת לניהול סביבות לימוד (להלן "המערכת" או/ו "הפלטפורמה"). חברת {{שם החברה}} מעוניינת להשתמש במערכת, נציגים מוסמכים מטעם חברת {{שם החברה}} בחנו את המערכת ויכולותיה.</p>`;
+
+let Q, currentData = null;
+
+// ─────────────────────────
+function doLogin() {
+  if (document.getElementById('lpass').value === PASS) {
+    document.getElementById('lg').style.display = 'none';
+    document.getElementById('mn').style.display = 'grid';
+    Q = new Quill('#qed', { theme:'snow', modules:{toolbar:'#qtb'}, placeholder:'תוכן ההסכם...' });
+    loadContract();
+  } else {
+    document.getElementById('lpass').classList.add('err');
+    document.getElementById('lerr').style.display = 'block';
+    setTimeout(() => document.getElementById('lpass').classList.remove('err'), 1500);
+  }
+}
+function doLogout() {
+  document.getElementById('lg').style.display = 'flex';
+  document.getElementById('mn').style.display = 'none';
+  document.getElementById('lpass').value = '';
+}
+
+// ─────────────────────────
+async function loadContract() {
+  setStatus('saving', 'טוען...');
+  try {
+    const r = await fetch(N8N_LOAD, {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ slot: SLOT, password: PASS })
+    });
+    if (!r.ok) throw new Error('שגיאת שרת');
+    const d = await r.json();
+    currentData = d;
+
+    Q.root.innerHTML = d.content || DEFAULT_CONTENT;
+    document.getElementById('title').value = d.title || 'הסכם התקשרות';
+    document.getElementById('cname').value = d.client_name || '';
+    updateLinkDisplay(!!d.content);
+
+    if (d.signed) {
+      showSignedBanner(d);
+      setStatus('signed', 'נחתם ✓ — הסכם נעול לעריכה');
+    } else {
+      hideSignedBanner();
+      setStatus('saved', d.content ? 'נטען ✓' : 'ברירת מחדל');
+    }
+  } catch(e) {
+    Q.root.innerHTML = DEFAULT_CONTENT;
+    document.getElementById('title').value = 'הסכם התקשרות';
+    updateLinkDisplay(false);
+    setStatus('err', 'שגיאה בטעינה');
+  }
+}
+
+// ─────────────────────────
+async function saveContract() {
+  const btn = document.getElementById('sbtn');
+  btn.disabled = true;
+  setStatus('saving', 'שומר...');
+  const title = document.getElementById('title').value.trim() || 'הסכם התקשרות';
+  const client_name = document.getElementById('cname').value.trim();
+  const content = Q.root.innerHTML;
+  try {
+    const r = await fetch(N8N_SAVE, {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ slot: SLOT, password: PASS, title, client_name, content, signed: false })
+    });
+    if (!r.ok) throw new Error('שגיאת שרת ' + r.status);
+    currentData = { slot: SLOT, title, client_name, content, signed: false };
+    setStatus('saved', 'נשמר ✓');
+    updateLinkDisplay(true);
+    hideSignedBanner();
+    toast('נשמר בהצלחה ✓', 'green');
+  } catch(e) {
+    setStatus('err', 'שגיאה בשמירה');
+    toast('שגיאה: ' + e.message, 'red');
+  }
+  btn.disabled = false;
+}
+
+// ─────────────────────────
+// Clear only signed status + signer fields, keep content template (placeholders intact)
+async function clearClientFields() {
+  if (!confirm('לנקות את פרטי החתימה ולפתוח את ההסכם לעריכה מחדש?\n(תוכן ההסכם יישמר — רק סטטוס "נחתם" יתאפס)')) return;
+  setStatus('saving', 'מאפס...');
+  const title = document.getElementById('title').value.trim() || 'הסכם התקשרות';
+  const client_name = document.getElementById('cname').value.trim();
+  // Keep existing content but reset signed
+  const content = currentData?.content || Q.root.innerHTML;
+  try {
+    const r = await fetch(N8N_SAVE, {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ slot: SLOT, password: PASS, title, client_name, content, signed: false })
+    });
+    if (!r.ok) throw new Error('שגיאת שרת');
+    currentData = { ...currentData, signed: false };
+    hideSignedBanner();
+    setStatus('saved', 'אופס — מוכן לעריכה');
+    toast('שדות הלקוח נוקו ✓', 'green');
+  } catch(e) {
+    setStatus('err', 'שגיאה');
+    toast('שגיאה: ' + e.message, 'red');
+  }
+}
+
+// ─────────────────────────
+function showSignedBanner(d) {
+  document.getElementById('signedBanner').style.display = 'flex';
+  let meta = '';
+  if (d.signer_name) meta += 'חתם: <strong>' + d.signer_name + '</strong>';
+  if (d.signer_email) meta += (meta?' · ':'') + d.signer_email;
+  if (d.signed_at) {
+    try { meta += (meta?' · ':'') + new Date(d.signed_at).toLocaleDateString('he-IL', {day:'2-digit',month:'2-digit',year:'numeric'}); } catch{}
+  }
+  document.getElementById('signedMeta').innerHTML = meta || 'ההסכם כבר נחתם';
+  // lock editor
+  Q.enable(false);
+  document.getElementById('title').disabled = true;
+  document.getElementById('cname').disabled = true;
+  document.getElementById('sbtn').disabled = true;
+}
+function hideSignedBanner() {
+  document.getElementById('signedBanner').style.display = 'none';
+  Q.enable(true);
+  document.getElementById('title').disabled = false;
+  document.getElementById('cname').disabled = false;
+  document.getElementById('sbtn').disabled = false;
+}
+
+// ─────────────────────────
+function updateLinkDisplay(hasContent) {
+  const url = PROPOSAL_URL;  // no slot param needed
+  document.getElementById('linkUrl').textContent = hasContent ? url : '— שמור קודם —';
+  document.getElementById('copyBtn').dataset.u = hasContent ? url : '';
+}
+function copyLink() {
+  const u = document.getElementById('copyBtn').dataset.u;
+  if (!u) { toast('שמור קודם!', 'red'); return; }
+  navigator.clipboard.writeText(u).then(() => {
+    const b = document.getElementById('copyBtn');
+    b.textContent = 'הועתק ✓'; b.classList.add('ok');
+    setTimeout(() => { b.textContent = 'העתק קישור'; b.classList.remove('ok'); }, 2000);
+  });
+}
+
+// ─────────────────────────
+function ins(t) {
+  if (!Q || !Q.isEnabled()) return;
+  const s = Q.getSelection(true);
+  Q.insertText(s.index, t, { background: '#fef9c3', bold: true });
+  Q.setSelection(s.index + t.length);
+}
+function setStatus(type, text) {
+  const d = document.getElementById('sdot');
+  d.className = 'sdot' + (type ? ' ' + type : '');
+  document.getElementById('stxt').textContent = text;
+}
+function toast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = type || ''; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('lpass').addEventListener('keydown', e => { if(e.key === 'Enter') doLogin(); });
+});
+</script>
+</body>
+</html>
