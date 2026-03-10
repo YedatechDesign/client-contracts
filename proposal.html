@@ -301,13 +301,79 @@ footer a{color:rgba(255,255,255,.5);text-decoration:none}
 #scrollup.show{opacity:1;pointer-events:auto}
 
 @media(max-width:700px){
-  .hero-title{font-size:1.7rem}.s{padding:48px 16px}.s-title{font-size:1.7rem}
-  .ms-item{flex-direction:column!important;align-items:center}.ms-card{flex:none;width:100%}
-  .ms-center{flex-direction:row;gap:12px;width:100%;justify-content:flex-start;margin-bottom:8px}
-  .ms-line{display:none}.why-grid{grid-template-columns:1fr}.opt-grid{grid-template-columns:1fr}
-  .pay-grid{grid-template-columns:1fr}.sig-fields{grid-template-columns:1fr}
-  .sig-grid{grid-template-columns:1fr}.nav{padding:0 16px}
+  /* global */
+  .nav{padding:0 16px}
+  .s{padding:40px 14px}
+  .s-title{font-size:1.65rem}
+  .s-sub{margin-bottom:28px}
+
+  /* hero */
+  .hero{padding:56px 16px 72px}
+  .hero-title{font-size:1.5rem}
+  .hero-chips{gap:8px}
+  .chip{padding:6px 12px}
+
+  /* milestones — all cards on ONE side, line on right edge */
+  .ms-wrap{padding-right:40px}
+  .ms-line{left:auto;right:12px;transform:none}
+  .ms-item,.ms-item.left,.ms-item.right{
+    flex-direction:column!important;
+    align-items:flex-start;
+    margin-bottom:28px
+  }
+  .ms-spacer{display:none!important}
+  .ms-center{
+    position:absolute;right:-4px;
+    flex-direction:column;
+    width:auto;
+    flex:none
+  }
+  .ms-item{position:relative}
+  .ms-num{width:42px;height:42px;font-size:1rem}
+  .ms-card{
+    flex:none!important;
+    width:100%!important;
+    margin-right:0!important;
+    padding:20px 18px 18px
+  }
+  .ms-card-icon{top:16px;right:16px!important;left:auto!important}
+  .ms-card-title{padding-right:52px!important;padding-left:0!important;font-size:.95rem}
+
+  /* why */
+  .why-grid{grid-template-columns:1fr}
+  .why-card{padding:18px 14px}
+
+  /* pricing */
+  .price-row{flex-direction:column;align-items:flex-start;gap:4px;padding:14px 18px}
+  .pay-grid{grid-template-columns:1fr}
+  .pay-card{padding:20px 18px 16px}
+  .pay-card-num{width:34px;height:34px;font-size:.95rem}
+
+  /* optional */
+  .opt-grid{grid-template-columns:1fr}
+  .opt-card{padding:22px 18px;display:flex;align-items:center;gap:14px;text-align:right}
+  .opt-icon-wrap{margin:0!important;flex-shrink:0}
+  .opt-title{font-size:.9rem;margin-bottom:2px}
+
+  /* tokens */
   .tok-examples-grid{grid-template-columns:1fr}
+  .tok-table th,.tok-table td{padding:10px 10px;font-size:.8rem}
+
+  /* terms */
+  .acc-head{padding:14px 16px}
+  .acc-title{font-size:.88rem}
+
+  /* contract */
+  .contract-body{padding:16px}
+  .party-row{flex-direction:column;align-items:flex-start;gap:3px}
+  .party-val{font-size:.85rem}
+
+  /* signature */
+  .sig-fields{grid-template-columns:1fr}
+  .sig-grid{grid-template-columns:1fr}
+  .stamp-box{height:54px}
+  .sub-area{padding:16px}
+  .sub-btn{padding:14px;font-size:.9rem}
 }
 </style>
 </head>
