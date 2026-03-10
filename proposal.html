@@ -831,7 +831,8 @@ window.addEventListener('DOMContentLoaded', async () => {
 async function loadContract() {
   try {
     const r = await fetch(N8N_LOAD, {
-      method:'POST', headers:{'Content-Type':'application/json'},
+      method:'POST', headers:{'Content-Type':'application/json','Cache-Control':'no-cache'},
+      cache: 'no-store',
       body: JSON.stringify({ slot: SLOT, mode: 'client' })
     });
     if (!r.ok) throw new Error('שגיאת שרת');
