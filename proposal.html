@@ -414,11 +414,11 @@ footer{background:var(--navy);padding:22px;text-align:center;
     </div>
   </div>
 </div></div>
-<footer>חברת ידע פיתוח סביבות למידה בע"מ · ח.פ 516072253 · יגאל אלון 123, תל אביב · coo@yedalms.io</footer>
+<footer>חברת ידע פיתוח סביבות למידה בע"מ · ח.פ 516072253 · יגאל אלון 123, תל אביב · <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="f0939f9fb0899594919c9d83de999f">[email&#160;protected]</a></footer>
 <button id="scrollup" onclick="scrollTo({top:0,behavior:'smooth'})">↑</button>
 </div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 const N8N_LOAD='https://yedauto.com/webhook/yeda-load';
 const N8N_SIGN='https://yedauto.com/webhook/yeda-sign';
 const LOGOS='https://yedatechdesign.github.io/client-contracts/logos/';
@@ -451,22 +451,36 @@ window.addEventListener('scroll',()=>document.getElementById('scrollup').classLi
   try{
     const r=await fetch(N8N_LOAD,{method:'POST',headers:{'Content-Type':'application/json'},
       cache:'no-store',body:JSON.stringify({slot:SLOT,mode:'client'})});
-    if(!r.ok)throw new Error('load failed');
-    const raw=await r.json();
-    // n8n can return array or object — normalize
-    if(Array.isArray(raw)) loaded=raw[0]?.json||raw[0]||null;
-    else if(raw?.json) loaded=raw.json;
-    else loaded=raw;
+    if(r.ok){
+      const raw=await r.json();
+      // Try every possible n8n response format
+      if(Array.isArray(raw)){
+        const first=raw[0]; loaded=first?.json||first||null;
+      } else if(raw && typeof raw==='object'){
+        // Direct slot data (most common after Parse File Content node)
+        if(raw.slot!==undefined||raw.matara||raw.title||raw.milestones){
+          loaded=raw;
+        // n8n wrapped: {json:{...}}
+        } else if(raw.json&&(raw.json.slot!==undefined||raw.json.matara||raw.json.title)){
+          loaded=raw.json;
+        // rawText or body string (alt=media returned as text)
+        } else {
+          const str=raw.rawText||raw.body||raw.data||raw.content||'';
+          if(typeof str==='string'&&str.includes('"slot"')){
+            try{loaded=JSON.parse(str);}catch(e){}
+          }
+          if(!loaded&&Object.keys(raw).length>2) loaded=raw;
+        }
+      }
+    }
   }catch(e){console.warn('load error',e);}
 
-  // Validate token — only reject if BOTH sides have a token AND they don't match
-  if(TOKEN && loaded && loaded.token && loaded.token !== TOKEN){
+  // Only reject if token in URL doesn't match token in data
+  if(TOKEN && loaded && loaded.token && loaded.token!==TOKEN){
     showError('קישור זה פג תוקפו. יש לפנות לנציג Yeda לקבלת קישור עדכני.'); return;
   }
+  if(loaded&&loaded.signed){showError('הסכם זה כבר נחתם.');return;}
 
-  if(loaded && loaded.signed){showError('הסכם זה כבר נחתם.');return;}
-
-  // Deep merge: DEF as base, loaded values override everything
   D = mergeData(DEF, loaded||{});
   render();
   document.getElementById('ls').style.display='none';
@@ -666,9 +680,4 @@ async function doSubmit(){
   }catch(e){const er=document.getElementById('serr');er.textContent='שגיאה: '+e.message;er.style.display='block';btn.disabled=false;sp.style.display='none';tx.textContent='אני מאשר/ת ומסכים/ה לתנאי ההסכם ✍️'}
 }
 
-function showError(msg){document.getElementById('ls').style.display='none';document.getElementById('emsg').textContent=msg;document.getElementById('es').style.display='flex'}
-function h(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
-function pad(n){return String(n).padStart(2,'0')}
-</script>
-</body>
-</html>
+function showError(msg){document.getElementById('ls').style.display='none';document.getElementById('emsg').textContent=msg;document.getElementById('e
