@@ -2,395 +2,241 @@
 <html dir="rtl" lang="he">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>yeda — הסכם התקשרות</title>
+<title>הצעת מחיר והסכם — Yeda</title>
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/dist/signature_pad.umd.min.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --navy:#0d2680;--navy2:#0a1e5e;--blue:#1a56db;--blue-light:#e8f0fe;--blue-mid:#c7d7fc;
-  --text:#0d2680;--sub:#374151;--muted:#6b7280;--faint:#9ca3af;
-  --bg:#f4f6fb;--white:#ffffff;
-  --border:rgba(0,0,0,.08);--border2:#e5e7eb;
-  --green:#059669;--red:#d4183d;--amber:#d97706;
+  --navy:#0d2680;--blue:#1a56db;--blue-light:#e8f0fe;--blue-mid:#c7d7fc;
+  --sub:#374151;--muted:#6b7280;--faint:#9ca3af;
+  --bg:#f4f6fb;--white:#fff;--border:#e5e7eb;--border2:#d1d5db;
+  --green:#059669;--red:#dc2626;
   --radius:14px;--radius-sm:10px;
-  --shadow:0 2px 8px rgba(0,0,0,.07);--shadow-lg:0 8px 28px rgba(0,0,0,.1)
+  --shadow:0 2px 10px rgba(0,0,0,.07)
 }
 html{scroll-behavior:smooth}
-body{font-family:'Heebo',sans-serif;background:var(--white);color:var(--sub);direction:rtl;-webkit-font-smoothing:antialiased}
-
-/* ── SPIN ── */
+body{font-family:'Heebo',sans-serif;background:#fff;color:var(--sub);direction:rtl;min-height:100vh}
 @keyframes spin{to{transform:rotate(360deg)}}
-.sp{width:22px;height:22px;border:2.5px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;display:none}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@keyframes sparkle{0%,100%{opacity:.15;transform:scale(.8)}50%{opacity:.9;transform:scale(1.1) rotate(20deg)}}
+@keyframes sparkle2{0%,100%{opacity:.08;transform:scale(.6) rotate(-10deg)}60%{opacity:.7;transform:scale(1.2) rotate(15deg)}}
+@keyframes sparkle3{0%,100%{opacity:.2;transform:scale(1) rotate(0deg)}40%{opacity:.5;transform:scale(.7) rotate(-20deg)}}
 
 /* ── LOADING ── */
 #ls{position:fixed;inset:0;background:#fff;display:flex;flex-direction:column;
-    align-items:center;justify-content:center;gap:14px;z-index:9999}
-.ll{font-size:2rem;font-weight:900;color:var(--navy);letter-spacing:-1.5px}
-.lsp{width:26px;height:26px;border:2.5px solid #e5e7eb;border-top-color:var(--blue);
-     border-radius:50%;animation:spin .75s linear infinite}
+    align-items:center;justify-content:center;z-index:999;gap:20px}
+#ls img.yeda-logo-img{height:48px;object-fit:contain}
+#ls .ll{font-size:2rem;font-weight:900;color:var(--navy);letter-spacing:-1.5px}
+.lsp{width:36px;height:36px;border:3px solid var(--blue-light);border-top-color:var(--blue);
+     border-radius:50%;animation:spin .8s linear infinite}
 
 /* ── ERROR ── */
-#es{display:none;min-height:100vh;align-items:center;justify-content:center;padding:32px;background:var(--bg)}
-.ec{background:#fff;border-radius:var(--radius);padding:56px 44px;text-align:center;max-width:440px;box-shadow:var(--shadow-lg)}
+#es{display:none;position:fixed;inset:0;background:#fff;align-items:center;justify-content:center;z-index:998}
+.ec{text-align:center;max-width:400px;padding:32px}
 
 /* ── NAV ── */
-.nav{background:var(--white);border-bottom:1px solid var(--border);height:60px;
-     display:flex;align-items:center;padding:0 40px;justify-content:space-between;
-     position:sticky;top:0;z-index:200;box-shadow:0 1px 4px rgba(0,0,0,.06)}
-.nav-logo{font-size:1.5rem;font-weight:900;color:var(--navy);letter-spacing:-1px}
-.nav-badge{display:flex;align-items:center;gap:6px;background:var(--blue-light);
-           border:1px solid var(--blue-mid);color:var(--blue);
-           font-size:.72rem;font-weight:700;padding:5px 13px;border-radius:20px}
-.ndot{width:6px;height:6px;border-radius:50%;background:var(--green)}
+.nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.95);
+     backdrop-filter:blur(12px);border-bottom:1px solid var(--border);
+     padding:0 28px;height:60px;display:flex;align-items:center;justify-content:space-between}
+.nav-logo img{height:34px;object-fit:contain}
+.nav-logo-text{font-size:1.3rem;font-weight:900;color:var(--navy);letter-spacing:-1px}
+.nav-badge{display:flex;align-items:center;gap:7px;background:var(--blue-light);
+           border:1px solid var(--blue-mid);border-radius:20px;padding:6px 14px;
+           font-size:.78rem;font-weight:700;color:var(--blue)}
+.ndot{width:7px;height:7px;border-radius:50%;background:var(--green)}
 
 /* ── HERO ── */
-.hero{background:linear-gradient(135deg,#0a1e5e 0%,#0d2680 40%,#1a56db 100%);
-      padding:80px 24px 90px;text-align:center;position:relative;overflow:hidden}
-.hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:52px;
-             background:var(--white);clip-path:ellipse(56% 100% at 50% 100%)}
-/* animated sparkles */
-@keyframes sparkle{0%,100%{opacity:.25;transform:scale(.8) rotate(0deg)}50%{opacity:.9;transform:scale(1.15) rotate(20deg)}}
-@keyframes sparkle2{0%,100%{opacity:.15;transform:scale(1) rotate(0deg)}50%{opacity:.7;transform:scale(1.3) rotate(-15deg)}}
-@keyframes sparkle3{0%,100%{opacity:.35;transform:scale(.9) rotate(10deg)}50%{opacity:1;transform:scale(1.1) rotate(-10deg)}}
-.hero-sparks{position:absolute;inset:0;pointer-events:none;overflow:hidden}
-.hsk{position:absolute;color:rgba(255,255,255,.55);line-height:1}
-.hsk1{top:18%;right:14%;font-size:2.4rem;animation:sparkle 3.2s ease-in-out infinite}
-.hsk2{top:30%;left:10%;font-size:1.4rem;animation:sparkle2 4.1s ease-in-out infinite 1.1s}
-.hsk3{top:60%;right:7%;font-size:1rem;animation:sparkle3 2.8s ease-in-out infinite .5s}
-.hero-spark{margin-bottom:16px;position:relative;z-index:1}
+.hero{background:linear-gradient(140deg,#0d2680 0%,#1a56db 60%,#2563eb 100%);
+      padding:72px 24px 90px;text-align:center;position:relative;overflow:hidden}
+.hero-sparks{position:absolute;inset:0;pointer-events:none}
+.hsk{position:absolute;color:rgba(255,255,255,.6);font-size:2.4rem;user-select:none}
+.hsk1{top:18%;right:12%;animation:sparkle 3.2s ease-in-out infinite}
+.hsk2{top:30%;left:15%;font-size:1.4rem;animation:sparkle2 4.1s ease-in-out infinite 1.1s}
+.hsk3{bottom:25%;right:22%;font-size:1rem;animation:sparkle3 2.8s ease-in-out infinite .6s}
 .hero-eyebrow{display:inline-block;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);
-              color:rgba(255,255,255,.85);font-size:.8rem;font-weight:600;
-              padding:5px 16px;border-radius:20px;margin-bottom:18px}
-.hero-title{font-size:2.6rem;font-weight:900;color:#fff;line-height:1.2;letter-spacing:-.5px;max-width:700px;margin:0 auto 12px}
-.hero-sub{color:rgba(255,255,255,.7);font-size:.9rem}
-.hero-chips{display:flex;align-items:center;justify-content:center;gap:12px;
-            flex-wrap:wrap;margin-top:24px}
-.chip{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);
-      border-radius:10px;padding:8px 18px;text-align:center}
-.chip-l{font-size:.7rem;font-weight:600;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.3px;margin-bottom:2px}
+              border-radius:20px;padding:7px 18px;font-size:.78rem;font-weight:700;
+              color:rgba(255,255,255,.9);letter-spacing:.5px;margin-bottom:20px;position:relative;z-index:1}
+.hero-title{font-size:2.2rem;font-weight:900;color:#fff;line-height:1.25;
+            letter-spacing:-.5px;margin-bottom:14px;position:relative;z-index:1}
+.hero-sub{font-size:.9rem;color:rgba(255,255,255,.75);margin-bottom:28px;position:relative;z-index:1}
+.hero-chips{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;position:relative;z-index:1}
+.chip{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);
+      border-radius:10px;padding:8px 16px;display:flex;align-items:center;gap:8px}
+.chip-l{font-size:.72rem;font-weight:600;color:rgba(255,255,255,.6)}
 .chip-v{font-size:.9rem;font-weight:800;color:#fff}
 
-/* ── SECTION WRAPPER ── */
+/* ── SECTION ── */
 .s{padding:72px 24px}
 .s.alt{background:var(--bg)}
-.s-inner{max-width:1000px;margin:0 auto}
-.s-title{font-size:2.2rem;font-weight:900;color:var(--navy);text-align:center;margin-bottom:8px;letter-spacing:-.5px}
-.s-sub{text-align:center;color:var(--muted);font-size:.9rem;margin-bottom:44px}
+.s-inner{max-width:900px;margin:0 auto}
+.s-title{font-size:2rem;font-weight:900;color:var(--navy);text-align:center;
+         margin-bottom:8px;letter-spacing:-.5px}
+.s-sub{text-align:center;color:var(--muted);font-size:.88rem;margin-bottom:44px}
 
 /* ── CARD ── */
-.card{background:var(--white);border-radius:var(--radius);border:1px solid var(--border);box-shadow:var(--shadow)}
+.card{background:#fff;border-radius:var(--radius);border:1px solid var(--border);box-shadow:var(--shadow)}
 
-/* ── ICON BOX ── */
-.ibx{width:48px;height:48px;border-radius:12px;background:var(--blue-light);
-     display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.ibx svg{width:22px;height:22px;stroke:var(--blue);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.ibx.sm{width:36px;height:36px;border-radius:9px}
-.ibx.sm svg{width:17px;height:17px}
+/* ── CONTRACT BLOCKS ── */
+.blocks-wrap{display:flex;flex-direction:column;gap:16px}
+.cblock{padding:28px 32px}
+.cblock-num{display:inline-flex;align-items:center;justify-content:center;
+            width:28px;height:28px;border-radius:50%;background:var(--blue);
+            color:#fff;font-size:.78rem;font-weight:800;margin-bottom:14px;flex-shrink:0}
+.cblock-title{font-size:1.1rem;font-weight:900;color:var(--navy);margin-bottom:10px}
+.cblock-text{font-size:.92rem;color:var(--sub);line-height:1.85;white-space:pre-line}
 
-/* ═══════ SECTION: GOAL ═══════ */
-.goal-card{padding:36px 40px;font-size:.95rem;color:var(--sub);line-height:1.9;text-align:center}
+/* ── CLIENTS ── */
+.clients-section{padding:72px 24px;background:#fff}
+.clients-inner{max-width:1000px;margin:0 auto}
+.clients-label{text-align:center;font-size:.75rem;font-weight:800;text-transform:uppercase;
+               letter-spacing:.8px;color:var(--muted);margin-bottom:36px}
+.clients-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
+.client-card{border:1px solid var(--border);border-radius:12px;padding:24px 18px 18px;
+             text-align:center;transition:box-shadow .2s,transform .15s}
+.client-card:hover{box-shadow:0 8px 24px rgba(26,86,219,.12);transform:translateY(-2px)}
+.client-logo-wrap{height:56px;display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+.client-logo-wrap img{max-height:52px;max-width:130px;object-fit:contain}
+.client-name-link{display:block;font-size:.9rem;font-weight:800;color:var(--navy);
+                  text-decoration:none;margin-bottom:6px}
+.client-name-link:hover{color:var(--blue);text-decoration:underline}
+.client-desc{font-size:.75rem;color:var(--muted);line-height:1.55}
 
-/* ═══════ SECTION: MILESTONES ═══════ */
-.ms-wrap{position:relative;padding:8px 0}
-.ms-line{position:absolute;top:0;bottom:0;left:50%;width:2px;background:var(--blue-light);transform:translateX(-50%)}
-/* RTL flex: first child = RIGHT side, last child = LEFT side */
-.ms-item{display:flex;align-items:flex-start;margin-bottom:48px;position:relative}
-.ms-item:last-child{margin-bottom:0}
-/* card LEFT side: [spacer][center][card] */
-.ms-item.left{flex-direction:row} /* spacer first→RIGHT, card last→LEFT */
-/* card RIGHT side: [card][center][spacer] */
-.ms-item.right{flex-direction:row} /* card first→RIGHT */
-.ms-spacer{flex:0 0 calc(50% - 60px)}
-.ms-card{flex:0 0 calc(50% - 60px);padding:28px 28px 24px;position:relative}
-.ms-card-icon{position:absolute;top:20px;left:20px} /* left side of card (away from line for LEFT cards) */
-.ms-item.right .ms-card-icon{left:auto;right:20px} /* flip for RIGHT cards */
-.ms-card-title{font-size:1.05rem;font-weight:800;color:var(--navy);margin-bottom:12px;padding-left:60px}
-.ms-item.right .ms-card-title{padding-left:0;padding-right:60px}
-.ms-card-desc{font-size:.875rem;color:var(--sub);line-height:1.75}
-.ms-center{flex:0 0 120px;display:flex;align-items:center;justify-content:center;flex-direction:column;z-index:1}
-.ms-num{width:56px;height:56px;border-radius:50%;background:var(--blue);color:#fff;
-        font-size:1.3rem;font-weight:900;display:flex;align-items:center;justify-content:center;
-        box-shadow:0 0 0 6px rgba(26,86,219,.12)}
-.ms-num.first{background:linear-gradient(135deg,#0d2680,#1a56db)}
-
-/* ═══════ SECTION: WHY ═══════ */
-.why-text{font-size:.95rem;color:var(--sub);line-height:1.85;text-align:center;
-          max-width:760px;margin:0 auto 44px}
-.why-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-.why-card{padding:24px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px}
-.why-text-wrap{flex:1}
-.why-title{font-size:.95rem;font-weight:800;color:var(--navy);line-height:1.4}
-.why-icons{display:flex;align-items:center;gap:8px}
-.why-outline-icon{width:34px;height:34px;display:flex;align-items:center;justify-content:center}
-.why-outline-icon svg{width:22px;height:22px;stroke:var(--blue);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.why-check{width:44px;height:44px;border-radius:10px;background:var(--blue);flex-shrink:0;
-           display:flex;align-items:center;justify-content:center}
-
-/* ═══════ SECTION: PRICING ═══════ */
-.price-card{overflow:hidden}
-.price-head{background:var(--navy);padding:18px 28px;display:flex;align-items:center;justify-content:space-between}
-.price-head-title{color:#fff;font-size:1.05rem;font-weight:800}
-.price-head-icon{width:36px;height:36px;border-radius:8px;background:rgba(255,255,255,.15);
-                 display:flex;align-items:center;justify-content:center;color:#fff;font-size:1rem}
-.price-row{display:flex;align-items:center;justify-content:space-between;
-           padding:18px 28px;border-bottom:1px solid var(--border2)}
-.price-row:last-child{border-bottom:none}
-.price-row-name{font-size:.9rem;font-weight:600;color:var(--sub)}
-.price-row-val{font-size:.9rem;font-weight:800;color:var(--blue)}
-
-/* ═══════ PAYMENT GRID ═══════ */
-.pay-head{display:flex;align-items:center;gap:10px;justify-content:center;margin-bottom:32px}
-.pay-head-title{font-size:2rem;font-weight:900;color:var(--navy)}
-.pay-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px}
-.pay-card{padding:28px 24px 20px;border-top:3px solid var(--blue)}
-.pay-card-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px}
-.pay-card-title{font-size:.95rem;font-weight:800;color:var(--navy);line-height:1.4;flex:1}
-.pay-card-num{width:42px;height:42px;border-radius:50%;background:var(--blue);color:#fff;
-              font-size:1.1rem;font-weight:900;display:flex;align-items:center;justify-content:center;
-              flex-shrink:0;margin-right:12px}
-.pay-card-desc{font-size:.82rem;color:var(--muted);line-height:1.65;margin-bottom:14px}
-.pay-card-total{display:flex;align-items:center;justify-content:space-between}
-.pay-card-total-label{font-size:.82rem;color:var(--muted)}
-.pay-card-amount{font-size:1.3rem;font-weight:900;color:var(--blue)}
-
-/* summary table */
-.sum-card{overflow:hidden}
-.sum-head{background:var(--navy);padding:16px 28px;display:flex;justify-content:space-between;align-items:center}
-.sum-head-title{color:#fff;font-size:1rem;font-weight:800}
-.sum-row{display:flex;justify-content:space-between;align-items:center;
-         padding:16px 28px;border-bottom:1px solid var(--border2)}
-.sum-row:last-child{border-bottom:none}
-.sum-row-name{font-size:.9rem;color:var(--sub);font-weight:600}
-.sum-row-val{font-size:.9rem;font-weight:800;color:var(--blue)}
-.price-note{font-size:.78rem;color:var(--muted);margin-top:14px;text-align:center}
-
-/* ═══════ OPTIONAL ═══════ */
-.opt-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-.opt-card{padding:28px 24px 24px;text-align:center}
-.opt-icon-wrap{margin:0 auto 14px}
-.opt-title{font-size:.95rem;font-weight:800;color:var(--navy);margin-bottom:8px}
-.opt-price{font-size:1rem;font-weight:900;color:var(--blue)}
-
-/* ═══════ TOKENS ═══════ */
-.tok-table-wrap{overflow-x:auto;margin-bottom:36px}
-.tok-table{width:100%;border-collapse:collapse;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)}
-.tok-table th{background:var(--navy);color:#fff;padding:14px 20px;font-size:.88rem;font-weight:700;text-align:center}
-.tok-table td{padding:18px 20px;text-align:center;border:1px solid var(--border2);font-size:.95rem;background:#fff}
-.tok-table del{color:var(--faint)}
-.tok-table .price{font-weight:800;color:var(--blue);font-size:1rem}
-
-.tok-examples-title{font-size:1.4rem;font-weight:900;color:var(--navy);text-align:center;margin-bottom:28px}
-.tok-examples-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 40px}
-.tok-example{display:flex;align-items:flex-start;gap:8px;font-size:.875rem;color:var(--sub);line-height:1.6}
-.tok-dot{width:8px;height:8px;border-radius:50%;background:var(--blue);margin-top:7px;flex-shrink:0}
-
-/* ═══════ TERMS ═══════ */
-.acc-item{border:1px solid var(--border2);border-radius:var(--radius-sm);margin-bottom:10px;overflow:hidden}
-.acc-head{display:flex;align-items:center;justify-content:space-between;padding:18px 22px;cursor:pointer;background:#fff;transition:background .15s;flex-direction:row-reverse}
-.acc-head:hover{background:var(--bg)}
-.acc-head-right{display:flex;align-items:center;gap:12px}
-.acc-title{font-size:.95rem;font-weight:800;color:var(--navy)}
-.acc-arrow{font-size:.9rem;color:var(--blue);transition:transform .2s;font-weight:700}
-.acc-arrow.open{transform:rotate(180deg)}
-.acc-body{display:none;padding:16px 22px 20px;font-size:.875rem;color:var(--sub);line-height:1.8;background:#fafbff;border-top:1px solid var(--border2)}
-.acc-body.open{display:block}
-
-/* ═══════ CONTRACT ═══════ */
-.contract-wrap{overflow:hidden}
-.contract-header{background:var(--navy);padding:20px 28px;display:flex;align-items:center;justify-content:space-between}
-.contract-header-title{color:#fff;font-size:1.05rem;font-weight:800}
-.contract-header-icon{background:rgba(255,255,255,.15);border-radius:8px;width:36px;height:36px;
-                      display:flex;align-items:center;justify-content:center;color:#fff;font-size:1rem}
-.contract-body{padding:24px}
-.party-card{background:var(--bg);border-radius:10px;padding:22px 24px;margin-bottom:14px}
-.party-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
-.party-title{font-size:.95rem;font-weight:800;color:var(--navy)}
-.party-ibx{width:42px;height:42px;border-radius:10px;background:var(--blue);
-           display:flex;align-items:center;justify-content:center;color:#fff;font-size:1rem}
-.party-row{display:flex;align-items:baseline;gap:8px;padding:7px 0;
-           border-bottom:1px dashed var(--border2)}
-.party-row:last-child{border-bottom:none}
-.party-key{font-size:.8rem;font-weight:600;color:var(--muted);flex-shrink:0;display:flex;align-items:center;gap:5px}
-.party-val{font-size:.875rem;font-weight:700;color:var(--navy)}
-.hoval-card{background:#f0f3ff;border-radius:10px;padding:20px 24px;margin-top:14px}
-.hoval-title{font-size:.9rem;font-weight:800;color:var(--navy);margin-bottom:10px}
-.hoval-text{font-size:.875rem;color:var(--sub);line-height:1.8}
-
-/* ── INLINE FILL ── */
-.fi{display:inline-block;border:none;border-bottom:2.5px solid var(--amber);
-    background:#fffbeb;font-family:'Heebo',sans-serif;font-size:.875rem;
-    font-weight:700;color:var(--text);padding:1px 6px 2px;border-radius:3px 3px 0 0;
-    transition:all .2s;direction:rtl;min-width:60px;vertical-align:baseline}
-.fi:focus{outline:none;border-bottom-color:var(--blue);background:#eff6ff}
-.fi::placeholder{color:#d97706;font-weight:400;font-size:.8rem}
+/* ── FILL FIELDS ── */
+.fi{background:transparent;border:none;border-bottom:2px solid var(--blue);
+    font-family:'Heebo',sans-serif;font-size:.92rem;color:var(--navy);
+    padding:2px 6px;min-width:100px;text-align:center;direction:rtl}
+.fi:focus{outline:none;background:var(--blue-light);border-radius:4px 4px 0 0}
 .fi.bad{border-bottom-color:var(--red);background:#fff1f2;animation:shake .3s}
-@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-3px)}75%{transform:translateX(3px)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
 
-/* ═══════ SIGNATURE ═══════ */
-.sig-intro{text-align:center;margin-bottom:28px}
-.sig-card-title{font-size:.95rem;font-weight:800;color:var(--navy);margin-bottom:4px}
-.sig-card-sub{font-size:.82rem;color:var(--muted)}
+/* ── CONTRACT SECTION ── */
+.contract-header{background:linear-gradient(135deg,#0d2680,#1a56db);
+                 border-radius:var(--radius) var(--radius) 0 0;padding:24px 32px;
+                 display:flex;align-items:center;gap:16px}
+.contract-header-title{color:#fff;font-size:1.1rem;font-weight:800}
+.contract-header-sub{color:rgba(255,255,255,.7);font-size:.8rem;margin-top:3px}
+.contract-body{padding:24px 32px;border:1px solid var(--border);border-top:none;
+               border-radius:0 0 var(--radius) var(--radius)}
+.parties{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px}
+.party-card{border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden}
+.party-top{background:var(--bg);padding:12px 18px;display:flex;align-items:center;justify-content:space-between}
+.party-title{font-size:.8rem;font-weight:800;text-transform:uppercase;letter-spacing:.4px;color:var(--muted)}
+.party-row{display:flex;align-items:center;justify-content:space-between;
+           padding:10px 18px;border-bottom:1px solid var(--border)}
+.party-row:last-child{border-bottom:none}
+.party-key{font-size:.78rem;font-weight:700;color:var(--muted)}
+.party-val{font-size:.88rem;font-weight:600;color:var(--sub)}
+.hoval-card{background:#f0f3ff;border-radius:10px;padding:18px 22px;margin-top:16px;line-height:1.85;font-size:.88rem;color:var(--sub)}
+.hoval-title{font-size:.8rem;font-weight:800;color:var(--navy);margin-bottom:8px}
+
+/* ── SIGNATURE ── */
 .sig-fields{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
 .sf{display:flex;flex-direction:column;gap:5px}
 .sf.full{grid-column:1/-1}
 .sf-l{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--muted)}
-.sf-i{width:100%;border:1.5px solid var(--border2);border-radius:9px;
-      background:var(--bg);font-family:'Heebo',sans-serif;font-size:.9rem;
-      font-weight:500;color:var(--sub);padding:11px 13px;direction:rtl;transition:all .2s}
+.sf-i{border:1.5px solid var(--border);border-radius:8px;padding:10px 12px;
+      font-family:'Heebo',sans-serif;font-size:.92rem;color:var(--sub);
+      transition:border-color .2s;background:#fafbff;width:100%}
 .sf-i:focus{outline:none;border-color:var(--blue);background:#fff}
-.sf-i::placeholder{color:var(--faint);font-weight:400}
 .sf-i.bad{border-color:var(--red)!important;background:#fff1f2}
-
-.decl{background:var(--blue-light);border:1px solid var(--blue-mid);border-radius:9px;
-      padding:12px 18px;font-size:.83rem;color:var(--blue);text-align:center;font-weight:600;margin:4px 0 20px}
-
-.sig-grid{display:grid;grid-template-columns:1fr 180px;gap:20px;align-items:start}
 .sf-l2{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--muted);margin-bottom:7px}
-.padwrap{border:1.5px dashed #cbd5e1;border-radius:10px;background:#fafbff;
-         position:relative;overflow:hidden;transition:border-color .2s;cursor:crosshair}
-.padwrap:hover{border-color:#93c5fd}.padwrap.bad{border-color:var(--red)!important}
-#sigCanvas{display:block;width:100%;height:112px;touch-action:none}
+.sig-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.padwrap{border:1.5px solid var(--border);border-radius:10px;position:relative;
+         overflow:hidden;background:#fff;height:140px;cursor:crosshair}
+.padwrap canvas{display:block;width:100%;height:100%}
 .pad-hint{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
-          color:var(--faint);font-size:.82rem;pointer-events:none}
-.clr-btn{position:absolute;bottom:6px;left:8px;background:rgba(255,255,255,.95);
-         border:1px solid var(--border2);border-radius:5px;padding:2px 9px;
-         font-size:.68rem;color:var(--muted);cursor:pointer;font-family:'Heebo',sans-serif}
-.clr-btn:hover{color:var(--red);border-color:var(--red)}
-.stamp-box{border:1.5px dashed #cbd5e1;border-radius:10px;height:72px;
+          font-size:.8rem;color:var(--faint);pointer-events:none;transition:opacity .2s}
+.clr-btn{position:absolute;bottom:8px;left:10px;background:var(--bg);border:1px solid var(--border);
+         border-radius:6px;padding:3px 10px;font-family:'Heebo',sans-serif;font-size:.72rem;cursor:pointer}
+.stamp-box{border:1.5px dashed var(--border);border-radius:10px;height:80px;
            display:flex;align-items:center;justify-content:center;
-           color:var(--faint);font-size:.78rem;background:#fafbff;margin-bottom:12px}
-
-.sub-area{padding:20px 28px 24px;border-top:1px solid var(--border2)}
+           font-size:.75rem;color:var(--faint);margin-bottom:12px}
+.decl{font-size:.78rem;color:var(--muted);text-align:center;padding:14px 0;line-height:1.6}
+.sub-area{padding:0 28px 28px}
 .sub-err{display:none;background:#fff1f2;border:1px solid #fecdd3;border-radius:8px;
-         padding:11px 16px;color:var(--red);font-size:.83rem;margin-bottom:12px}
-.sub-btn{width:100%;padding:17px;background:var(--blue);color:#fff;border:none;
-         border-radius:10px;font-family:'Heebo',sans-serif;font-size:1rem;font-weight:800;
-         cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:10px;
-         box-shadow:0 4px 14px rgba(26,86,219,.28)}
-.sub-btn:hover:not(:disabled){background:var(--navy);transform:translateY(-1px);box-shadow:0 6px 20px rgba(26,86,219,.35)}
-.sub-btn:disabled{opacity:.55;cursor:not-allowed;transform:none;box-shadow:none}
+         padding:12px 16px;margin-bottom:12px;font-size:.85rem;color:var(--red);font-weight:600}
+.sub-btn{width:100%;padding:16px;background:var(--blue);color:#fff;border:none;border-radius:10px;
+         font-family:'Heebo',sans-serif;font-size:1rem;font-weight:800;cursor:pointer;
+         display:flex;align-items:center;justify-content:center;gap:10px;transition:all .2s;
+         box-shadow:0 4px 14px rgba(26,86,219,.3)}
+.sub-btn:hover:not(:disabled){background:var(--navy)}
+.sub-btn:disabled{opacity:.55;cursor:not-allowed}
+.sp{width:20px;height:20px;border:2.5px solid rgba(255,255,255,.3);border-top-color:#fff;
+    border-radius:50%;animation:spin .6s linear infinite;display:none}
+.serr{display:none;background:#fff1f2;border:1px solid #fecdd3;border-radius:8px;
+      padding:12px 16px;margin:0 28px 12px;font-size:.85rem;color:var(--red)}
 
 /* ── SUCCESS ── */
-#succ{display:none;min-height:100vh;align-items:center;justify-content:center;padding:40px;background:var(--bg)}
-.succ-card{background:#fff;border-radius:var(--radius);border:1px solid var(--border);
-           box-shadow:var(--shadow-lg);padding:56px 44px;text-align:center;max-width:500px;width:100%}
-.succ-ring{width:68px;height:68px;border-radius:50%;background:var(--blue);
-           display:flex;align-items:center;justify-content:center;
-           margin:0 auto 20px;font-size:2rem;color:#fff;box-shadow:0 4px 18px rgba(26,86,219,.3)}
-.succ-h{font-size:1.6rem;font-weight:900;color:var(--navy);margin-bottom:8px}
-.succ-p{color:var(--muted);font-size:.875rem;line-height:1.7;margin-bottom:22px}
-.succ-meta{background:var(--bg);border-radius:10px;padding:14px 20px;
-           text-align:right;font-size:.83rem;color:var(--sub);max-width:360px;
-           margin:0 auto 26px;line-height:2}
-.dl-btn{display:inline-flex;align-items:center;gap:8px;padding:13px 30px;
-        background:var(--navy);color:#fff;border:none;border-radius:10px;
-        font-family:'Heebo',sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;transition:background .2s}
-.dl-btn:hover{background:var(--blue)}
-
-/* ── FOOTER ── */
-footer{background:var(--navy);padding:28px 24px;text-align:center;font-size:.78rem;
-       color:rgba(255,255,255,.45);line-height:1.9}
-footer a{color:rgba(255,255,255,.5);text-decoration:none}
+#succ{display:none;min-height:100vh;flex-direction:column;align-items:center;justify-content:center;
+      padding:32px;text-align:center;background:var(--bg)}
+.succ-icon{width:72px;height:72px;border-radius:50%;background:var(--green);
+           display:flex;align-items:center;justify-content:center;margin:0 auto 24px}
+.succ-icon svg{width:36px;height:36px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+.succ-title{font-size:1.8rem;font-weight:900;color:var(--navy);margin-bottom:10px}
+.succ-sub{color:var(--muted);font-size:.9rem;margin-bottom:28px;line-height:1.7}
+.succ-meta{background:#fff;border:1px solid var(--border);border-radius:var(--radius);
+           padding:20px 28px;display:inline-block;text-align:right;margin-bottom:24px;
+           font-size:.88rem;line-height:2;box-shadow:var(--shadow)}
 
 /* ── SCROLL UP ── */
-#scrollup{position:fixed;bottom:24px;left:24px;width:48px;height:48px;border-radius:50%;
+#scrollup{position:fixed;bottom:24px;left:24px;width:44px;height:44px;border-radius:50%;
           background:var(--blue);color:#fff;border:none;display:flex;
-          align-items:center;justify-content:center;cursor:pointer;font-size:1.1rem;
+          align-items:center;justify-content:center;cursor:pointer;font-size:1rem;
           box-shadow:0 4px 14px rgba(26,86,219,.4);opacity:0;pointer-events:none;transition:opacity .3s;z-index:100}
 #scrollup.show{opacity:1;pointer-events:auto}
 
+/* ── FOOTER ── */
+footer{background:var(--navy);padding:28px 24px;text-align:center;
+       font-size:.75rem;color:rgba(255,255,255,.4);line-height:1.9}
+
+/* ── MOBILE ── */
 @media(max-width:700px){
-  /* global */
-  .nav{padding:0 16px}
-  .s{padding:40px 14px}
-  .s-title{font-size:1.65rem}
-  .s-sub{margin-bottom:28px}
-
-  /* hero */
-  .hero{padding:56px 16px 72px}
-  .hero-title{font-size:1.5rem}
-  .hero-chips{gap:8px}
-  .chip{padding:6px 12px}
-
-  /* milestones — all cards on ONE side, line on right edge */
-  .ms-wrap{padding-right:40px}
-  .ms-line{left:auto;right:12px;transform:none}
-  .ms-item,.ms-item.left,.ms-item.right{
-    flex-direction:column!important;
-    align-items:flex-start;
-    margin-bottom:28px
-  }
-  .ms-spacer{display:none!important}
-  .ms-center{
-    position:absolute;right:-4px;
-    flex-direction:column;
-    width:auto;
-    flex:none
-  }
-  .ms-item{position:relative}
-  .ms-num{width:42px;height:42px;font-size:1rem}
-  .ms-card{
-    flex:none!important;
-    width:100%!important;
-    margin-right:0!important;
-    padding:20px 18px 18px
-  }
-  .ms-card-icon{top:16px;right:16px!important;left:auto!important}
-  .ms-card-title{padding-right:52px!important;padding-left:0!important;font-size:.95rem}
-
-  /* why */
-  .why-grid{grid-template-columns:1fr}
-  .why-card{padding:18px 14px}
-
-  /* pricing */
-  .price-row{flex-direction:column;align-items:flex-start;gap:4px;padding:14px 18px}
-  .pay-grid{grid-template-columns:1fr}
-  .pay-card{padding:20px 18px 16px}
-  .pay-card-num{width:34px;height:34px;font-size:.95rem}
-
-  /* optional */
-  .opt-grid{grid-template-columns:1fr}
-  .opt-card{padding:22px 18px;display:flex;align-items:center;gap:14px;text-align:right}
-  .opt-icon-wrap{margin:0!important;flex-shrink:0}
-  .opt-title{font-size:.9rem;margin-bottom:2px}
-
-  /* tokens */
-  .tok-examples-grid{grid-template-columns:1fr}
-  .tok-table th,.tok-table td{padding:10px 10px;font-size:.8rem}
-
-  /* terms */
-  .acc-head{padding:14px 16px}
-  .acc-title{font-size:.88rem}
-
-  /* contract */
-  .contract-body{padding:16px}
-  .party-row{flex-direction:column;align-items:flex-start;gap:3px}
-  .party-val{font-size:.85rem}
-
-  /* signature */
+  .nav{padding:0 14px}.hero{padding:52px 16px 68px}.hero-title{font-size:1.6rem}
+  .s{padding:44px 14px}.s-title{font-size:1.65rem}
+  .cblock{padding:20px 18px}
+  .clients-grid{grid-template-columns:repeat(2,1fr);gap:14px}
+  .client-card{padding:18px 12px 14px}
+  .parties{grid-template-columns:1fr}
   .sig-fields{grid-template-columns:1fr}
   .sig-grid{grid-template-columns:1fr}
-  .stamp-box{height:54px}
-  .sub-area{padding:16px}
-  .sub-btn{padding:14px;font-size:.9rem}
+  .party-row{flex-direction:column;align-items:flex-start;gap:3px}
+  .contract-body{padding:16px}
+  .sub-area{padding:0 14px 20px}
+  .sub-err,.serr{margin:0 14px 10px}
 }
 </style>
 </head>
 <body>
 
-<div id="ls"><div class="ll">yeda</div><div class="lsp"></div></div>
+<div id="ls">
+  <img class="yeda-logo-img" src="https://yedatechdesign.github.io/client-contracts/logos/yeda-logo.png"
+       onerror="this.style.display='none';document.getElementById('ls-text').style.display='block'">
+  <span id="ls-text" style="display:none;font-size:2rem;font-weight:900;color:#0d2680;letter-spacing:-1.5px">yeda</span>
+  <div class="lsp"></div>
+</div>
+
 <div id="es"><div class="ec">
-  <div style="font-size:3rem;margin-bottom:16px">?</div>
+  <div style="font-size:3rem;margin-bottom:16px">📄</div>
   <div style="font-size:1.3rem;font-weight:800;color:var(--navy);margin-bottom:8px">ההסכם לא זמין</div>
-  <div style="color:var(--muted);font-size:.9rem;line-height:1.7" id="emsg">הקישור שגוי או שההסכם עדיין לא הוכן. פנה לנציג Yeda.</div>
+  <div style="color:var(--muted);font-size:.9rem;line-height:1.7" id="emsg">הקישור שגוי או שההסכם עדיין לא הוכן.</div>
 </div></div>
+
+<!-- SUCCESS -->
+<div id="succ">
+  <div class="succ-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+  <div class="succ-title">ההסכם נחתם בהצלחה!</div>
+  <div class="succ-sub">ההסכם נשמר ותישלח אליכם עותק ב-PDF למייל.</div>
+  <div class="succ-meta" id="succMeta"></div>
+</div>
 
 <div id="main" style="display:none">
 
 <!-- NAV -->
 <nav class="nav">
-  <div class="nav-logo">yeda</div>
+  <div class="nav-logo">
+    <img src="https://yedatechdesign.github.io/client-contracts/logos/yeda-logo.png"
+         onerror="this.outerHTML='<span class=\'nav-logo-text\'>yeda</span>'">
+  </div>
   <div class="nav-badge"><div class="ndot"></div>מסמך מאובטח</div>
 </nav>
 
@@ -402,325 +248,62 @@ footer a{color:rgba(255,255,255,.5);text-decoration:none}
     <div class="hsk hsk3">✦</div>
   </div>
   <div class="hero-eyebrow" style="position:relative;z-index:1;margin-bottom:18px">הצעת מחיר והסכם</div>
-  <div class="hero-title" id="cTitle">הצעת מחיר – פיתוח מערכת מותאמת אישית</div>
-  <div class="hero-sub">מסמך זה מכיל את תנאי ההתקשרות המלאים</div>
+  <div class="hero-title" id="cTitle" style="position:relative;z-index:1">הצעת מחיר – פיתוח מערכת מותאמת אישית</div>
+  <div class="hero-sub" style="position:relative;z-index:1">מסמך זה מכיל את תנאי ההתקשרות המלאים</div>
   <div class="hero-chips">
     <div class="chip"><div class="chip-l">לקוח</div><div class="chip-v" id="cBadge">—</div></div>
     <div class="chip"><div class="chip-l">ספק</div><div class="chip-v">ידע פיתוח סביבות למידה</div></div>
   </div>
 </div>
 
-<!-- ═══ MILESTONES ═══ -->
-<div class="s">
-  <div class="s-inner">
-    <div class="s-title">אבני דרך</div>
-    <div class="s-sub">השלבים המרכזיים בתהליך</div>
-    <div class="ms-wrap">
-      <div class="ms-line"></div>
-
-      <!-- 0: card RIGHT side → card FIRST in RTL flex -->
-      <div class="ms-item right" id="ms0">
-        <div class="card ms-card">
-          <div class="ms-card-icon ibx sm"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div>
-          <div class="ms-card-title">חתימה והעברת תשלום ראשון</div>
-          <div class="ms-card-desc">חתימת חוזה בין הצדדים והעברת התשלום הראשון, המאשרים התחייבות הצדדים להפעלת הפרויקט.</div>
-        </div>
-        <div class="ms-center"><div class="ms-num first">0</div></div>
-        <div class="ms-spacer"></div>
-      </div>
-
-      <!-- 1: card LEFT side → spacer FIRST in RTL flex -->
-      <div class="ms-item left" id="ms1">
-        <div class="ms-spacer"></div>
-        <div class="ms-center"><div class="ms-num">1</div></div>
-        <div class="card ms-card">
-          <div class="ms-card-icon ibx sm"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
-          <div class="ms-card-title">פגישת אפיון</div>
-          <div class="ms-card-desc">פגישה מקיפה עם נציגי הלקוח לתיאור מלא של דרישות המערכת, היכולות הנדרשות, מבנה ההיררכיות הארגוניות וצרכי המשתמשים.</div>
-        </div>
-      </div>
-
-      <!-- 2: card RIGHT side → card FIRST -->
-      <div class="ms-item right" id="ms2">
-        <div class="card ms-card">
-          <div class="ms-card-icon ibx sm"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
-          <div class="ms-card-title">אישור אפיון</div>
-          <div class="ms-card-desc">הכנת מסמך אפיון מפורט המפרט את כל הדרישות, ההיכולות והתכונות. אישור מטעם הלקוח על התאמת האפיון לצרכיו.</div>
-        </div>
-        <div class="ms-center"><div class="ms-num">2</div></div>
-        <div class="ms-spacer"></div>
-      </div>
-
-      <!-- 3: card LEFT side → spacer FIRST -->
-      <div class="ms-item left" id="ms3">
-        <div class="ms-spacer"></div>
-        <div class="ms-center"><div class="ms-num">3</div></div>
-        <div class="card ms-card">
-          <div class="ms-card-icon ibx sm"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
-          <div class="ms-card-title">הקמת אתר התאחדות ארצית אחד</div>
-          <div class="ms-card-desc">ביצוע חיבור טכני של דומיין, הגדרת מבנה תכנים והרשאות, עיצוב והתאמת הפורטל למיתוג ההתאחדות, הכנת תבנית להזנת ההדרכות.</div>
-        </div>
-      </div>
-
-      <!-- 4: card RIGHT side → card FIRST -->
-      <div class="ms-item right" id="ms4">
-        <div class="card ms-card">
-          <div class="ms-card-icon ibx sm"><svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
-          <div class="ms-card-title">פיתוח</div>
-          <div class="ms-card-desc">פיתוח מערכת יצירת חומרי למידה עם AI בהתאם לאפיון המאושר, והעלאה לאוויר.</div>
-        </div>
-        <div class="ms-center"><div class="ms-num">4</div></div>
-        <div class="ms-spacer"></div>
-      </div>
-
-    </div>
-  </div>
-</div>
-
-<!-- ═══ WHY ═══ -->
-<div class="s alt">
-  <div class="s-inner">
-    <div class="s-title">למה אנחנו?</div>
-    <div class="why-text">הפלטפורמה מאפשרת למכללות להקים ולהפעיל מערך קורסים דיגיטליים ופרונטליים, תוך שילוב כלים מתקדמים למעקב אחר התקדמות המשתמשים וביצועיהם. המערכת כוללת דוחות מפורטים עם נתוני צפייה, תוצאות מבחנים וסטטיסטיקות שימוש, ומספקת תמונה מלאה על תהליך הלמידה.</div>
-    <div class="why-grid">
-      <div class="card why-card">
-        <div class="why-text-wrap"><div class="why-title">פתרון מלא לבניית קורסים דיגיטליים</div></div>
-        <div class="why-icons">
-          <div class="ibx sm"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
-          <div class="why-check"><svg viewBox="0 0 24 24" width="20" height="20" stroke="#fff" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
-        </div>
-      </div>
-      <div class="card why-card">
-        <div class="why-text-wrap"><div class="why-title">זמינות גבוהה ומענה מהיר לכל צורך</div></div>
-        <div class="why-icons">
-          <div class="ibx sm"><svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
-          <div class="why-check"><svg viewBox="0 0 24 24" width="20" height="20" stroke="#fff" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
-        </div>
-      </div>
-      <div class="card why-card">
-        <div class="why-text-wrap"><div class="why-title">אבטחת מידע ברמה גבוהה</div></div>
-        <div class="why-icons">
-          <div class="ibx sm"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
-          <div class="why-check"><svg viewBox="0 0 24 24" width="20" height="20" stroke="#fff" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
-        </div>
-      </div>
-      <div class="card why-card">
-        <div class="why-text-wrap"><div class="why-title">מנהל תיק אישי זמין לכל התייעצות</div></div>
-        <div class="why-icons">
-          <div class="ibx sm"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
-          <div class="why-check"><svg viewBox="0 0 24 24" width="20" height="20" stroke="#fff" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
-        </div>
-      </div>
-      <div class="card why-card">
-        <div class="why-text-wrap"><div class="why-title">דוחות מעקב התקדמות בהתאמה אישית</div></div>
-        <div class="why-icons">
-          <div class="ibx sm"><svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>
-          <div class="why-check"><svg viewBox="0 0 24 24" width="20" height="20" stroke="#fff" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
-        </div>
-      </div>
-      <div class="card why-card">
-        <div class="why-text-wrap"><div class="why-title">התנהלות בקבוצת Whatsapp ייחודית</div></div>
-        <div class="why-icons">
-          <div class="ibx sm"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
-          <div class="why-check"><svg viewBox="0 0 24 24" width="20" height="20" stroke="#fff" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ═══ PRICING ═══ -->
-<div class="s">
-  <div class="s-inner">
-    <div class="s-title">עלויות</div>
-    <div class="s-sub">מחירון ולוח תשלומים</div>
-    <div class="card price-card" style="margin-bottom:40px">
-      <div class="price-head">
-        <div class="price-head-title">מחירון בסיס</div>
-        <div class="price-head-icon"><svg viewBox="0 0 24 24" width="20" height="20" stroke="#fff" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></div>
-      </div>
-      <div class="price-row"><div class="price-row-name">פיתוח</div><div class="price-row-val">250 ₪ לשעה</div></div>
-      <div class="price-row"><div class="price-row-name">מערכת ניהול למידה (שנה ראשונה)</div><div class="price-row-val">11,988 ₪ (כולל 100GB אחסון ו-200GB תעבורה)</div></div>
-      <div class="price-row"><div class="price-row-name">10,000 קרדיטים לכלי AI וצ'אטבוטים</div><div class="price-row-val">2,310 ₪</div></div>
-    </div>
-
-    <div class="pay-head"><div class="ibx sm"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke="var(--blue)" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div><div class="pay-head-title">לוח תשלומים</div></div>
-    <div class="pay-grid">
-      <div class="card pay-card">
-        <div class="pay-card-top">
-          <div class="pay-card-title">תשלום 1 – חתימה והעברת תשלום ראשון</div>
-          <div class="pay-card-num">1</div>
-        </div>
-        <div class="pay-card-desc">100 שעות פיתוח (25,000 ₪) + 1/3 עלות מערכת ניהול למידה (3,996 ₪)</div>
-        <div class="pay-card-total"><div class="pay-card-total-label">סה"כ:</div><div class="pay-card-amount">28,996 ₪</div></div>
-      </div>
-      <div class="card pay-card">
-        <div class="pay-card-top">
-          <div class="pay-card-title">תשלום 2 – לאחר אישור אפיון</div>
-          <div class="pay-card-num">2</div>
-        </div>
-        <div class="pay-card-desc">1/3 עלות מערכת ניהול למידה (3,996 ₪)</div>
-        <div class="pay-card-total"><div class="pay-card-total-label">סה"כ:</div><div class="pay-card-amount">3,996 ₪</div></div>
-      </div>
-      <div class="card pay-card">
-        <div class="pay-card-top">
-          <div class="pay-card-title">תשלום 3 – לאחר הקמת אתר התאחדות ארצית אחד</div>
-          <div class="pay-card-num">3</div>
-        </div>
-        <div class="pay-card-desc">1/3 מערכת ניהול למידה (3,996 ₪) + קרדיטים AI (2,310 ₪)</div>
-        <div class="pay-card-total"><div class="pay-card-total-label">סה"כ:</div><div class="pay-card-amount">6,306 ₪</div></div>
-      </div>
-      <div class="card pay-card">
-        <div class="pay-card-top">
-          <div class="pay-card-title">תשלום 4 – בסיום הפיתוח</div>
-          <div class="pay-card-num">4</div>
-        </div>
-        <div class="pay-card-desc">100 שעות פיתוח לאחר ה-100 הראשונות + שעות נוספות לפי 250 ₪ לשעה</div>
-        <div class="pay-card-total"><div class="pay-card-total-label">סה"כ:</div><div class="pay-card-amount" style="font-size:1rem">ישתנה</div></div>
-      </div>
-    </div>
-
-    <div class="card sum-card">
-      <div class="sum-head"><div class="sum-head-title">סיכום תשלומים</div></div>
-      <div class="sum-row"><div class="sum-row-name">תשלום 1</div><div class="sum-row-val">28,996 ₪</div></div>
-      <div class="sum-row"><div class="sum-row-name">תשלום 2</div><div class="sum-row-val">3,996 ₪</div></div>
-      <div class="sum-row"><div class="sum-row-name">תשלום 3</div><div class="sum-row-val">6,306 ₪</div></div>
-      <div class="sum-row"><div class="sum-row-name">תשלום 4</div><div class="sum-row-val" style="font-size:.9rem">ישתנה</div></div>
-    </div>
-    <div class="price-note">* כל המחירים ללא מע"מ</div>
-  </div>
-</div>
-
-<!-- ═══ OPTIONAL ═══ -->
-<div class="s alt">
-  <div class="s-inner">
-    <div class="s-title">שירותים אופציונליים</div>
-    <div class="s-sub">לפי שימוש בפועל</div>
-    <div class="opt-grid">
-      <div class="card opt-card">
-        <div class="ibx opt-icon-wrap"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg></div>
-        <div class="opt-title">אחסון נוסף עד 1TB</div>
-        <div class="opt-price">250 ₪ לחודש</div>
-      </div>
-      <div class="card opt-card">
-        <div class="ibx opt-icon-wrap"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 0 1 0 8.49m-8.48-.01a6 6 0 0 1 0-8.49m11.31-2.82a10 10 0 0 1 0 14.14m-14.14 0a10 10 0 0 1 0-14.14"/></svg></div>
-        <div class="opt-title">תעבורה נוספת עד 2TB</div>
-        <div class="opt-price">250 ₪ לחודש</div>
-      </div>
-      <div class="card opt-card">
-        <div class="ibx opt-icon-wrap"><svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
-        <div class="opt-title">טוקנים נוספים</div>
-        <div class="opt-price">0.07$ × 3.3 ₪</div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ═══ TOKENS ═══ -->
-<div class="s">
-  <div class="s-inner">
-    <div class="s-title">חבילות טוקנים לשימוש ב-AI</div>
-    <div class="s-sub"></div>
-    <div class="tok-table-wrap">
-      <table class="tok-table">
-        <thead><tr><th>10,000 טוקנים</th><th>20,000 טוקנים</th><th>40,000 טוקנים</th></tr></thead>
-        <tbody><tr>
-          <td><span class="price">3,420 ₪</span> <del>3,600 ₪</del></td>
-          <td><span class="price">6,480 ₪</span> <del>7,200 ₪</del></td>
-          <td><span class="price">12,960 ₪</span> <del>14,400 ₪</del></td>
-        </tr></tbody>
-      </table>
-    </div>
-    <div class="tok-examples-title">דוגמאות לשימוש בטוקנים</div>
-    <div class="tok-examples-grid">
-      <div class="tok-example"><div class="tok-dot"></div><span>יצירת 10 סילבוסים = <strong>20-40 טוקנים AI</strong></span></div>
-      <div class="tok-example"><div class="tok-dot"></div><span>יצירת תוכן למצגות – 100 שקופיות = <strong>20-25 טוקנים AI</strong></span></div>
-      <div class="tok-example"><div class="tok-dot"></div><span>יצירת כתוביות לשעה של וידאו = <strong>15-30 טוקנים AI</strong></span></div>
-      <div class="tok-example"><div class="tok-dot"></div><span>יצירת שאלות לשעה של וידאו = <strong>10-15 טוקנים AI</strong></span></div>
-      <div class="tok-example"><div class="tok-dot"></div><span>חלוקה לפרקים לשעה של וידאו = <strong>5-10 טוקנים AI</strong></span></div>
-      <div class="tok-example"><div class="tok-dot"></div><span>תרגום כתוביות לשעה של וידאו = <strong>80-130 טוקנים AI</strong></span></div>
-      <div class="tok-example"><div class="tok-dot"></div><span>יצירת לומדה מקבצים = <strong>300-500 טוקנים AI</strong></span></div>
-      <div class="tok-example"><div class="tok-dot"></div><span>3 שאלות לעוזר האישי = <strong>1 טוקן AI</strong></span></div>
-    </div>
-  </div>
-</div>
-
-<!-- ═══ TERMS ═══ -->
-<div class="s alt">
+<!-- CONTRACT BLOCKS -->
+<div class="s" id="blocks-section">
   <div class="s-inner">
     <div class="s-title">תנאי ההסכם</div>
-    <div class="s-sub" style="margin-bottom:32px"></div>
-    <div id="terms-acc">
-      <div class="acc-item">
-        <div class="acc-head" onclick="toggleAcc(this)">
-          <div class="acc-arrow">∨</div>
-          <div class="acc-head-right"><div class="ibx sm"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke="var(--blue)" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div><div class="acc-title">מערכת ניהול למידה</div></div>
-        </div>
-        <div class="acc-body open">הלקוח יקבל אתרים אישיים המוקמים על גבי פלטפורמת Yeda ומחוברים לדומיינים של הלקוח, בהתאם למבנה ולמספר האתרים שנרכשו. הפלטפורמה כוללת אתרים מלאים, מערכת ניהול למידה (LMS), אפשרות לחיבור מערכת תשלומים, עדכוני גרסה, תמיכה טכנית מלאה, קבוצת ווטסאפ ייעודית והדרכות. בהתאם להסכם, ההתקשרות היא בהתחייבות ללא אפשרות יציאה מוקדמת. החבילה מאפשרת שימוש ללא הגבלת כמות משתמשים פעילים למשך שלוש שנות פעילות. בתום התקופה, המחיר עשוי להשתנות בהתאם להיקף השימוש בפועל.</div>
-      </div>
-      <div class="acc-item">
-        <div class="acc-head" onclick="toggleAcc(this)">
-          <div class="acc-arrow">∨</div>
-          <div class="acc-head-right"><div class="ibx sm"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke="var(--blue)" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 0 1 0 8.49m-8.48-.01a6 6 0 0 1 0-8.49"/></svg></div><div class="acc-title">פלטפורמת AI</div></div>
-        </div>
-        <div class="acc-body">הלקוח יקבל גישה לפלטפורמה המיועדת לבנייה, עיצוב, הקלטה ואחסון של מצגות, וידאו, לומדות אינטראקטיביות ועוזרי למידה מבוססי AI. העלויות מפורטות בסיכום המחירים בהתאם לנפחי השימוש, וייתכנו חיובים נוספים במקרה של חריגה מהיקפי השימוש הכלולים בתקופת ההתקשרות.</div>
-      </div>
-      <div class="acc-item">
-        <div class="acc-head" onclick="toggleAcc(this)">
-          <div class="acc-arrow">∨</div>
-          <div class="acc-head-right"><div class="ibx sm"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke="var(--blue)" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div class="acc-title">אחריות</div></div>
-        </div>
-        <div class="acc-body">חברת ידע פיתוח סביבות למידה בע"מ ו/או מי מטעמה אינם נושאים כל אחריות בקשר לכל תביעה משפטית הקשורה בדיני אינטרנט, לרבות נגישות, רישום דטאות, שמירה על פרטיות, חוק הספאם ועוד. מומלץ ללקוח להיוועץ בעו"ד המתמחה בתחום.</div>
-      </div>
-      <div class="acc-item">
-        <div class="acc-head" onclick="toggleAcc(this)">
-          <div class="acc-arrow">∨</div>
-          <div class="acc-head-right"><div class="ibx sm"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke="var(--blue)" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><div class="acc-title">קניין רוחני</div></div>
-        </div>
-        <div class="acc-body">הקניין הרוחני המלא של מוצרי תוכן באתר וזכויות היוצרים יהיו שייכים ללקוח.</div>
-      </div>
-      <div class="acc-item">
-        <div class="acc-head" onclick="toggleAcc(this)">
-          <div class="acc-arrow">∨</div>
-          <div class="acc-head-right"><div class="ibx sm"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke="var(--blue)" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div><div class="acc-title">סודיות</div></div>
-        </div>
-        <div class="acc-body">חברת ידע בע"מ מתחייבת לשמירה על סודיות וזכויות היוצרים — לא לשלוח ולשתף חומרים מתוך הקורסים, דטאות משתמשים, או מידע אחר עם צד שלישי ללא רשותו של הלקוח.</div>
-      </div>
-    </div>
+    <div class="s-sub" id="blocks-sub">פרטי ההתקשרות המלאים</div>
+    <div class="blocks-wrap" id="blocks-wrap"></div>
   </div>
 </div>
 
-<!-- ═══ CONTRACT ═══ -->
-<div class="s">
-  <div class="s-inner">
+<!-- CLIENTS -->
+<div class="clients-section" id="clients-section" style="display:none">
+  <div class="clients-inner">
+    <div class="clients-label">עובדים עם Yeda</div>
+    <div class="clients-grid" id="clients-grid"></div>
+  </div>
+</div>
+
+<!-- CONTRACT FORM -->
+<div class="s alt">
+  <div class="s-inner" style="max-width:780px">
     <div class="s-title">הסכם התקשרות</div>
-    <div class="s-sub" style="margin-bottom:28px"></div>
-    <div class="card contract-wrap">
+    <div class="s-sub">מלאו את פרטי הלקוח</div>
+    <div class="card" style="overflow:hidden">
       <div class="contract-header">
-        <div class="contract-header-title">מסמך התקשרות רשמי</div>
-        <div class="contract-header-icon"><svg viewBox="0 0 24 24" width="20" height="20" stroke="#fff" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div>
+        <div>
+          <div class="contract-header-title">הסכם התקשרות — <span id="cTitleSmall">Yeda</span></div>
+          <div class="contract-header-sub">נא למלא את הפרטים ולחתום</div>
+        </div>
       </div>
       <div class="contract-body">
-        <div class="party-card">
-          <div class="party-top">
-            <div class="party-title">נותן השירות</div>
+        <div class="parties">
+          <div class="party-card">
+            <div class="party-top"><div class="party-title">נותן השירות</div></div>
+            <div class="party-row"><div class="party-key">חברה</div><div class="party-val">חברת ידע פיתוח סביבות לימוד בע"מ</div></div>
+            <div class="party-row"><div class="party-key">ח.פ</div><div class="party-val">516072253</div></div>
+            <div class="party-row"><div class="party-key">איש קשר</div><div class="party-val">אלכסיי קוגן</div></div>
           </div>
-          <div class="party-row"><div class="party-key">חברה</div><div class="party-val">חברת ידע פיתוח סביבות לימוד בע"מ</div></div>
-          <div class="party-row"><div class="party-key">ח.פ</div><div class="party-val">516072253</div></div>
-          <div class="party-row"><div class="party-key">כתובת</div><div class="party-val">יגאל אלון 123, תל אביב</div></div>
-          <div class="party-row"><div class="party-key">איש קשר</div><div class="party-val">אלכסיי קוגן</div></div>
-        </div>
-        <div class="party-card" id="client-party">
-          <div class="party-top">
-            <div class="party-title">הלקוח</div>
-            <div class="party-ibx"><svg viewBox="0 0 24 24" width="20" height="20" stroke="var(--blue)" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+          <div class="party-card" id="client-party">
+            <div class="party-top"><div class="party-title">הלקוח</div></div>
+            <!-- filled by JS -->
           </div>
-          <!-- filled dynamically -->
         </div>
         <div class="hoval-card">
           <div class="hoval-title">הואיל ו:</div>
-          <div class="hoval-text" id="hoval-text">
-            חברת ידע פיתחה מערכת לניהול סביבות לימוד (להלן "המערכת" או/ו "הפלטפורמה"). חברת ___ מעוניינת להשתמש במערכת, נציגים מוסמכים מטעם חברת ___, בחנו את המערכת ויכולותיה.
+          <div id="hoval-text" style="font-size:.88rem;line-height:1.85;color:var(--sub)">
+            חברת ידע פיתחה מערכת לניהול סביבות לימוד (להלן "המערכת" או/ו "הפלטפורמה").<br><br>
+            חברת <input class="fi" id="ff-company" placeholder="שם החברה" style="width:140px">
+            מעוניינת להשתמש במערכת; נציגים מוסמכים מטעמה בחנו את המערכת ויכולותיה.
           </div>
         </div>
       </div>
@@ -728,243 +311,295 @@ footer a{color:rgba(255,255,255,.5);text-decoration:none}
   </div>
 </div>
 
-<!-- ═══ SIGNATURE ═══ -->
-<div class="s alt">
-  <div class="s-inner" style="max-width:720px">
-    <div class="s-title">פרטי חתימה</div>
-    <div class="s-sub" style="margin-bottom:32px">מלאו את הפרטים וחתמו כדי להשלים את ההסכם</div>
-    <div class="card" style="overflow:hidden">
-      <div style="padding:28px 28px 0">
-        <div class="sig-fields">
-          <div class="sf">
-            <div class="sf-l">שם מלא איש קשר *</div>
-            <input class="sf-i" id="sigName" placeholder="ישראל ישראלי">
-          </div>
-          <div class="sf">
-            <div class="sf-l">תפקיד בחברה</div>
-            <input class="sf-i" id="sigRole" placeholder="מנכ״ל / מנהל כספים">
-          </div>
-          <div class="sf full">
-            <div class="sf-l">כתובת מייל *</div>
-            <input class="sf-i" id="sigEmail" type="email" placeholder="name@company.co.il">
-          </div>
+<!-- SIGNATURE -->
+<div class="s" style="max-width:780px;margin:0 auto">
+  <div class="s-title">פרטי חתימה</div>
+  <div class="s-sub">מלאו את הפרטים וחתמו כדי להשלים את ההסכם</div>
+  <div class="card" style="overflow:hidden">
+    <div style="padding:24px 28px 0">
+      <div class="sig-fields">
+        <div class="sf">
+          <div class="sf-l">שם מלא *</div>
+          <input class="sf-i" id="sigName" placeholder="ישראל ישראלי">
         </div>
-        <div class="decl">הנני מצהיר/ה כי כל הפרטים שמסרתי נכונים ומחייבים אותי.</div>
-        <div class="sig-grid">
-          <div>
-            <div class="sf-l2">חתימה <span style="color:var(--blue)">*</span></div>
-            <div class="padwrap" id="padWrap">
-              <canvas id="sigCanvas"></canvas>
-              <div class="pad-hint" id="padHint">חתמו כאן באצבע או בעכבר</div>
-              <button class="clr-btn" type="button" onclick="clearSig()">מחק</button>
-            </div>
-          </div>
-          <div>
-            <div class="sf-l2">חותמת חברה</div>
-            <div class="stamp-box">אופציונלי</div>
-            <div class="sf-l2">ת"ז / ח.פ *</div>
-            <input class="sf-i" id="sigId" placeholder="000000000" style="margin-top:5px">
-          </div>
+        <div class="sf">
+          <div class="sf-l">תפקיד</div>
+          <input class="sf-i" id="sigRole" placeholder="מנכ״ל / מנהל כספים">
         </div>
-        <div class="sf" style="margin-top:14px;max-width:160px;padding-bottom:20px">
+        <div class="sf full">
+          <div class="sf-l">כתובת מייל *</div>
+          <input class="sf-i" id="sigEmail" type="email" placeholder="name@company.co.il">
+        </div>
+        <div class="sf">
+          <div class="sf-l">ת"ז / ח.פ *</div>
+          <input class="sf-i" id="sigId" placeholder="000000000">
+        </div>
+        <div class="sf">
           <div class="sf-l">תאריך</div>
           <input class="sf-i" id="sigDate">
         </div>
       </div>
-      <div class="sub-area">
-        <div class="sub-err" id="serr"></div>
-        <button class="sub-btn" id="submitBtn" onclick="doSubmit()">
-          <div class="sp" id="btnSpin"></div>
-          <span id="btnTxt">אני מאשר/ת ומסכים/ה לתנאי ההסכם ✍️</span>
-        </button>
+      <div class="sig-grid">
+        <div>
+          <div class="sf-l2">חתימה <span style="color:var(--blue)">*</span></div>
+          <div class="padwrap" id="padWrap">
+            <canvas id="sigCanvas"></canvas>
+            <div class="pad-hint" id="padHint">חתמו כאן באצבע או בעכבר</div>
+            <button class="clr-btn" type="button" onclick="clearSig()">מחק</button>
+          </div>
+        </div>
+        <div>
+          <div class="sf-l2">חותמת חברה</div>
+          <div class="stamp-box">אופציונלי</div>
+        </div>
       </div>
+      <div class="decl">הנני מצהיר/ה כי כל הפרטים שמסרתי נכונים ומחייבים אותי.</div>
+    </div>
+    <div class="sub-err" id="sub-err"></div>
+    <div class="serr" id="serr"></div>
+    <div class="sub-area">
+      <button class="sub-btn" id="submitBtn" onclick="doSubmit()">
+        <div class="sp" id="btnSpin"></div>
+        <span id="btnTxt">אני מאשר/ת ומסכים/ה לתנאי ההסכם ✍️</span>
+      </button>
     </div>
   </div>
 </div>
 
 <footer>
-  © חברת ידע פיתוח סביבות למידה בע"מ · ח.פ. 516072253<br>
-  יגאל אלון 123, תל אביב · <a href="mailto:coo@yedalms.io">coo@yedalms.io</a>
+  חברת ידע פיתוח סביבות למידה בע"מ · ח.פ 516072253 · coo@yedalms.io
 </footer>
-</div><!-- /main -->
-
-<!-- SUCCESS -->
-<div id="succ" style="display:none;min-height:100vh;align-items:center;justify-content:center;padding:40px;background:var(--bg)">
-  <div class="succ-card">
-    <div class="succ-ring">✓</div>
-    <div class="succ-h">ההסכם נחתם בהצלחה!</div>
-    <div class="succ-p">תודה! ההסכם נשמר ונשלח למייל שלך.<br>ניתן להוריד את ה-PDF לשמירה.</div>
-    <div class="succ-meta" id="succMeta"></div>
-    <button class="dl-btn" id="dlBtn" onclick="downloadPDF()">
-      <div class="sp" id="dlSpin"></div><span id="dlTxt">⬇ הורד PDF של ההסכם</span>
-    </button>
-  </div>
-</div>
 
 <button id="scrollup" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+</div><!-- /main -->
 
 <script>
 const N8N_LOAD = 'https://yedauto.com/webhook/yeda-load';
 const N8N_SIGN = 'https://yedauto.com/webhook/yeda-sign';
-const SLOT = 1;
-let SP, contractData, pdfUrl = '', fillFields = [];
+const LOGOS_BASE = 'https://yedatechdesign.github.io/client-contracts/logos/';
+const SLOT = parseInt(new URLSearchParams(location.search).get('slot')) || 1;
 
-// ── ACCORDION ──
-function toggleAcc(head) {
-  const body = head.nextElementSibling;
-  const arrow = head.querySelector('.acc-arrow');
-  const open = body.classList.toggle('open');
-  arrow.classList.toggle('open', open);
-}
+const ALL_CLIENTS = [
+  { id:'client1',  name:'HackerU',                desc:'המכללה המובילה בארץ להכשרה במקצועות סייבר והייטק', url:'https://www.hackeru.co.il/' },
+  { id:'client2',  name:'מכללת IPC',              desc:'המכללה המובילה בתחום ההכשרות המקצועיות',           url:'https://campus-ipc.co.il/' },
+  { id:'client3',  name:'מכללת אורין שפלטר',      desc:'המכללה המובילה להוראה הפיננסית',                   url:'https://oscrypto.academy/' },
+  { id:'client4',  name:'ThriveDX',               desc:'חברה גלובלית המתמחה בהכשרות דיגיטליות',           url:'https://thrivedx.com/' },
+  { id:'client5',  name:'מרכז גומא גבים',         desc:'המכללה המובילה לגישור, אימון ולימודי משפחה',      url:'https://study.gomegevim.co.il/' },
+  { id:'client6',  name:'מכללת קול המס',          desc:'מכללה בפיקוח לשכת רו"ח ולשכת יועצי המס',         url:'https://finance-courses.co.il/' },
+  { id:'client7',  name:'HIGHQ',                  desc:'המכללה המובילה בישראל להכנה לבחינות ופסיכומטרי',  url:'https://www.high-q.co.il/' },
+  { id:'client8',  name:'פירמת עורכי הדין פישר', desc:'משרדי עורכי הדין הגדולים והמובילים בישראל',       url:'https://www.fbclawyers.com/' },
+  { id:'client9',  name:'קבוצת מובמנט',          desc:'החברה המובילה בארץ לקידום בריאות בארגונים',       url:'https://online.allencarr.co.il/' },
+  { id:'client10', name:'אולג׳ובס',              desc:'האתר המוביל לחיפוש עבודה',                         url:'https://allcourses.co.il/' },
+  { id:'client11', name:'מלם טים',               desc:'קבוצת שירותי ה-IT המובילה בישראל',                 url:'https://academia.teamcad.co.il/' },
+  { id:'client12', name:'כלכליסט',               desc:'אתר החדשות הכלכלי המוביל בישראל',                  url:'https://study.calcalist.co.il/' },
+];
 
-// ── LOAD ──
-window.addEventListener('DOMContentLoaded', async () => {
-  const t = new Date();
-  document.getElementById('sigDate').value =
-    String(t.getDate()).padStart(2,'0') + '/' +
-    String(t.getMonth()+1).padStart(2,'0') + '/' + t.getFullYear();
-  await loadContract();
-  window.addEventListener('scroll', () =>
-    document.getElementById('scrollup').classList.toggle('show', scrollY > 400));
+let SP, contractData = {}, fillFields = [];
+
+window.addEventListener('scroll', () => {
+  document.getElementById('scrollup').classList.toggle('show', window.scrollY > 400);
 });
 
-async function loadContract() {
+// ── INIT ──
+(async function init() {
+  const today = new Date();
+  document.getElementById('sigDate').value =
+    String(today.getDate()).padStart(2,'0') + '.' +
+    String(today.getMonth()+1).padStart(2,'0') + '.' + today.getFullYear();
+
   try {
     const r = await fetch(N8N_LOAD, {
-      method:'POST', headers:{'Content-Type':'application/json','Cache-Control':'no-cache'},
-      cache: 'no-store',
+      method:'POST',
+      headers:{'Content-Type':'application/json','Cache-Control':'no-cache'},
+      cache:'no-store',
       body: JSON.stringify({ slot: SLOT, mode: 'client' })
     });
-    if (!r.ok) throw new Error('שגיאת שרת');
+    if (!r.ok) throw new Error('load failed');
     const d = await r.json();
-    if (!d.content) { showError('ההסכם עדיין לא מוכן. פנה לנציג Yeda.'); return; }
-    if (d.signed === true) { showError('ההסכם כבר נחתם. לפרטים פנה לנציג Yeda.'); return; }
+
+    if (d.signed) { showError('הסכם זה כבר נחתם.'); return; }
+    if (!d.title && !d.blocks) { showError('ההסכם עדיין לא הוכן. פנה לנציג Yeda.'); return; }
+
     contractData = d;
-    document.getElementById('cTitle').textContent = d.title || 'הצעת מחיר – פיתוח מערכת מותאמת אישית';
-    document.getElementById('cBadge').textContent = d.client_name || '—';
+    document.getElementById('cTitle').textContent      = d.title || 'הצעת מחיר';
+    document.getElementById('cTitleSmall').textContent = d.title || 'Yeda';
+    document.getElementById('cBadge').textContent      = d.client_name || '—';
+
+    renderBlocks(d.blocks || []);
+    renderClients(d.selected_clients || []);
     buildClientParty(d.client_name);
-    initSignaturePad();
-    document.getElementById('ls').style.display = 'none';
+    initSigPad();
+
+    document.getElementById('ls').style.display   = 'none';
     document.getElementById('main').style.display = 'block';
-  } catch(e) { showError('שגיאה בטעינת ההסכם. נסה לרענן.'); }
+
+  } catch(e) {
+    showError('שגיאה בטעינת ההסכם. נסה לרענן את הדף.');
+  }
+})();
+
+// ── RENDER BLOCKS ──
+function renderBlocks(blocks) {
+  const wrap = document.getElementById('blocks-wrap');
+  if (!blocks.length) {
+    wrap.innerHTML = '<div style="text-align:center;color:var(--muted);padding:24px">אין תוכן להצגה</div>';
+    return;
+  }
+  wrap.innerHTML = blocks.map((b, i) => `
+    <div class="card cblock">
+      <div class="cblock-num">${i+1}</div>
+      <div class="cblock-title">${escH(b.title)}</div>
+      <div class="cblock-text">${escH(b.text)}</div>
+    </div>`).join('');
 }
 
+// ── RENDER CLIENTS ──
+function renderClients(selected) {
+  if (!selected.length) return;
+  const section = document.getElementById('clients-section');
+  section.style.display = 'block';
+  const clients = ALL_CLIENTS.filter(c => selected.includes(c.id));
+  const cols = clients.length <= 3 ? clients.length : 4;
+  document.getElementById('clients-grid').style.gridTemplateColumns = `repeat(${Math.min(cols,4)},1fr)`;
+  document.getElementById('clients-grid').innerHTML = clients.map(c => `
+    <div class="client-card">
+      <div class="client-logo-wrap">
+        <a href="${c.url}" target="_blank" rel="noopener">
+          <img src="${LOGOS_BASE}${c.id}.png" alt="${c.name}" onerror="this.style.opacity='.2'">
+        </a>
+      </div>
+      <a class="client-name-link" href="${c.url}" target="_blank" rel="noopener">${c.name}</a>
+      <div class="client-desc">${c.desc}</div>
+    </div>`).join('');
+}
+
+// ── CLIENT PARTY ──
 function buildClientParty(clientName) {
   fillFields = [];
-  let i = 0;
   const fields = [
-    { key:'שם החברה / הלקוח', pre:clientName||'' },
-    { key:'ח.פ של הלקוח' },
-    { key:'כתובת הלקוח' }
+    { key:'שם החברה', id:'ff0', pre: clientName||'' },
+    { key:'ח.פ',      id:'ff1' },
+    { key:'כתובת',    id:'ff2' }
   ];
-  const rows = fields.map(f => {
-    const id = 'ff' + (i++);
-    const w = Math.max(80, f.key.length * 12);
-    fillFields.push({ id, label: f.key });
-    return `<div class="party-row">
-      <div class="party-key">${f.key}</div>
-      <input class="fi" id="${id}" placeholder="${f.key}" value="${f.pre||''}" style="width:${w}px;max-width:260px">
-    </div>`;
-  }).join('');
-  // hoval - only ONE company name field
-  const hid = 'ff' + (i++);
-  fillFields.push({ id: hid, label:'שם החברה' });
+  fillFields = fields.map(f => ({ id:f.id, label:f.key }));
+  fillFields.push({ id:'ff-company', label:'שם החברה בהואיל' });
+
   document.getElementById('client-party').innerHTML = `
     <div class="party-top"><div class="party-title">הלקוח</div></div>
-    ${rows}`;
-  document.getElementById('hoval-text').innerHTML =
-    `חברת ידע פיתחה מערכת לניהול סביבות לימוד (להלן "המערכת" או/ו "הפלטפורמה").<br><br>
-    חברת <input class="fi" id="${hid}" placeholder="שם החברה" style="width:140px"> מעוניינת להשתמש במערכת; נציגים מוסמכים מטעמה בחנו את המערכת ויכולותיה.`;
+    ${fields.map(f => `
+      <div class="party-row">
+        <div class="party-key">${f.key}</div>
+        <input class="fi" id="${f.id}" placeholder="${f.key}" value="${escH(f.pre||'')}" style="max-width:200px">
+      </div>`).join('')}`;
+
+  if (clientName) {
+    const hoval = document.getElementById('ff-company');
+    if (hoval) hoval.value = clientName;
+  }
 }
 
 // ── SIG PAD ──
-function initSignaturePad() {
+function initSigPad() {
   const canvas = document.getElementById('sigCanvas');
-  const wrap = document.getElementById('padWrap');
-  canvas.width = wrap.offsetWidth || 500; canvas.height = 112;
-  SP = new SignaturePad(canvas, { backgroundColor:'rgb(250,251,255)', penColor:'#0d2680', minWidth:1.3, maxWidth:2.6 });
-  SP.addEventListener('beginStroke', () => {
-    document.getElementById('padHint').style.display = 'none';
-    document.getElementById('padWrap').classList.remove('bad');
-  });
-  window.addEventListener('resize', () => { const d=SP.toData(); canvas.width=wrap.offsetWidth; SP.fromData(d); });
+  const wrap   = document.getElementById('padWrap');
+  canvas.width  = wrap.offsetWidth  || 340;
+  canvas.height = wrap.offsetHeight || 140;
+  SP = { ctx: canvas.getContext('2d'), drawing: false, empty: true };
+  SP.ctx.strokeStyle = '#0d2680'; SP.ctx.lineWidth = 2.2;
+  SP.ctx.lineCap = 'round'; SP.ctx.lineJoin = 'round';
+
+  const pos = e => {
+    const r = canvas.getBoundingClientRect();
+    const t = e.touches ? e.touches[0] : e;
+    return { x:(t.clientX-r.left)*(canvas.width/r.width), y:(t.clientY-r.top)*(canvas.height/r.height) };
+  };
+  canvas.addEventListener('mousedown',  e => { SP.drawing=true; SP.ctx.beginPath(); const p=pos(e); SP.ctx.moveTo(p.x,p.y); });
+  canvas.addEventListener('mousemove',  e => { if(!SP.drawing)return; const p=pos(e); SP.ctx.lineTo(p.x,p.y); SP.ctx.stroke(); SP.empty=false; document.getElementById('padHint').style.opacity='0'; });
+  canvas.addEventListener('mouseup',    () => SP.drawing=false);
+  canvas.addEventListener('mouseleave', () => SP.drawing=false);
+  canvas.addEventListener('touchstart', e => { e.preventDefault(); SP.drawing=true; SP.ctx.beginPath(); const p=pos(e); SP.ctx.moveTo(p.x,p.y); }, {passive:false});
+  canvas.addEventListener('touchmove',  e => { e.preventDefault(); if(!SP.drawing)return; const p=pos(e); SP.ctx.lineTo(p.x,p.y); SP.ctx.stroke(); SP.empty=false; document.getElementById('padHint').style.opacity='0'; }, {passive:false});
+  canvas.addEventListener('touchend',   () => SP.drawing=false);
 }
-function clearSig() { SP.clear(); document.getElementById('padHint').style.display='flex'; document.getElementById('padWrap').classList.remove('bad'); }
+
+function clearSig() {
+  const c = document.getElementById('sigCanvas');
+  SP.ctx.clearRect(0,0,c.width,c.height);
+  SP.empty=true; document.getElementById('padHint').style.opacity='1';
+}
 
 // ── VALIDATE ──
 function validate() {
-  let ok=true, missing=[];
-  fillFields.forEach(({id,label}) => {
-    const el=document.getElementById(id);
-    const bad=!el?.value.trim();
-    if(el) el.classList.toggle('bad',bad);
-    if(bad){ok=false;missing.push(label);}
+  let ok = true; const missing = [];
+  const required = [
+    { id:'sigName',  label:'שם מלא' },
+    { id:'sigEmail', label:'מייל' },
+    { id:'sigId',    label:'ת.ז / ח.פ' },
+    { id:'ff0',      label:'שם החברה' },
+  ];
+  required.forEach(({id,label}) => {
+    const el = document.getElementById(id);
+    if (!el?.value.trim()) { el?.classList.add('bad'); missing.push(label); ok=false; }
+    else el?.classList.remove('bad');
   });
-  [{id:'sigName',label:'שם מלא'},{id:'sigId',label:'ת.ז./ח.פ'},{id:'sigDate',label:'תאריך'},{id:'sigEmail',label:'מייל',email:true}]
-  .forEach(({id,label,email}) => {
-    const el=document.getElementById(id); const v=el.value.trim();
-    const bad=!v||(email&&!v.includes('@'));
-    el.classList.toggle('bad',bad);
-    if(bad){ok=false;missing.push(label);}
-  });
-  if(SP.isEmpty()){document.getElementById('padWrap').classList.add('bad');ok=false;missing.push('חתימה');}
-  const errEl=document.getElementById('serr');
-  if(!ok){errEl.textContent='נא למלא: '+missing.join(', ');errEl.style.display='block';
-    (document.querySelector('.fi.bad,.sf-i.bad')||document.getElementById('padWrap'))?.scrollIntoView({behavior:'smooth',block:'center'});
-  } else errEl.style.display='none';
+  if (SP.empty) { document.getElementById('padWrap').style.border='1.5px solid var(--red)'; missing.push('חתימה'); ok=false; }
+  else document.getElementById('padWrap').style.border='1.5px solid var(--border)';
+  const errEl = document.getElementById('sub-err');
+  if (!ok) { errEl.textContent='נא למלא: '+missing.join(', '); errEl.style.display='block'; }
+  else errEl.style.display='none';
   return ok;
 }
 
 // ── SUBMIT ──
 async function doSubmit() {
-  if(!validate()) return;
+  if (!validate()) return;
   const btn=document.getElementById('submitBtn'), sp=document.getElementById('btnSpin'), tx=document.getElementById('btnTxt');
   btn.disabled=true; sp.style.display='block'; tx.textContent='שולח...';
-  const vals={};
-  fillFields.forEach(({id,label})=>{vals[label]=document.getElementById(id)?.value.trim()||'';});
-  const payload={
-    slot:SLOT, title:contractData.title||'הסכם התקשרות', client_name:contractData.client_name||'',
-    contract_html:contractData.content, filled_values:vals,
-    signer_name:document.getElementById('sigName').value.trim(),
-    signer_role:document.getElementById('sigRole').value.trim(),
-    signer_email:document.getElementById('sigEmail').value.trim(),
-    signer_id:document.getElementById('sigId').value.trim(),
-    signer_date:document.getElementById('sigDate').value,
-    signature_base64:SP.toDataURL('image/png'), signed_at:new Date().toISOString()
+
+  const vals = {};
+  fillFields.forEach(({id,label}) => { vals[label] = document.getElementById(id)?.value.trim()||''; });
+
+  const payload = {
+    slot: SLOT,
+    title:        contractData.title||'הסכם התקשרות',
+    client_name:  contractData.client_name||'',
+    blocks:       contractData.blocks||[],
+    filled_values: vals,
+    signer_name:  document.getElementById('sigName').value.trim(),
+    signer_role:  document.getElementById('sigRole').value.trim(),
+    signer_email: document.getElementById('sigEmail').value.trim(),
+    signer_id:    document.getElementById('sigId').value.trim(),
+    signer_date:  document.getElementById('sigDate').value,
+    signature_base64: document.getElementById('sigCanvas').toDataURL('image/png'),
+    signed_at:    new Date().toISOString()
   };
+
   try {
-    const r=await fetch(N8N_SIGN,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
-    if(!r.ok) throw new Error('שגיאת שרת '+r.status);
-    const d=await r.json(); pdfUrl=d.pdf_url||'';
+    const r = await fetch(N8N_SIGN, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload)});
+    if (!r.ok) throw new Error('שגיאת שרת ' + r.status);
     document.getElementById('main').style.display='none';
-    const s=document.getElementById('succ'); s.style.display='flex';
-    document.getElementById('succMeta').innerHTML=
+    const s = document.getElementById('succ'); s.style.display='flex';
+    document.getElementById('succMeta').innerHTML =
       `<div><strong>שם:</strong> ${payload.signer_name}</div>
        <div><strong>תפקיד:</strong> ${payload.signer_role||'—'}</div>
        <div><strong>מייל:</strong> ${payload.signer_email}</div>
        <div><strong>תאריך:</strong> ${payload.signer_date}</div>`;
-    if(!pdfUrl) document.getElementById('dlBtn').style.display='none';
     window.scrollTo(0,0);
   } catch(e) {
-    const errEl=document.getElementById('serr');
-    errEl.textContent='שגיאה בשליחה: '+e.message; errEl.style.display='block';
+    const errEl = document.getElementById('serr');
+    errEl.textContent = 'שגיאה בשליחה: '+e.message; errEl.style.display='block';
     btn.disabled=false; sp.style.display='none'; tx.textContent='אני מאשר/ת ומסכים/ה לתנאי ההסכם ✍️';
   }
-}
-
-async function downloadPDF() {
-  if(!pdfUrl) return;
-  const btn=document.getElementById('dlBtn'),sp=document.getElementById('dlSpin'),tx=document.getElementById('dlTxt');
-  btn.disabled=true; sp.style.display='block'; tx.textContent='מכין...';
-  try{const r=await fetch(pdfUrl);const blob=await r.blob();const a=Object.assign(document.createElement('a'),{href:URL.createObjectURL(blob),download:'yeda-contract.pdf'});a.click();URL.revokeObjectURL(a.href);tx.textContent='הורד ✓';sp.style.display='none';}
-  catch{sp.style.display='none';tx.textContent='⬇ הורד PDF';btn.disabled=false;window.open(pdfUrl,'_blank');}
 }
 
 function showError(msg) {
   document.getElementById('ls').style.display='none';
   document.getElementById('emsg').textContent=msg;
-  const es=document.getElementById('es'); es.style.display='flex';
+  document.getElementById('es').style.display='flex';
 }
+
+function escH(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 </script>
 </body>
 </html>
