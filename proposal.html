@@ -452,29 +452,48 @@ window.addEventListener('scroll',()=>document.getElementById('scrollup').classLi
     const r=await fetch(N8N_LOAD,{method:'POST',headers:{'Content-Type':'application/json'},
       cache:'no-store',body:JSON.stringify({slot:SLOT,mode:'client'})});
     if(!r.ok)throw new Error('load failed');
-    loaded=await r.json();
-  }catch(e){}
+    const raw=await r.json();
+    // n8n can return array or object — normalize
+    if(Array.isArray(raw)) loaded=raw[0]?.json||raw[0]||null;
+    else if(raw?.json) loaded=raw.json;
+    else loaded=raw;
+  }catch(e){console.warn('load error',e);}
 
   // Validate token — if TOKEN in URL doesn't match stored token, reject
   if(TOKEN && loaded && loaded.token && loaded.token !== TOKEN){
     showError('קישור זה פג תוקפו. יש לפנות לנציג Yeda לקבלת קישור עדכני.'); return;
   }
-  // If no token in URL but token exists in data — also reject (link needs token)
+  // If no token in URL but token exists in data — reject
   if(!TOKEN && loaded && loaded.token){
     showError('קישור חסר. יש לפנות לנציג Yeda לקבלת הקישור המלא.'); return;
   }
 
   if(loaded && loaded.signed){showError('הסכם זה כבר נחתם.');return;}
 
-  D = loaded && (loaded.title||loaded.matara) ? loaded : {};
+  // Deep merge: DEF as base, loaded values override everything
+  D = mergeData(DEF, loaded||{});
   render();
   document.getElementById('ls').style.display='none';
   document.getElementById('main').style.display='block';
   initSigPad();
 })();
 
-function gv(key, fallback){ return (D[key] !== undefined && D[key] !== null && D[key] !== '') ? D[key] : fallback; }
-function ga(key, fallback){ const v=D[key]; return (Array.isArray(v)&&v.length>0) ? v : fallback; }
+// Merge loaded data onto DEF — loaded values always win
+function mergeData(def, loaded){
+  const out={};
+  for(const k of Object.keys(def)){
+    const lv=loaded[k];
+    if(Array.isArray(def[k])){
+      out[k]=(Array.isArray(lv)) ? lv : def[k];
+    } else {
+      out[k]=(lv!==undefined && lv!==null && lv!=='') ? lv : def[k];
+    }
+  }
+  for(const k of Object.keys(loaded)){ if(!(k in out)) out[k]=loaded[k]; }
+  return out;
+}
+function gv(key){ return D[key]; }
+function ga(key){ return D[key]; }
 
 const DEF={
   title:'הצעת מחיר – פיתוח מערכת מותאמת אישית',client_name:'',
@@ -510,21 +529,21 @@ const DEF={
 };
 
 function render(){
-  const t=gv('title',DEF.title), cn=gv('client_name',DEF.client_name);
-  document.getElementById('hTitle').textContent=t;
+  const t=gv('title'), cn=gv('client_name');
+  document.getElementById('hTitle').textContent=t||'';
   document.getElementById('hClient').textContent=cn||'—';
-  document.getElementById('cTitleSmall').textContent=t;
-  document.getElementById('mataraText').textContent=gv('matara',DEF.matara);
-  renderMilestones(ga('milestones',DEF.milestones));
-  document.getElementById('whyIntro').textContent=gv('why_intro',DEF.why_intro);
-  renderWhy(ga('why_items',DEF.why_items));
-  renderClients(ga('selected_clients',DEF.selected_clients));
-  document.getElementById('costsSub').textContent=gv('costs_subtitle',DEF.costs_subtitle);
-  renderCosts(ga('costs_rows',DEF.costs_rows),ga('payments',DEF.payments));
-  renderOptional(ga('optional',DEF.optional));
-  renderTokens(ga('token_packages',DEF.token_packages),ga('token_examples',DEF.token_examples));
-  renderTerms(ga('terms',DEF.terms));
-  buildClientParty(cn);
+  document.getElementById('cTitleSmall').textContent=t||'';
+  document.getElementById('mataraText').textContent=gv('matara')||'';
+  renderMilestones(ga('milestones')||[]);
+  document.getElementById('whyIntro').textContent=gv('why_intro')||'';
+  renderWhy(ga('why_items')||[]);
+  renderClients(ga('selected_clients')||[]);
+  document.getElementById('costsSub').textContent=gv('costs_subtitle')||'';
+  renderCosts(ga('costs_rows')||[],ga('payments')||[]);
+  renderOptional(ga('optional')||[]);
+  renderTokens(ga('token_packages')||[],ga('token_examples')||[]);
+  renderTerms(ga('terms')||[]);
+  buildClientParty(cn||'');
 }
 
 function renderMilestones(ms){
