@@ -327,8 +327,21 @@ function getLink(s){
 }
 
 /* ── RENDER PANEL ── */
+function mergeDD(def, loaded){
+  const out={};
+  for(const k of Object.keys(def)){
+    const lv=loaded[k];
+    if(Array.isArray(def[k])){
+      out[k]=(Array.isArray(lv)&&lv.length>0)?lv:def[k];
+    } else {
+      out[k]=(lv!==undefined&&lv!==null&&lv!=='')?lv:def[k];
+    }
+  }
+  for(const k of Object.keys(loaded)){if(!(k in out))out[k]=loaded[k];}
+  return out;
+}
 function renderPanel(s){
-  const d=Object.assign({},DD,_sd[s]||{});
+  const d=mergeDD(DD,_sd[s]||{});
   const signed=d.signed===true;
   const link=getLink(s);
   const versions=d.versions||[];
