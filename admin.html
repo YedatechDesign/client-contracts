@@ -1,652 +1,225 @@
 <!DOCTYPE html>
-<html dir="rtl" lang="he">
+<html lang="he" dir="rtl">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>yeda — Admin</title>
-<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yeda Contracts — ניהול הסכמים</title>
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--navy:#0d2680;--blue:#1a56db;--bl:#e8f0fe;--bm:#c7d7fc;
-  --sub:#374151;--mu:#6b7280;--fa:#9ca3af;--bg:#f4f6fb;
-  --bdr:#e5e7eb;--gr:#059669;--rd:#dc2626;--or:#d97706;--r:12px;--sh:0 2px 8px rgba(0,0,0,.07)}
-body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--sub);direction:rtl}
-@keyframes spin{to{transform:rotate(360deg)}}
-
-/* LOGIN */
-#lw{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
-.lbox{background:#fff;border-radius:var(--r);border:1px solid var(--bdr);box-shadow:var(--sh);
-      padding:48px 40px;max-width:380px;width:100%;text-align:center}
-.llogo{font-size:2rem;font-weight:900;color:var(--navy);letter-spacing:-2px;margin-bottom:4px}
-.lsub{color:var(--mu);font-size:.83rem;margin-bottom:28px}
-.linp{width:100%;border:1.5px solid var(--bdr);border-radius:9px;padding:12px 14px;
-      font-family:'Heebo',sans-serif;font-size:.95rem;direction:ltr;text-align:center;
-      margin-bottom:12px;transition:border-color .2s}
-.linp:focus{outline:none;border-color:var(--blue)}
-.lbtn{width:100%;padding:13px;background:var(--blue);color:#fff;border:none;border-radius:9px;
-      font-family:'Heebo',sans-serif;font-size:1rem;font-weight:700;cursor:pointer}
-.lbtn:hover{background:var(--navy)}
-.lerr{color:var(--rd);font-size:.8rem;margin-top:8px;display:none}
-
-/* APP */
-#app{display:none}
-.topbar{background:#fff;border-bottom:1px solid var(--bdr);height:56px;
-        display:flex;align-items:center;justify-content:space-between;padding:0 24px;
-        position:sticky;top:0;z-index:100;box-shadow:0 1px 4px rgba(0,0,0,.04)}
-.tlogo{font-size:1.35rem;font-weight:900;color:var(--navy);letter-spacing:-1.5px}
-.tabs{display:flex;gap:5px}
-.tab{padding:6px 14px;background:none;border:1.5px solid var(--bdr);border-radius:8px;
-     font-family:'Heebo',sans-serif;font-size:.8rem;font-weight:700;cursor:pointer;color:var(--mu);transition:all .15s}
-.tab:hover{border-color:var(--bm);color:var(--blue)}
-.tab.active{background:var(--blue);color:#fff;border-color:var(--blue)}
-.tab .sdot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#4ade80;margin-left:5px;vertical-align:middle}
-.lout{background:none;border:1px solid var(--bdr);border-radius:7px;padding:5px 11px;
-      font-family:'Heebo',sans-serif;font-size:.76rem;color:var(--mu);cursor:pointer}
-.lout:hover{border-color:var(--rd);color:var(--rd)}
-
-/* MAIN */
-.main{max-width:1000px;margin:0 auto;padding:22px 18px 80px}
-.slot-panel{display:none}.slot-panel.active{display:block}
-.signed-banner{background:#fffbeb;border:1.5px solid #fcd34d;border-radius:9px;padding:11px 16px;
-               display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
-.sbtext{font-size:.85rem;font-weight:700;color:#92400e}
-.resetbtn{background:#fff;border:1px solid #f59e0b;color:#d97706;border-radius:7px;
-          padding:4px 12px;font-family:'Heebo',sans-serif;font-size:.76rem;font-weight:700;cursor:pointer}
-
-/* SECTION ACCORDIONS */
-.acc{background:#fff;border:1.5px solid var(--bdr);border-radius:var(--r);margin-bottom:10px;overflow:hidden}
-.acc-head{display:flex;align-items:center;justify-content:space-between;padding:13px 16px;
-          cursor:pointer;transition:background .15s;user-select:none}
+:root{--navy:#0d2680;--blue:#1a56db;--green:#059669;--red:#dc2626;--amber:#f59e0b;--bg:#f8fafc;--card:#fff;--bdr:#e5e7eb;--mu:#6b7280;--fa:#9ca3af;--rd:#ef4444}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:#1f2937;direction:rtl;min-height:100vh}
+.login-wrap{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}
+.login-box{background:var(--card);border-radius:16px;padding:40px;box-shadow:0 4px 24px rgba(0,0,0,.08);text-align:center;max-width:400px;width:100%}
+.login-box .logo{font-family:'Arial Black',Arial,sans-serif;font-size:42px;color:var(--navy);font-weight:900}
+.login-box .sub{color:var(--mu);font-size:13px;margin:8px 0 28px}
+.login-box input{width:100%;padding:12px 16px;border:1.5px solid var(--bdr);border-radius:10px;font-size:15px;text-align:center;outline:none}
+.login-box input:focus{border-color:var(--blue)}
+.btn-login{width:100%;margin-top:14px;padding:12px;border:none;border-radius:10px;background:var(--blue);color:#fff;font-size:15px;font-weight:700;cursor:pointer}
+.btn-login:hover{background:var(--navy)}
+.login-err{color:var(--rd);font-size:13px;margin-top:10px;display:none}
+.header{background:var(--card);border-bottom:1px solid var(--bdr);padding:16px 28px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.header .logo{font-family:'Arial Black',Arial,sans-serif;font-size:22px;color:var(--navy);font-weight:900}
+.header .title{font-size:15px;color:var(--mu)}
+.spacer{flex:1}
+.btn{padding:9px 18px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;border:1.5px solid transparent;transition:all .2s;display:inline-flex;align-items:center;gap:6px;text-decoration:none}
+.btn-primary{background:var(--blue);color:#fff}.btn-primary:hover{background:var(--navy)}
+.btn-secondary{background:#fff;border-color:var(--bdr);color:#374151}.btn-secondary:hover{background:#f9fafb}
+.btn-danger{background:var(--rd);color:#fff}.btn-danger:hover{background:#b91c1c}
+.btn-sm{padding:6px 12px;font-size:12px}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.filters{padding:16px 28px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.chip{padding:6px 16px;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;border:1.5px solid var(--bdr);background:var(--card);color:var(--mu);transition:all .2s}
+.chip.active{background:var(--blue);color:#fff;border-color:var(--blue)}
+.chip:hover:not(.active){border-color:var(--blue);color:var(--blue)}
+.counter{margin-right:auto;font-size:13px;color:var(--mu)}
+.list-wrap{padding:0 28px 28px}
+.contract-card{background:var(--card);border:1px solid var(--bdr);border-radius:12px;padding:18px 22px;margin-bottom:12px;transition:box-shadow .2s}
+.contract-card:hover{box-shadow:0 2px 12px rgba(0,0,0,.06)}
+.cc-top{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:.78rem;font-weight:700}
+.badge.draft{background:#f3f4f6;color:#6b7280}.badge.sent{background:#eff6ff;color:#1a56db}.badge.signed{background:#ecfdf5;color:#059669}.badge.cancelled{background:#fef2f2;color:#dc2626}
+.cc-title{font-size:15px;font-weight:700;flex:1}.cc-client{font-size:13px;color:var(--mu);margin-bottom:6px}
+.cc-dates{font-size:12px;color:var(--fa);margin-bottom:10px}.cc-actions{display:flex;gap:8px;flex-wrap:wrap}
+.editor-wrap{display:none}
+.editor-header{background:var(--card);border-bottom:1px solid var(--bdr);padding:14px 28px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.editor-body{padding:20px 28px;max-width:920px}
+.acc{margin-bottom:12px;background:var(--card);border:1px solid var(--bdr);border-radius:12px;overflow:hidden}
+.acc-head{padding:14px 20px;cursor:pointer;display:flex;align-items:center;gap:10px;font-size:14px;font-weight:700;user-select:none}
 .acc-head:hover{background:#f9fafb}
-.acc-hl{display:flex;align-items:center;gap:9px}
-.acc-ico{width:30px;height:30px;border-radius:7px;background:var(--bl);display:flex;align-items:center;justify-content:center;font-size:.88rem;flex-shrink:0}
-.acc-t{font-size:.9rem;font-weight:800;color:var(--navy)}
-.acc-arr{color:var(--mu);transition:transform .2s;font-size:.78rem}
-.acc.open .acc-arr{transform:rotate(180deg)}
-.acc-body{display:none;padding:16px 18px;border-top:1px solid var(--bdr)}
-.acc.open .acc-body{display:block}
-
-/* FORM FIELDS */
-.frow{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
-.frow.s1{grid-template-columns:1fr}
-.f{display:flex;flex-direction:column;gap:4px}
-.fl{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--mu)}
-.fi{border:1.5px solid var(--bdr);border-radius:8px;padding:8px 11px;
-    font-family:'Heebo',sans-serif;font-size:.87rem;color:var(--sub);
-    transition:border-color .2s;background:#fafbff;width:100%}
-.fi:focus{outline:none;border-color:var(--blue);background:#fff}
-textarea.fi{resize:vertical;min-height:76px;line-height:1.65}
-
-/* BLOCKS */
-.bl-list{display:flex;flex-direction:column;gap:7px;margin-bottom:8px}
-.bl-card{border:1.5px solid var(--bdr);border-radius:9px;overflow:hidden}
-.bl-top{display:flex;align-items:center;gap:7px;padding:8px 11px;background:var(--bg)}
-.bl-num{width:21px;height:21px;border-radius:50%;background:var(--blue);color:#fff;
-        font-size:.68rem;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.bl-ti{flex:1;border:none;background:transparent;font-family:'Heebo',sans-serif;
-       font-size:.86rem;font-weight:700;color:var(--navy);padding:2px 4px;border-radius:4px}
-.bl-ti:focus{outline:1px solid var(--bm);background:#fff}
-.bdel{background:none;border:none;cursor:pointer;color:var(--fa);font-size:1.1rem;
-      padding:2px 6px;border-radius:4px;line-height:1;transition:color .15s;flex-shrink:0}
-.bdel:hover{color:var(--rd)}
-.bl-body{padding:7px 11px}
-.bl-tx{width:100%;border:none;background:transparent;font-family:'Heebo',sans-serif;
-       font-size:.81rem;color:var(--sub);resize:vertical;min-height:58px;line-height:1.7;padding:2px}
-.bl-tx:focus{outline:1px solid var(--bm);background:#fafbff;border-radius:4px}
-.add-btn{display:flex;align-items:center;justify-content:center;gap:6px;
-         background:var(--bl);border:1.5px dashed var(--bm);color:var(--blue);
-         border-radius:8px;padding:8px;font-family:'Heebo',sans-serif;font-size:.81rem;
-         font-weight:700;cursor:pointer;width:100%;transition:all .15s}
-.add-btn:hover{background:var(--blue);color:#fff;border-style:solid}
-
-/* WHY */
-.why-list{display:flex;flex-direction:column;gap:5px;margin-bottom:8px}
-.why-row{display:flex;align-items:center;gap:7px}
-.why-row input{flex:1}
-
-/* CLIENTS */
-.cl-chk{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:5px}
-.cl-c{border:1.5px solid var(--bdr);border-radius:8px;padding:8px 6px;cursor:pointer;
-      text-align:center;transition:all .15s;position:relative}
-.cl-c:hover{border-color:var(--bm)}
-.cl-c.sel{border-color:var(--blue);background:var(--bl)}
-.cl-c img{width:100%;height:34px;object-fit:contain;margin-bottom:4px;filter:grayscale(.4)}
-.cl-c.sel img{filter:none}
-.cl-c-name{font-size:.64rem;font-weight:700;color:var(--sub)}
-.cl-c.sel .cl-c-name{color:var(--blue)}
-.ckm{position:absolute;top:4px;left:4px;width:14px;height:14px;border-radius:50%;
-     background:var(--blue);display:none;align-items:center;justify-content:center}
-.ckm svg{width:8px;height:8px;stroke:#fff;fill:none;stroke-width:2.5}
-.cl-c.sel .ckm{display:flex}
-
-/* TABLE ROWS */
-.tbl-rows{display:flex;flex-direction:column;gap:5px;margin-bottom:8px}
-.tbl-row{display:flex;align-items:center;gap:7px}
-.tbl-row input{flex:1}.tbl-row .bdel{padding:6px 7px;flex-shrink:0}
-.pay-rows{display:flex;flex-direction:column;gap:9px;margin-bottom:8px}
-.pay-row{border:1px solid var(--bdr);border-radius:9px;padding:10px 12px}
-.pay-rh{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px}
-.pay-rn{font-size:.7rem;font-weight:800;color:var(--mu)}
-
-/* TOKEN PACKAGES */
-.tok-pkg{display:flex;flex-direction:column;gap:7px;margin-bottom:8px}
-.tok-row{display:flex;align-items:center;gap:7px}
-.tok-row input{flex:1}
-
-/* LINK + TOKEN */
-.link-area{background:#f0f3ff;border:1px solid var(--bm);border-radius:9px;padding:12px 14px;margin-top:8px}
-.link-ttl{font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.4px;color:var(--mu);margin-bottom:7px}
-.link-url{font-size:.77rem;color:var(--blue);font-weight:600;direction:ltr;text-align:left;
-          word-break:break-all;margin-bottom:8px;background:#fff;border:1px solid var(--bm);
-          border-radius:6px;padding:7px 10px}
-.link-btns{display:flex;gap:8px}
-.cp-btn{background:var(--blue);color:#fff;border:none;border-radius:7px;padding:7px 14px;
-        font-family:'Heebo',sans-serif;font-size:.76rem;font-weight:700;cursor:pointer;transition:background .15s}
-.cp-btn:hover{background:var(--navy)}
-.cp-btn.ok{background:var(--gr)}
-.new-token-btn{background:#fff;border:1.5px solid var(--bm);color:var(--blue);border-radius:7px;
-               padding:7px 12px;font-family:'Heebo',sans-serif;font-size:.76rem;font-weight:700;cursor:pointer}
-.new-token-btn:hover{background:var(--bl)}
-
-/* VERSION HISTORY */
-.ver-hist{margin-top:12px}
-.ver-ttl{font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.4px;color:var(--mu);margin-bottom:8px}
-.ver-list{display:flex;flex-direction:column;gap:6px}
-.ver-item{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;
-          background:#fff;border:1px solid var(--bdr);border-radius:8px}
-.ver-name{font-size:.81rem;font-weight:700;color:var(--sub)}
-.ver-date{font-size:.71rem;color:var(--mu)}
-.ver-dl{background:none;border:1px solid var(--bdr);color:var(--mu);border-radius:6px;
-        padding:4px 10px;font-family:'Heebo',sans-serif;font-size:.72rem;cursor:pointer}
-.ver-dl:hover{border-color:var(--blue);color:var(--blue)}
-.ver-empty{font-size:.8rem;color:var(--fa);text-align:center;padding:10px}
-
-/* SAVE BAR */
-.save-bar{position:sticky;bottom:0;background:rgba(255,255,255,.97);backdrop-filter:blur(8px);
-          border-top:1px solid var(--bdr);padding:12px 16px;margin:0 -18px;z-index:50;
-          display:flex;gap:10px;align-items:center}
-.save-btn{flex:1;padding:12px;background:var(--blue);color:#fff;border:none;border-radius:9px;
-          font-family:'Heebo',sans-serif;font-size:.9rem;font-weight:800;cursor:pointer;
-          display:flex;align-items:center;justify-content:center;gap:7px;
-          transition:all .2s;box-shadow:0 3px 10px rgba(26,86,219,.22)}
-.save-btn:hover:not(:disabled){background:var(--navy)}
-.save-btn:disabled{opacity:.5;cursor:not-allowed}
-.ver-btn{padding:12px 18px;background:#fff;border:2px solid var(--or);color:var(--or);
-         border-radius:9px;font-family:'Heebo',sans-serif;font-size:.88rem;font-weight:800;
-         cursor:pointer;display:flex;align-items:center;gap:6px;white-space:nowrap;
-         transition:all .2s;flex-shrink:0}
-.ver-btn:hover:not(:disabled){background:#fff7ed}
-.ver-btn:disabled{opacity:.5;cursor:not-allowed}
-.ssp{width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;
-     border-radius:50%;animation:spin .6s linear infinite;display:none}
-.vsp{width:16px;height:16px;border:2px solid rgba(217,119,6,.3);border-top-color:var(--or);
-     border-radius:50%;animation:spin .6s linear infinite;display:none}
-.save-msg{font-size:.78rem;font-weight:700;min-width:60px;text-align:center}
-.save-msg.ok{color:var(--gr)}.save-msg.err{color:var(--rd)}
-
-@media(max-width:700px){
-  .topbar{padding:0 10px}.tabs{gap:3px}.tab{padding:4px 9px;font-size:.73rem}
-  .main{padding:14px 10px 80px}.frow{grid-template-columns:1fr}
-  .cl-chk{grid-template-columns:repeat(3,1fr)}
-  .link-btns{flex-wrap:wrap}.save-bar{flex-wrap:wrap}
-}
+.acc-head .arrow{margin-right:auto;transition:transform .2s;font-size:12px;color:var(--mu)}
+.acc.open .acc-head .arrow{transform:rotate(180deg)}
+.acc-body{display:none;padding:0 20px 18px}.acc.open .acc-body{display:block}
+label{display:block;font-size:12px;font-weight:600;color:var(--mu);margin-bottom:4px;margin-top:12px}
+label:first-child{margin-top:0}
+input[type="text"],input[type="url"],textarea,select{width:100%;padding:10px 14px;border:1.5px solid var(--bdr);border-radius:8px;font-size:14px;font-family:inherit;outline:none;background:#fff}
+input:focus,textarea:focus,select:focus{border-color:var(--blue)}
+textarea{resize:vertical;min-height:80px}
+.inline-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.block-item{background:#f9fafb;border:1px solid var(--bdr);border-radius:10px;padding:14px;margin-bottom:10px;position:relative}
+.block-item .remove-btn{position:absolute;top:10px;left:10px;background:none;border:none;color:var(--rd);cursor:pointer;font-size:16px;opacity:.6}
+.block-item .remove-btn:hover{opacity:1}
+.clients-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
+.client-logo-item{border:2px solid var(--bdr);border-radius:10px;padding:10px 8px;text-align:center;cursor:pointer;transition:all .2s;background:#fff;position:relative}
+.client-logo-item.selected{border-color:var(--blue);background:#eff6ff}
+.client-logo-item img{width:80px;height:50px;object-fit:contain;display:block;margin:0 auto}
+.client-logo-item .cname{font-size:11px;font-weight:600;color:#374151;margin-top:6px}
+.client-logo-item .cdesc{font-size:9px;color:var(--mu);margin-top:2px;line-height:1.3}
+.client-logo-item .del-client{position:absolute;top:4px;left:4px;background:var(--rd);color:#fff;border:none;border-radius:50%;width:18px;height:18px;font-size:10px;cursor:pointer;display:none;align-items:center;justify-content:center}
+.client-logo-item:hover .del-client{display:flex}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:1000;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.show{display:flex}
+.modal-box{background:var(--card);border-radius:16px;padding:28px;max-width:480px;width:100%;box-shadow:0 8px 32px rgba(0,0,0,.15)}
+.modal-box h3{font-size:17px;color:var(--navy);margin-bottom:16px}
+.modal-actions{display:flex;gap:10px;margin-top:18px;justify-content:flex-end}
+.ver-item{display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid var(--bdr);font-size:13px}
+.ver-item:last-child{border-bottom:none}
+.status-select{padding:6px 12px;border-radius:8px;font-size:13px;font-weight:600;border:1.5px solid var(--bdr);background:#fff;cursor:pointer}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1f2937;color:#fff;padding:12px 24px;border-radius:10px;font-size:14px;z-index:9999;opacity:0;transition:opacity .3s;pointer-events:none}
+.toast.show{opacity:1}
+.loading{display:flex;align-items:center;justify-content:center;padding:60px;color:var(--mu);font-size:15px}
+.spinner{width:28px;height:28px;border:3px solid var(--bdr);border-top-color:var(--blue);border-radius:50%;animation:spin .7s linear infinite;margin-left:10px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.stitle{font-size:14px;font-weight:700;border:1px dashed #d4a017;border-radius:6px;padding:4px 8px;background:#fffbe6;display:inline-block;min-width:180px}
+@media(max-width:640px){.header,.filters,.list-wrap,.editor-header,.editor-body{padding-right:16px;padding-left:16px}.inline-row{grid-template-columns:1fr}.btn-sm{padding:5px 8px;font-size:11px}}
 </style>
 </head>
 <body>
-<!-- LOGIN -->
-<div id="lw">
-  <div class="lbox">
-    <div class="llogo">yeda</div>
-    <div class="lsub">ממשק ניהול חוזים</div>
-    <input class="linp" type="password" id="pw" placeholder="סיסמה"
-           onkeydown="if(event.key==='Enter')doLogin()">
-    <button class="lbtn" onclick="doLogin()">כניסה</button>
-    <div class="lerr" id="lerr">סיסמה שגויה</div>
+
+<div id="loginView" class="login-wrap"><div class="login-box"><div class="logo">yeda</div><div class="sub">ניהול הסכמים דיגיטליים</div><input type="password" id="pwdInput" placeholder="סיסמה" autofocus><button class="btn-login" id="loginBtn">כניסה</button><div class="login-err" id="loginErr">סיסמה שגויה</div></div></div>
+
+<div id="appView" style="display:none">
+  <div id="listView">
+    <div class="header"><div class="logo">yeda</div><div class="title">ניהול הסכמים</div><div class="spacer"></div><button class="btn btn-primary" id="btnNew">+ הסכם חדש</button></div>
+    <div class="filters"><div class="chip active" data-f="all">הכל</div><div class="chip" data-f="draft">טיוטה</div><div class="chip" data-f="sent">נשלח</div><div class="chip" data-f="signed">נחתם</div><div class="chip" data-f="cancelled">בוטל</div><div class="counter" id="counter"></div></div>
+    <div class="list-wrap" id="contractsList"></div>
+  </div>
+  <div id="editorView" class="editor-wrap">
+    <div class="editor-header"><button class="btn btn-secondary btn-sm" id="btnBack">← חזור לרשימה</button><select class="status-select" id="edStatusSelect"><option value="draft">טיוטה</option><option value="sent">נשלח</option><option value="signed">נחתם</option><option value="cancelled">בוטל</option></select><div class="spacer"></div><button class="btn btn-primary btn-sm" id="btnSave">💾 שמור</button><button class="btn btn-secondary btn-sm" id="btnSaveVer">📄 שמור גרסה</button><button class="btn btn-secondary btn-sm" id="btnCopyLink">🔗 העתק קישור</button></div>
+    <div class="editor-body" id="editorBody"></div>
   </div>
 </div>
-<!-- APP -->
-<div id="app">
-  <div class="topbar">
-    <div class="tlogo">yeda admin</div>
-    <div class="tabs" id="tabRow">
-      <button class="tab active" data-s="1" onclick="switchSlot(1)">חוזה 1</button>
-      <button class="tab" data-s="2" onclick="switchSlot(2)">חוזה 2</button>
-      <button class="tab" data-s="3" onclick="switchSlot(3)">חוזה 3</button>
-    </div>
-    <button class="lout" onclick="doLogout()">יציאה</button>
-  </div>
-  <div class="main">
-    <div class="slot-panel active" id="p1"></div>
-    <div class="slot-panel" id="p2"></div>
-    <div class="slot-panel" id="p3"></div>
-  </div>
-</div>
+
+<div class="modal-overlay" id="addClientModal"><div class="modal-box"><h3>הוספת לקוח חדש</h3>
+  <label>שם הלקוח *</label><input type="text" id="nc_name" placeholder="שם החברה">
+  <label>תיאור קצר</label><input type="text" id="nc_desc" placeholder="תיאור קצר של החברה">
+  <label>קישור לאתר</label><input type="url" id="nc_url" placeholder="https://example.com">
+  <label>לוגו (PNG/JPG)</label><input type="file" id="nc_logo" accept="image/png,image/jpeg,image/webp" style="padding:8px">
+  <p style="font-size:11px;color:var(--mu);margin-top:6px">הלוגו יש להעלות ידנית ל-GitHub Pages בנתיב logos/[id].png — מומלץ: PNG שקוף, 200×140px</p>
+  <div class="modal-actions"><button class="btn btn-secondary btn-sm" onclick="document.getElementById('addClientModal').classList.remove('show')">ביטול</button><button class="btn btn-primary btn-sm" id="btnAddClient">הוסף לקוח</button></div>
+</div></div>
+
+<div class="toast" id="toast"></div>
 
 <script>
-const PASS='yedacontracts2026';
-const N8N_SAVE='https://yedauto.com/webhook/yeda-save';
-const N8N_LOAD='https://yedauto.com/webhook/yeda-load';
-const N8N_VER='https://yedauto.com/webhook/yeda-save-version';
-const N8N_SAVE_VER='https://yedauto.com/webhook/yeda-save-version';
-const PROP_URL='https://yedatechdesign.github.io/client-contracts/proposal.html';
-const LOGOS='https://yedatechdesign.github.io/client-contracts/logos/';
+const PASS='yedacontracts2026',N8N_BASE='https://yedauto.com/webhook';
+const N8N_LIST=N8N_BASE+'/yeda-contracts-list',N8N_CREATE=N8N_BASE+'/yeda-contract-create',N8N_LOAD=N8N_BASE+'/yeda-contract-load',N8N_SAVE=N8N_BASE+'/yeda-contract-save',N8N_DELETE=N8N_BASE+'/yeda-contract-delete',N8N_SAVE_VER=N8N_BASE+'/yeda-save-version',N8N_STATUS=N8N_BASE+'/yeda-status-update';
+const PROP_URL='https://yedatechdesign.github.io/client-contracts/proposal.html',LOGO_BASE='https://yedatechdesign.github.io/client-contracts/logos/';
 
-const ALL_CLIENTS=[
-  {id:'client1',name:'HackerU'},{id:'client2',name:'IPC'},{id:'client3',name:'אורין שפלטר'},
-  {id:'client4',name:'ThriveDX'},{id:'client5',name:'גומא גבים'},{id:'client6',name:'קול המס'},
-  {id:'client7',name:'HIGHQ'},{id:'client8',name:'פישר'},{id:'client9',name:'מובמנט'},
-  {id:'client10',name:'אולג׳ובס'},{id:'client11',name:'מלם טים'},{id:'client12',name:'כלכליסט'},
-];
+const DC={client1:{name:'HackerU',desc:'המכללה המובילה בארץ להכשרה במקצועות סייבר והייטק'},client2:{name:'מכללת IPC',desc:'המכללה המובילה בתחום ההכשרות המקצועיות'},client3:{name:'מכללת אורין שפלטר',desc:'המכללה המובילה להוראה הפיננסית'},client4:{name:'ThriveDX',desc:'חברה גלובלית המתמחה בהכשרות דיגיטליות'},client5:{name:'מרכז גומא גבים',desc:'המכללה המובילה לגישור, אימון ולימודי משפחה'},client6:{name:'מכללת קול המס',desc:'מכללה בפיקוח לשכת רו"ח ולשכת יועצי המס'},client7:{name:'HIGHQ',desc:'המכללה המובילה בישראל להכנה לבחינות בגרות ופסיכומטרי'},client8:{name:'פירמת עורכי הדין פישר',desc:'משרדי עורכי הדין הגדולים והמובילים בישראל'},client9:{name:'קבוצת מובמנט',desc:'החברה המובילה בארץ לקידום בריאות בארגונים'},client10:{name:'אולג׳ובס',desc:'האתר המוביל לחיפוש עבודה'},client11:{name:'מלם טים',desc:'קבוצת שירותי ה-IT המובילה בישראל'},client12:{name:'כלכליסט',desc:'אתר החדשות הכלכלי המוביל בישראל'}};
+const STATUS_HE={draft:'טיוטה',sent:'נשלח',signed:'נחתם ✓',cancelled:'בוטל'};
+const ST_DEF={matara:'מטרה',milestones:'אבני דרך',why:'למה אנחנו?',clients:'עובדים עם Yeda:',costs:'עלויות ותנאי תשלום',optional:'שירותים אופציונליים לפי שימוש בפועל',tokens:"חבילות טוקנים לשימוש ב-AI וצ'אטבוט",terms:'תנאי ההסכם'};
 
-const DD={
-  title:'הצעת מחיר – פיתוח מערכת מותאמת אישית',client_name:'',link_token:'',versions:[],
-  matara:'פיתוח מערכת מותאמת אישית ליצירת תכנים עם AI לפי אפיון מאושר מראש, הקמת אתר לניהול למידה ומעקב ביצועים תחת מערכת Yeda. המערכת תאפשר ניהול תהליכי למידה ומעקב אחר התקדמות ההכשרות, כולל רישום, צפייה בתכנים, ומדידה של התקדמות המשתתפים לאורך זמן.',
-  milestones:[
-    {id:'m0',num:'0',title:'חתימה והעברת תשלום ראשון',desc:'חתימת חוזה בין הצדדים והעברת התשלום הראשון, המאשרים התחייבות הצדדים להפעלת הפרויקט.'},
-    {id:'m1',num:'1',title:'פגישת אפיון',desc:'פגישה מקיפה עם נציגי הלקוח לתיאור מלא של דרישות המערכת, היכולות הנדרשות, מבנה ההיררכיות הארגוניות וצרכי המשתמשים.'},
-    {id:'m2',num:'2',title:'אישור אפיון',desc:'הכנת מסמך אפיון מפורט המפרט את כל הדרישות, ההיכולות והתכונות. אישור מטעם הלקוח על התאמת האפיון לצרכיו.'},
-    {id:'m3',num:'3',title:'הקמת אתר',desc:'ביצוע חיבור טכני של דומיין, הגדרת מבנה תכנים והרשאות, עיצוב והתאמת הפורטל למיתוג, הכנת תבנית להזנת ההדרכות.'},
-    {id:'m4',num:'4',title:'פיתוח',desc:'פיתוח מערכת יצירת חומרי למידה עם AI בהתאם לאפיון המאושר, והעלאה לאוויר.'}
-  ],
-  why_intro:'הפלטפורמה מאפשרת למכללות להקים ולהפעיל מערך קורסים דיגיטליים ופרונטליים, תוך שילוב כלים מתקדמים למעקב אחר התקדמות המשתמשים וביצועיהם.',
-  why_items:['פתרון מלא לבניית קורסים דיגיטליים','זמינות גבוהה ומענה מהיר לכל צורך','אבטחת מידע ברמה גבוהה','מנהל תיק אישי זמין','דוחות מעקב התקדמות','התנהלות בקבוצת Whatsapp'],
-  selected_clients:['client1','client2','client3','client4','client5','client6','client7','client8','client9','client10','client11','client12'],
-  costs_subtitle:'מחירון - הקמת מערכת ניהול למידה ופיתוח מערכת יצירת חומרי למידה',
-  costs_rows:[['פיתוח','250 ₪ לשעה'],['מערכת ניהול למידה (שנה ראשונה)','11,988 ₪ (כולל 100GB אחסון ו-200GB תעבורה)'],["10,000 קרדיטים לכלי AI וצ'אטבוטים",'2,310 ₪']],
-  payments:[
-    {num:1,title:'חתימה והעברת תשלום ראשון',desc:'100 שעות פיתוח (25,000 ₪) + 1/3 עלות מערכת ניהול למידה (3,996 ₪)',total:'28,996 ₪'},
-    {num:2,title:'לאחר אישור אפיון',desc:'1/3 עלות מערכת ניהול למידה (3,996 ₪)',total:'3,996 ₪'},
-    {num:3,title:'לאחר הקמת האתר',desc:'1/3 עלות מערכת ניהול למידה (3,996 ₪) + עלות קרדיטים לשימוש ב-AI (2,310 ₪)',total:'6,306 ₪'},
-    {num:4,title:'בסיום הפיתוח',desc:'100 שעות פיתוח לאחר ה-100 שעות הראשונות בהתאם לאפיון המאושר + שעות נוספות לפי 250 ₪ לשעה.',total:'ישתנה'}
-  ],
-  optional:[{title:'אחסון נוסף עד 1TB',price:'250 ₪ לחודש'},{title:'תעבורה נוספת עד 2TB',price:'250 ₪ לחודש'},{title:'טוקנים נוספים',price:'0.07$ × 3.3 ₪'}],
-  token_packages:[{amount:'10,000 טוקנים',original:'3,600₪',sale:'3,420₪'},{amount:'20,000 טוקנים',original:'7,200₪',sale:'6,480₪',featured:true},{amount:'40,000 טוקנים',original:'14,400₪',sale:'12,960₪'}],
-  token_examples:['יצירת 10 סילבוסים = 20-40 טוקנים AI','יצירת 100 שקופיות = 20-25 טוקנים AI','כתוביות לשעה = 15-30 טוקנים AI','שאלות לשעה = 10-15 טוקנים AI','חלוקה לפרקים = 5-10 טוקנים AI','תרגום כתוביות = 80-130 טוקנים AI','לומדה מקבצים = 300-500 טוקנים AI','3 שאלות לעוזר = 1 טוקן AI'],
-  terms:[
-    {id:'t1',title:'מערכת ניהול למידה',text:'הלקוח יקבל אתרים אישיים המוקמים על גבי פלטפורמת Yeda ומחוברים לדומיינים של הלקוח, בהתאם למבנה ולמספר האתרים שנרכשו. הפלטפורמה כוללת אתרים מלאים, מערכת ניהול למידה (LMS), אפשרות לחיבור מערכת תשלומים, עדכוני גרסה, תמיכה טכנית מלאה, קבוצת ווטסאפ ייעודית והדרכות. בהתאם להסכם, ההתקשרות היא בהתחייבות ללא אפשרות יציאה מוקדמת, והמחיר מפורט בהצעת המחיר. החבילה מאפשרת שימוש ללא הגבלת כמות משתמשים פעילים למשך שלוש שנות פעילות. בתום התקופה, המחיר עשוי להשתנות בהתאם להיקף השימוש בפועל.'},
-    {id:'t2',title:'פלטפורמת AI ולומדות',text:'בנוסף, הלקוח יקבל גישה לפלטפורמה המיועדת לבנייה, עיצוב, הקלטה ואחסון של מצגות, וידאו, לומדות אינטראקטיביות ועוזרי למידה מבוססי AI. העלויות מפורטות בסיכום המחירים בהתאם לנפחי השימוש, וייתכנו חיובים נוספים במקרה של חריגה.'},
-    {id:'t3',title:'הגבלת אחריות',text:'חברת ידע פיתוח סביבות למידה בע"מ ו/או מי מטעמה אינם נושאים כל אחריות בקשר לכל תביעה משפטית הקשורה בדיני אינטרנט, לרבות נגישות, רישום דטאות, שמירה על פרטיות, חוק הספאם ועוד. מומלץ ללקוח להיוועץ בעו"ד המתמחה בתחום. השימוש באתר כפוף למדיניות פרטיות ותקנון תנאי שימוש בנוסחו מעת לעת.'},
-    {id:'t4',title:'קניין רוחני',text:'מובהר כי הקניין הרוחני המלא של מוצרי תוכן באתר וזכויות היוצרים יהיו שייכים ללקוח.'},
-    {id:'t5',title:'סודיות',text:'חברת ידע בע"מ מתחייבת לשמירה על סודיות וזכויות היוצרים — לא לשלוח ולשתף חומרים מתוך הקורסים, דטאות משתמשים, או מידע אחר עם צד שלישי ללא רשותו של הלקוח.'}
-  ],
-  signed:false, token:'', versions:[]
-};
+const DEF={title:'הצעת מחיר – פיתוח מערכת מותאמת אישית',client_name:'',section_titles:{...ST_DEF},
+matara:'פיתוח מערכת מותאמת אישית ליצירת תכנים עם AI לפי אפיון מאושר מראש, הקמת אתר לניהול למידה ומעקב ביצועים תחת מערכת Yeda. המערכת תאפשר ניהול תהליכי למידה ומעקב אחר התקדמות ההכשרות, כולל רישום, צפייה בתכנים, ומדידה של התקדמות המשתתפים לאורך זמן.',
+milestones:[{id:'m0',num:'0',title:'חתימה והעברת תשלום ראשון',desc:'חתימת חוזה בין הצדדים והעברת התשלום הראשון, המאשרים התחייבות הצדדים להפעלת הפרויקט.'},{id:'m1',num:'1',title:'פגישת אפיון',desc:'פגישה מקיפה עם נציגי הלקוח לתיאור מלא של דרישות המערכת, היכולות הנדרשות, מבנה ההיררכיות הארגוניות וצרכי המשתמשים.'},{id:'m2',num:'2',title:'אישור אפיון',desc:'הכנת מסמך אפיון מפורט המפרט את כל הדרישות, ההיכולות והתכונות המערכת. אישור מטעם הלקוח על התאמת האפיון לצרכיו.'},{id:'m3',num:'3',title:'הקמת אתר',desc:'ביצוע חיבור טכני של דומיין, הגדרת מבנה תכנים והרשאות, עיצוב והתאמת הפורטל למיתוג, הכנת תבנית להזנת ההדרכות.'},{id:'m4',num:'4',title:'פיתוח',desc:'פיתוח מערכת יצירת חומרי למידה עם AI בהתאם לאפיון המאושר, והעלאה לאוויר.'}],
+why_intro:'הפלטפורמה מאפשרת למכללות להקים ולהפעיל מערך קורסים דיגיטליים ופרונטליים, תוך שילוב כלים מתקדמים למעקב אחר התקדמות המשתמשים וביצועיהם. המערכת כוללת דוחות מפורטים עם נתוני צפייה, תוצאות מבחנים וסטטיסטיקות שימוש, ומספקת תמונה מלאה על תהליך הלמידה. כל זאת, תוך שמירה על <b>אבטחת מידע ברמה הגבוהה</b> ו<b>תמיכה מלאה</b> בניהול התכנים וליווי שוטף.',
+why_items:['פתרון מלא לבניית קורסים דיגיטליים','זמינות גבוהה ומענה מהיר לכל צורך','אבטחת מידע ברמה גבוהה','מנהל תיק אישי זמין לכל התייעצות','דוחות מעקב התקדמות בהתאמה אישית','התנהלות בקבוצת Whatsapp ייחודית'],
+selected_clients:['client1','client2','client3','client4','client5','client6','client7','client8','client9','client10','client11','client12'],
+custom_clients:{},
+costs_subtitle:'מחירון - הקמת מערכת ניהול למידה ופיתוח מערכת יצירת חומרי למידה',
+costs_rows:[['פיתוח','250 ₪ לשעה'],['מערכת ניהול למידה (שנה ראשונה)','11,988 ₪ (כולל 100GB אחסון ו-200GB תעבורה)'],["10,000 קרדיטים לכלי AI וצ'אטבוטים",'2,310 ₪']],
+payments:[{num:1,title:'חתימה והעברת תשלום ראשון',desc:'100 שעות פיתוח (25,000 ₪) + 1/3 עלות מערכת ניהול למידה (3,996 ₪)',total:'28,996 ₪'},{num:2,title:'לאחר אישור אפיון',desc:'1/3 עלות מערכת ניהול למידה (3,996 ₪)',total:'3,996 ₪'},{num:3,title:'לאחר הקמת האתר',desc:'1/3 עלות מערכת ניהול למידה (3,996 ₪) + עלות קרדיטים לשימוש ב-AI (2,310 ₪)',total:'6,306 ₪'},{num:4,title:'בסיום הפיתוח',desc:'100 שעות פיתוח לאחר ה-100 שעות הראשונות + שעות נוספות לפי 250 ₪ לשעה.',total:'ישתנה'}],
+optional:[{title:'אחסון נוסף עד 1TB',price:'250 ₪ לחודש'},{title:'תעבורה נוספת עד 2TB',price:'250 ₪ לחודש'},{title:'טוקנים נוספים',price:'0.07$ × 3.3 ₪'}],
+token_packages:[{amount:'10,000 טוקנים',original:'3,600₪',sale:'3,420₪',featured:false},{amount:'20,000 טוקנים',original:'7,200₪',sale:'6,480₪',featured:true},{amount:'40,000 טוקנים',original:'14,400₪',sale:'12,960₪',featured:false}],
+token_examples:['*יצירת 10 סילבוסים = 20-40 טוקנים AI','*יצירת תוכן למצגות - 100 שקופיות = 20-25 טוקנים AI','*יצירת כתוביות לשעה של וידאו = 15-30 טוקנים AI','*יצירת שאלות לשעה של וידאו = 10-15 טוקנים AI','*חלוקה לפרקים לשעה של וידאו = 5-10 טוקנים AI','*תרגום כתוביות לשעה של וידאו = 80-130 טוקנים AI','יצירת לומדה מקבצים = 300-500 טוקנים AI','*3 שאלות לעוזר האישי = 1 טוקן AI'],
+terms:[{id:'t1',title:'מערכת ניהול למידה',text:'הלקוח יקבל אתרים אישיים המוקמים על גבי פלטפורמת Yeda ומחוברים לדומיינים של הלקוח, בהתאם למבנה ולמספר האתרים שנרכשו. הפלטפורמה כוללת אתרים מלאים, מערכת ניהול למידה (LMS), אפשרות לחיבור מערכת תשלומים, עדכוני גרסה, תמיכה טכנית מלאה, קבוצת ווטסאפ ייעודית והדרכות. בהתאם להסכם, ההתקשרות היא בהתחייבות ללא אפשרות יציאה מוקדמת, והמחיר מפורט בהצעת המחיר. החבילה מאפשרת שימוש ללא הגבלת כמות משתמשים פעילים למשך שלוש שנות פעילות. בתום התקופה, המחיר עשוי להשתנות בהתאם להיקף השימוש בפועל.'},{id:'t2',title:'פלטפורמת AI ולומדות',text:'בנוסף, הלקוח יקבל גישה לפלטפורמה המיועדת לבנייה, עיצוב, הקלטה ואחסון של מצגות, וידאו, לומדות אינטראקטיביות ועוזרי למידה מבוססי AI. העלויות מפורטות בסיכום המחירים בהתאם לנפחי השימוש, וייתכנו חיובים נוספים במקרה של חריגה מהיקפי השימוש הכלולים בתקופת ההתקשרות.'},{id:'t3',title:'הגבלת אחריות',text:'חברת ידע פיתוח סביבות למידה בע"מ ו/או מי מטעמה אינם נושאים כל אחריות בקשר לכל תביעה משפטית או כל תלונה אחרת שהלקוח עלול לקבל בגין עבירה על חוקים ומגבלות הקשורים בדיני אינטרנט, לרבות הנושא נגישות, רישום דטאות, שמירה על פרטיות, חוק הספאם ועוד. מומלץ ללקוח להיוועץ בעו"ד המתמחה בתחום, על מנת להבטיח שלא תוגש כנגדו תלונה. השימוש באתר כפוף למדיניות פרטיות ותקנון תנאי שימוש בנוסחו מעת לעת.'},{id:'t4',title:'קניין רוחני',text:'מובהר כי הקניין הרוחני המלא של המוצרי תוכן באתר וזכויות היוצרים יהיו שייכים ללקוח.'},{id:'t5',title:'סודיות',text:'חברת ידע בע"מ מתחייבת לשמירה על סודיות וזכויות היוצרים - לא לשלוח ולשתף חומרים מתוך הקורסים או / ו דטאות משתמשים או / ו מידע הנחשף כלשהו וחומרים אחרים שאינם נחלת הכלל עם צד שלישי ללא רשותו של הלקוח.'}]};
 
-let _pw='', _cur=1, _sd={1:null,2:null,3:null};
+function merge(def,ld){const o={};for(const k of Object.keys(def)){const v=ld[k];if(Array.isArray(def[k]))o[k]=(Array.isArray(v)&&v.length>0)?v:def[k];else if(typeof def[k]==='object'&&def[k]!==null)o[k]=(v&&typeof v==='object')?{...def[k],...v}:def[k];else o[k]=(v!==undefined&&v!==null&&v!=='')?v:def[k]}for(const k of Object.keys(ld)){if(!(k in o))o[k]=ld[k]}return o}
+function gv(d,k){return(d[k]!==undefined&&d[k]!==null&&d[k]!=='')?d[k]:DEF[k]}
+function ga(d,k){const v=d[k];return(Array.isArray(v)&&v.length>0)?v:DEF[k]}
+function allCl(d){return{...DC,...(d?.custom_clients||{})}}
+function st(d,k){return d?.section_titles?.[k]||ST_DEF[k]||''}
 
-function genToken(){return Math.random().toString(36).slice(2,10)+Date.now().toString(36)}
+let password='',currentFilter='all',contracts=[],CC=null,CID=null;
+const $=id=>document.getElementById(id);
+const esc=s=>{const d=document.createElement('div');d.textContent=s;return d.innerHTML};
+function fmtD(iso){if(!iso)return'—';const d=new Date(iso);return`${String(d.getDate()).padStart(2,'0')}.${String(d.getMonth()+1).padStart(2,'0')}.${d.getFullYear()}`}
+function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500)}
+async function api(u,b){return(await fetch(u,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)})).json()}
 
-function doLogin(){
-  const v=document.getElementById('pw').value;
-  if(v!==PASS){document.getElementById('lerr').style.display='block';return;}
-  _pw=v;document.getElementById('lw').style.display='none';document.getElementById('app').style.display='block';
-  loadAll();
-}
-function doLogout(){_pw='';document.getElementById('lw').style.display='flex';document.getElementById('app').style.display='none';document.getElementById('pw').value=''}
+function initLogin(){const s=sessionStorage.getItem('yeda_pwd');if(s===PASS){password=PASS;showApp();return}$('loginView').style.display='flex';$('loginBtn').onclick=()=>{const v=$('pwdInput').value.trim();if(v===PASS){password=v;sessionStorage.setItem('yeda_pwd',v);showApp()}else $('loginErr').style.display='block'};$('pwdInput').onkeydown=e=>{if(e.key==='Enter')$('loginBtn').click()}}
+function showApp(){$('loginView').style.display='none';$('appView').style.display='block';loadList()}
 
-async function loadAll(){
-  for(let s=1;s<=3;s++){
-    try{
-      const r=await fetch(N8N_LOAD,{method:'POST',headers:{'Content-Type':'application/json'},
-        cache:'no-store',body:JSON.stringify({slot:s,password:_pw,mode:'admin'})});
-      const raw=await r.json();
-      let d=null;
-      if(Array.isArray(raw)){
-        const first=raw[0]; d=first?.json||first||null;
-      } else if(raw&&typeof raw==='object'){
-        if(raw.slot!==undefined||raw.matara||raw.title||raw.milestones){ d=raw; }
-        else if(raw.json&&(raw.json.slot!==undefined||raw.json.title||raw.json.matara)){ d=raw.json; }
-        else {
-          const str=raw.rawText||raw.body||raw.data||raw.content||'';
-          if(typeof str==='string'&&str.includes('"slot"')){ try{d=JSON.parse(str);}catch(e){} }
-          if(!d&&Object.keys(raw).length>2) d=raw;
-        }
-      }
-      _sd[s]=(d&&(d.title||d.client_name||d.matara||d.slot))?d:null;
-    }catch(e){_sd[s]=null;}
-    renderPanel(s);updateTab(s);
-  }
-}
+async function loadList(){$('contractsList').innerHTML='<div class="loading"><div class="spinner"></div>טוען...</div>';try{const d=await api(N8N_LIST,{password,status_filter:currentFilter});contracts=d.contracts||[];renderList()}catch(e){$('contractsList').innerHTML='<div class="loading" style="color:var(--rd)">שגיאה</div>'}}
+function renderList(){$('counter').textContent=`סה"כ: ${contracts.length} הסכמים`;if(!contracts.length){$('contractsList').innerHTML='<div class="loading" style="color:var(--mu)">אין הסכמים</div>';return}$('contractsList').innerHTML=contracts.map(c=>`<div class="contract-card"><div class="cc-top"><span class="badge ${c.status}">${STATUS_HE[c.status]||c.status}</span><span class="cc-title">${esc(c.title||'ללא כותרת')}</span></div><div class="cc-client">${esc(c.client_name||'—')}</div><div class="cc-dates">נוצר: ${fmtD(c.created_at)} · עודכן: ${fmtD(c.updated_at)}${c.signed_at?' · נחתם: '+fmtD(c.signed_at)+' ('+esc(c.signer_name||'')+')':''}</div><div class="cc-actions"><button class="btn btn-primary btn-sm" onclick="editC('${c.id}')">✏ ערוך</button><button class="btn btn-secondary btn-sm" onclick="cpLink('${c.id}','${c.token}')">📋 קישור</button><button class="btn btn-secondary btn-sm" onclick="window.open('${PROP_URL}?id=${c.id}&token=${c.token}','_blank')">👁 צפה</button><button class="btn btn-danger btn-sm" onclick="delC('${c.id}')">🗑</button></div></div>`).join('')}
+document.querySelectorAll('.chip').forEach(ch=>{ch.onclick=()=>{document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));ch.classList.add('active');currentFilter=ch.dataset.f;loadList()}});
+$('btnNew').onclick=async()=>{$('btnNew').disabled=true;try{const d=await api(N8N_CREATE,{password});toast('הסכם חדש נוצר');await loadList();editC(d.id)}catch(e){toast('שגיאה')}$('btnNew').disabled=false};
+function cpLink(id,tk){navigator.clipboard.writeText(`${PROP_URL}?id=${id}&token=${tk}`).then(()=>toast('הקישור הועתק'))}
+async function delC(id){if(!confirm('למחוק?'))return;try{await api(N8N_DELETE,{password,contract_id:id,drive_file_id:''});toast('נמחק');loadList()}catch(e){toast('שגיאה')}}
 
-function switchSlot(s){
-  _cur=s;
-  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',+t.dataset.s===s));
-  document.querySelectorAll('.slot-panel').forEach(p=>p.classList.remove('active'));
-  document.getElementById('p'+s).classList.add('active');
-}
+async function editC(id){$('listView').style.display='none';$('editorView').style.display='block';$('editorView').classList.add('editor-wrap');$('editorBody').innerHTML='<div class="loading"><div class="spinner"></div>טוען...</div>';CID=id;try{const r=await api(N8N_LOAD,{contract_id:id,mode:'admin'});const m=r._meta||{};delete r._meta;CC=merge(DEF,r);CC._meta=m;$('edStatusSelect').value=m.status||'draft';renderEd()}catch(e){$('editorBody').innerHTML='<div class="loading" style="color:var(--rd)">שגיאה</div>'}}
+$('btnBack').onclick=()=>{$('editorView').style.display='none';$('listView').style.display='block';loadList()};
+$('edStatusSelect').onchange=async()=>{try{await api(N8N_STATUS,{password,contract_id:CID,status:$('edStatusSelect').value});toast('סטטוס עודכן')}catch(e){toast('שגיאה')}};
+$('btnSave').onclick=async()=>{collect();$('btnSave').disabled=true;try{await api(N8N_SAVE,{password,contract_id:CID,...CC});toast('נשמר')}catch(e){toast('שגיאה')}$('btnSave').disabled=false};
+$('btnSaveVer').onclick=async()=>{collect();const vn=(CC.versions||[]).length+1;$('btnSaveVer').disabled=true;try{await api(N8N_SAVE,{password,contract_id:CID,...CC});await api(N8N_SAVE_VER,{password,contract_id:CID,version_number:vn,...CC});toast('גרסה נשמרה');editC(CID)}catch(e){toast('שגיאה')}$('btnSaveVer').disabled=false};
+$('btnCopyLink').onclick=()=>cpLink(CID,CC?.token||CC?._meta?.token||'');
 
-function updateTab(s){
-  const d=_sd[s];
-  const nm=d?.client_name||'חוזה '+s;
-  const dot=d?.signed?'<span class="sdot"></span>':'';
-  document.querySelector(`.tab[data-s="${s}"]`).innerHTML=dot+nm;
-}
+function stF(k,d){return`<input type="text" class="stitle" data-sk="${k}" value="${esc(st(d,k))}" onclick="event.stopPropagation()">`}
+function renderEd(){const d=CC,cl=allCl(d),body=$('editorBody');
+body.innerHTML=`
+<div class="acc open"><div class="acc-head" onclick="tAcc(this)">📋 פרטי הסכם<span class="arrow">▾</span></div><div class="acc-body"><label>כותרת</label><input type="text" id="ed_title" value="${esc(gv(d,'title'))}"><label>שם לקוח</label><input type="text" id="ed_client_name" value="${esc(gv(d,'client_name'))}"></div></div>
 
-function getLink(s){
-  const tok=_sd[s]?.link_token||_sd[s]?.token||'';
-  return tok?(PROP_URL+'?slot='+s+'&token='+tok):'';
-}
+<div class="acc"><div class="acc-head" onclick="tAcc(this)">🎯 ${stF('matara',d)}<span class="arrow">▾</span></div><div class="acc-body"><textarea id="ed_matara" rows="4">${esc(gv(d,'matara'))}</textarea></div></div>
 
-/* ── RENDER PANEL ── */
-function mergeDD(def, loaded){
-  const out={};
-  for(const k of Object.keys(def)){
-    const lv=loaded[k];
-    if(Array.isArray(def[k])){
-      out[k]=(Array.isArray(lv)&&lv.length>0)?lv:def[k];
-    } else {
-      out[k]=(lv!==undefined&&lv!==null&&lv!=='')?lv:def[k];
-    }
-  }
-  for(const k of Object.keys(loaded)){if(!(k in out))out[k]=loaded[k];}
-  return out;
-}
-function renderPanel(s){
-  const d=mergeDD(DD,_sd[s]||{});
-  const signed=d.signed===true;
-  const link=getLink(s);
-  const versions=d.versions||[];
-  const p=document.getElementById('p'+s);
-  p.innerHTML=`
-    ${signed?`<div class="signed-banner"><div class="sbtext">✓ נחתם — ${d.signer_name||''} — ${d.signer_date||''}</div><button class="resetbtn" onclick="resetSlot(${s})">🗑 אפס</button></div>`:''}
-    ${acc(s,'basic','📋','פרטי הצעה',basicHTML(s,d,signed),'open')}
-    ${acc(s,'link','🔗','קישור לחתימה',linkHTML(s,link,versions,signed),'open')}
-    ${acc(s,'matara','🎯','מטרה',mataraHTML(s,d,signed))}
-    ${acc(s,'ms','🪜','אבני דרך',msHTML(s,d,signed))}
-    ${acc(s,'why','💡','למה אנחנו?',whyHTML(s,d,signed))}
-    ${acc(s,'clients','🏢','עובדים עם Yeda',clientsHTML(s,d,signed))}
-    ${acc(s,'costs','💰','עלויות ותנאי תשלום',costsHTML(s,d,signed))}
-    ${acc(s,'opt','➕','שירותים אופציונליים',optHTML(s,d,signed))}
-    ${acc(s,'tok','🤖','חבילות טוקנים',tokHTML(s,d,signed))}
-    ${acc(s,'terms','📜','תנאי ההסכם',termsHTML(s,d,signed))}
-    ${!signed?`<div class="save-bar">
-      <button class="save-btn" id="sbtn${s}" onclick="saveSlot(${s})">
-        <div class="ssp" id="ssp${s}"></div><span id="stxt${s}">💾 שמור שינויים</span>
-      </button>
-      <button class="ver-btn" id="vbtn${s}" onclick="saveVersion(${s})" title="שמור גרסת PDF">
-        <div class="vsp" id="vsp${s}"></div><span id="vtxt${s}">📄 שמור גרסה</span>
-      </button>
-      <div class="save-msg" id="smsg${s}"></div>
-    </div>`:''}`;
-}
+<div class="acc"><div class="acc-head" onclick="tAcc(this)">🪜 ${stF('milestones',d)}<span class="arrow">▾</span></div><div class="acc-body"><div id="ed_ms">${ga(d,'milestones').map((m,i)=>msB(m,i)).join('')}</div><button class="btn btn-secondary btn-sm" style="margin-top:8px" onclick="addMs()">+ הוסף אבן דרך</button></div></div>
 
-function acc(s,id,icon,title,body,openClass=''){
-  return `<div class="acc${openClass?' open':''}" id="ac-${s}-${id}">
-    <div class="acc-head" onclick="document.getElementById('ac-${s}-${id}').classList.toggle('open')">
-      <div class="acc-hl"><div class="acc-ico">${icon}</div><div class="acc-t">${title}</div></div>
-      <span class="acc-arr">▾</span>
-    </div>
-    <div class="acc-body">${body}</div>
-  </div>`;
-}
+<div class="acc"><div class="acc-head" onclick="tAcc(this)">💡 ${stF('why',d)}<span class="arrow">▾</span></div><div class="acc-body"><label>טקסט פתיחה (תומך &lt;b&gt; לבולד)</label><textarea id="ed_why_intro" rows="4">${esc(gv(d,'why_intro'))}</textarea><label>נקודות (שורה לכל נקודה)</label><textarea id="ed_why_items" rows="5">${ga(d,'why_items').join('\n')}</textarea></div></div>
 
-/* ── SECTION HTMLs ── */
-function basicHTML(s,d,dis){
-  return `<div class="frow">
-    <div class="f"><div class="fl">כותרת ההצעה</div><input class="fi" id="${s}-title" value="${h(d.title)}" ${dis?'disabled':''}></div>
-    <div class="f"><div class="fl">שם הלקוח</div><input class="fi" id="${s}-cname" value="${h(d.client_name)}" placeholder="שם חברת הלקוח" ${dis?'disabled':''}></div>
-  </div>`;
-}
+<div class="acc"><div class="acc-head" onclick="tAcc(this)">🏢 ${stF('clients',d)}<span class="arrow">▾</span></div><div class="acc-body">
+<div class="clients-grid" id="ed_cl">${Object.entries(cl).map(([id,inf])=>`<div class="client-logo-item ${ga(d,'selected_clients').includes(id)?'selected':''}" data-cid="${id}" onclick="tCl(this)"><button class="del-client" onclick="event.stopPropagation();rmCl('${id}')" title="מחק">✕</button><img src="${LOGO_BASE}${id}.png" onerror="this.style.display='none'" alt="${esc(inf.name)}"><div class="cname">${esc(inf.name)}</div><div class="cdesc">${esc(inf.desc||'')}</div></div>`).join('')}</div>
+<button class="btn btn-primary btn-sm" style="margin-top:12px" onclick="document.getElementById('addClientModal').classList.add('show')">+ הוסף לקוח חדש</button></div></div>
 
-function linkHTML(s,link,versions,dis){
-  const verItems=versions.length?versions.map(v=>`
-    <div class="ver-item">
-      <div><div class="ver-name">${h(v.name)}</div><div class="ver-date">${h(v.date)}</div></div>
-      ${v.url?`<button class="ver-dl" onclick="window.open('${v.url}','_blank')">⬇ הורד</button>`:''}
-    </div>`).join(''):`<div class="ver-empty">אין גרסאות שמורות עדיין</div>`;
-  return `<div class="link-area">
-    <div class="link-ttl">קישור ייחודי ללקוח</div>
-    <div class="link-url" id="linkDisplay-${s}">${link}</div>
-    <div class="link-btns">
-      <button class="cp-btn" id="cpbtn${s}" onclick="copyLink(${s})">העתק</button>
-      ${!dis?`<button class="new-token-btn" onclick="refreshToken(${s})" title="צור קישור חדש (הקישור הישן יפסיק לעבוד)">🔄 חדש קישור</button>`:''}
-    </div>
-  </div>
-  <div class="ver-hist">
-    <div class="ver-ttl">היסטוריית גרסאות</div>
-    <div class="ver-list" id="verlist-${s}">${verItems}</div>
-  </div>`;
-}
+<div class="acc"><div class="acc-head" onclick="tAcc(this)">💰 ${stF('costs',d)}<span class="arrow">▾</span></div><div class="acc-body"><label>כותרת משנה</label><input type="text" id="ed_csub" value="${esc(gv(d,'costs_subtitle'))}"><label>שורות עלות (פריט | מחיר)</label><textarea id="ed_cr" rows="4">${ga(d,'costs_rows').map(r=>r.join(' | ')).join('\n')}</textarea><label style="margin-top:16px">תשלומים</label><div id="ed_pay">${ga(d,'payments').map((p,i)=>payB(p,i)).join('')}</div><button class="btn btn-secondary btn-sm" style="margin-top:8px" onclick="addPay()">+ הוסף תשלום</button></div></div>
 
-function mataraHTML(s,d,dis){
-  return `<div class="f"><div class="fl">טקסט מטרה</div><textarea class="fi" id="${s}-matara" rows="4" ${dis?'disabled':''}>${h(d.matara)}</textarea></div>`;
-}
+<div class="acc"><div class="acc-head" onclick="tAcc(this)">➕ ${stF('optional',d)}<span class="arrow">▾</span></div><div class="acc-body"><div id="ed_opt">${ga(d,'optional').map((o,i)=>optB(o,i)).join('')}</div><button class="btn btn-secondary btn-sm" style="margin-top:8px" onclick="addOpt()">+ הוסף שירות</button></div></div>
 
-function msHTML(s,d,dis){
-  const ms=d.milestones||DD.milestones;
-  const list=ms.map((m,i)=>`
-    <div class="bl-card" id="ms-${s}-${m.id}">
-      <div class="bl-top">
-        <div class="bl-num">${m.num!==undefined?m.num:i}</div>
-        <input class="bl-ti fi" id="mst-${s}-${m.id}" value="${h(m.title)}" placeholder="כותרת" ${dis?'disabled':''}>
-        ${!dis?`<button class="bdel" onclick="document.getElementById('ms-${s}-${m.id}').remove()">×</button>`:''}
-      </div>
-      <div class="bl-body"><textarea class="bl-tx fi" id="msd-${s}-${m.id}" placeholder="תיאור" ${dis?'disabled':''}>${h(m.desc)}</textarea></div>
-    </div>`).join('');
-  return `<div class="bl-list" id="msl-${s}">${list}</div>
-    ${!dis?`<button class="add-btn" onclick="addMs(${s})">+ הוסף אבן דרך</button>`:''}`;
-}
+<div class="acc"><div class="acc-head" onclick="tAcc(this)">🤖 ${stF('tokens',d)}<span class="arrow">▾</span></div><div class="acc-body"><div id="ed_tp">${ga(d,'token_packages').map((t,i)=>tpB(t,i)).join('')}</div><button class="btn btn-secondary btn-sm" style="margin-top:8px" onclick="addTp()">+ הוסף חבילה</button><label style="margin-top:16px">דוגמאות שימוש בטוקנים (שורה לכל דוגמה)</label><textarea id="ed_tex" rows="6">${ga(d,'token_examples').join('\n')}</textarea></div></div>
 
-function whyHTML(s,d,dis){
-  const items=d.why_items||DD.why_items;
-  const rows=items.map((it,i)=>`
-    <div class="why-row">
-      <input class="fi" id="wi-${s}-${i}" value="${h(it)}" placeholder="יתרון" ${dis?'disabled':''}>
-      ${!dis?`<button class="bdel" onclick="this.parentElement.remove()">×</button>`:''}
-    </div>`).join('');
-  return `<div class="f" style="margin-bottom:10px"><div class="fl">טקסט מבוא</div>
-    <textarea class="fi" id="${s}-whyintro" rows="3" ${dis?'disabled':''}>${h(d.why_intro)}</textarea></div>
-    <div class="fl" style="margin-bottom:5px">פריטי יתרונות</div>
-    <div class="why-list" id="wil-${s}">${rows}</div>
-    ${!dis?`<button class="add-btn" onclick="addWhy(${s})">+ הוסף יתרון</button>`:''}`;
-}
+<div class="acc"><div class="acc-head" onclick="tAcc(this)">📜 ${stF('terms',d)}<span class="arrow">▾</span></div><div class="acc-body"><div id="ed_trm">${ga(d,'terms').map((t,i)=>trmB(t,i)).join('')}</div><button class="btn btn-secondary btn-sm" style="margin-top:8px" onclick="addTrm()">+ הוסף תנאי</button></div></div>
 
-function clientsHTML(s,d,dis){
-  const sel=d.selected_clients||DD.selected_clients;
-  const cards=ALL_CLIENTS.map(c=>`
-    <div class="cl-c${sel.includes(c.id)?' sel':''}" id="cc-${s}-${c.id}"
-         onclick="${!dis?`tglCl(${s},'${c.id}')`:''}" title="${c.name}">
-      <div class="ckm"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
-      <img src="${LOGOS}${c.id}.png" alt="${c.name}" onerror="this.style.opacity='.15'">
-      <div class="cl-c-name">${c.name.length>9?c.name.slice(0,9)+'…':c.name}</div>
-    </div>`).join('');
-  return `<div class="cl-chk">${cards}</div><div style="font-size:.73rem;color:var(--mu);margin-top:3px">לחץ על לוגו לבחירה/ביטול</div>`;
-}
+<div class="acc"><div class="acc-head" onclick="tAcc(this)">🔗 קישור וגרסאות<span class="arrow">▾</span></div><div class="acc-body"><label>קישור ללקוח</label><div style="padding:8px;background:#f9fafb;border-radius:8px;font-size:13px;word-break:break-all">${PROP_URL}?id=${CID}&token=${d.token||d._meta?.token||''}</div><label style="margin-top:12px">גרסאות PDF</label><div>${(d.versions||d._meta?.versions||[]).length?(d.versions||d._meta?.versions||[]).map(v=>`<div class="ver-item"><span>${esc(v.name)}</span><span style="color:var(--fa)">${esc(v.date)}</span><a href="${v.url}" target="_blank" class="btn btn-secondary btn-sm">📄</a></div>`).join(''):'<span style="color:var(--fa);font-size:13px">אין גרסאות</span>'}</div></div></div>`}
 
-function costsHTML(s,d,dis){
-  const rows=d.costs_rows||DD.costs_rows;
-  const pays=d.payments||DD.payments;
-  const rHTML=rows.map((r,i)=>`
-    <div class="tbl-row">
-      <input class="fi" id="cr-${s}-${i}-0" value="${h(r[0])}" placeholder="פריט" ${dis?'disabled':''}>
-      <input class="fi" id="cr-${s}-${i}-1" value="${h(r[1])}" placeholder="עלות" ${dis?'disabled':''}>
-      ${!dis?`<button class="bdel" onclick="this.closest('.tbl-row').remove()">×</button>`:''}
-    </div>`).join('');
-  const pHTML=pays.map((p,i)=>`
-    <div class="pay-row" id="pay-${s}-${i}">
-      <div class="pay-rh"><span class="pay-rn">תשלום ${p.num}</span>
-        ${!dis?`<button class="bdel" onclick="document.getElementById('pay-${s}-${i}').remove()">×</button>`:''}
-      </div>
-      <div class="frow">
-        <div class="f"><div class="fl">כותרת</div><input class="fi" id="pt-${s}-${i}" value="${h(p.title)}" ${dis?'disabled':''}></div>
-        <div class="f"><div class="fl">סה"כ</div><input class="fi" id="pp-${s}-${i}" value="${h(p.total)}" ${dis?'disabled':''}></div>
-      </div>
-      <div class="f"><div class="fl">תיאור</div><textarea class="fi" id="pd-${s}-${i}" rows="2" ${dis?'disabled':''}>${h(p.desc)}</textarea></div>
-    </div>`).join('');
-  return `<div class="f" style="margin-bottom:10px"><div class="fl">כותרת טבלה</div>
-    <input class="fi" id="${s}-csubt" value="${h(d.costs_subtitle||DD.costs_subtitle)}" ${dis?'disabled':''}></div>
-    <div class="fl" style="margin-bottom:5px">שורות מחירון</div>
-    <div class="tbl-rows" id="crl-${s}">${rHTML}</div>
-    ${!dis?`<button class="add-btn" onclick="addCostRow(${s})" style="margin-bottom:12px">+ הוסף שורה</button>`:''}
-    <div class="fl" style="margin-bottom:5px">תשלומים</div>
-    <div class="pay-rows" id="payl-${s}">${pHTML}</div>
-    ${!dis?`<button class="add-btn" onclick="addPay(${s})">+ הוסף תשלום</button>`:''}`;
-}
+function msB(m,i){return`<div class="block-item"><button class="remove-btn" onclick="this.parentElement.remove()">✕</button><div class="inline-row"><div><label>מספר</label><input type="text" class="ms-n" value="${esc(m.num!==undefined?m.num:i)}" style="width:60px"></div><div><label>כותרת</label><input type="text" class="ms-t" value="${esc(m.title)}"></div></div><label>תיאור</label><textarea class="ms-d" rows="2">${esc(m.desc)}</textarea></div>`}
+function payB(p){return`<div class="block-item"><button class="remove-btn" onclick="this.parentElement.remove()">✕</button><div class="inline-row"><div><label>מספר</label><input type="text" class="p-n" value="${p.num}" style="width:60px"></div><div><label>כותרת</label><input type="text" class="p-t" value="${esc(p.title)}"></div></div><label>תיאור</label><textarea class="p-d" rows="2">${esc(p.desc)}</textarea><label>סה"כ</label><input type="text" class="p-tot" value="${esc(p.total)}"></div>`}
+function optB(o){return`<div class="block-item"><button class="remove-btn" onclick="this.parentElement.remove()">✕</button><div class="inline-row"><div><label>שירות</label><input type="text" class="o-t" value="${esc(o.title)}"></div><div><label>מחיר</label><input type="text" class="o-p" value="${esc(o.price)}"></div></div></div>`}
+function tpB(t){return`<div class="block-item"><button class="remove-btn" onclick="this.parentElement.remove()">✕</button><div class="inline-row"><div><label>כמות</label><input type="text" class="tp-a" value="${esc(t.amount)}"></div><div><label>מחיר מקורי</label><input type="text" class="tp-o" value="${esc(t.original)}"></div></div><div class="inline-row"><div><label>מחיר מבצע</label><input type="text" class="tp-s" value="${esc(t.sale)}"></div><div><label style="margin-top:24px"><input type="checkbox" class="tp-f" ${t.featured?'checked':''}> מודגש</label></div></div></div>`}
+function trmB(t){return`<div class="block-item"><button class="remove-btn" onclick="this.parentElement.remove()">✕</button><label>כותרת</label><input type="text" class="tr-t" value="${esc(t.title)}"><label>טקסט</label><textarea class="tr-x" rows="4">${esc(t.text)}</textarea></div>`}
 
-function optHTML(s,d,dis){
-  const items=d.optional||DD.optional;
-  const rHTML=items.map((it,i)=>`
-    <div class="tbl-row">
-      <input class="fi" id="op-${s}-${i}-t" value="${h(it.title)}" placeholder="שירות" ${dis?'disabled':''}>
-      <input class="fi" id="op-${s}-${i}-p" value="${h(it.price)}" placeholder="מחיר" ${dis?'disabled':''}>
-      ${!dis?`<button class="bdel" onclick="this.closest('.tbl-row').remove()">×</button>`:''}
-    </div>`).join('');
-  return `<div class="tbl-rows" id="optl-${s}">${rHTML}</div>
-    ${!dis?`<button class="add-btn" onclick="addOpt(${s})">+ הוסף שירות</button>`:''}`;
-}
+function addMs(){const w=$('ed_ms'),n=w.querySelectorAll('.block-item').length;w.insertAdjacentHTML('beforeend',msB({num:String(n),title:'',desc:''},n))}
+function addPay(){const w=$('ed_pay'),n=w.querySelectorAll('.block-item').length;w.insertAdjacentHTML('beforeend',payB({num:n+1,title:'',desc:'',total:''}))}
+function addOpt(){$('ed_opt').insertAdjacentHTML('beforeend',optB({title:'',price:''}))}
+function addTp(){$('ed_tp').insertAdjacentHTML('beforeend',tpB({amount:'',original:'',sale:'',featured:false}))}
+function addTrm(){$('ed_trm').insertAdjacentHTML('beforeend',trmB({id:'',title:'',text:''}))}
+function tCl(el){el.classList.toggle('selected')}
+function tAcc(h){h.parentElement.classList.toggle('open')}
 
-function tokHTML(s,d,dis){
-  const pkgs=d.token_packages||DD.token_packages;
-  const exs=d.token_examples||DD.token_examples;
-  const pHTML=pkgs.map((p,i)=>`
-    <div class="tok-row">
-      <input class="fi" id="tp-${s}-${i}-a" value="${h(p.amount)}" placeholder="כמות" ${dis?'disabled':''}>
-      <input class="fi" id="tp-${s}-${i}-o" value="${h(p.original)}" placeholder="מחיר מקורי" ${dis?'disabled':''}>
-      <input class="fi" id="tp-${s}-${i}-s" value="${h(p.sale)}" placeholder="מחיר מבצע" ${dis?'disabled':''}>
-    </div>`).join('');
-  const eHTML=exs.map((ex,i)=>`
-    <div class="why-row">
-      <input class="fi" id="te-${s}-${i}" value="${h(ex)}" placeholder="דוגמה" ${dis?'disabled':''}>
-      ${!dis?`<button class="bdel" onclick="this.parentElement.remove()">×</button>`:''}
-    </div>`).join('');
-  return `<div class="fl" style="margin-bottom:5px">חבילות</div>
-    <div class="tok-pkg" id="tpkgl-${s}">${pHTML}</div>
-    <div class="fl" style="margin:10px 0 5px">דוגמאות שימוש</div>
-    <div class="why-list" id="texl-${s}">${eHTML}</div>
-    ${!dis?`<button class="add-btn" onclick="addTokEx(${s})">+ הוסף דוגמה</button>`:''}`;
-}
+function rmCl(cid){if(!confirm('למחוק?'))return;if(CC.custom_clients?.[cid])delete CC.custom_clients[cid];CC.selected_clients=(CC.selected_clients||[]).filter(x=>x!==cid);renderEd();toast('לקוח הוסר')}
 
-function termsHTML(s,d,dis){
-  const terms=d.terms||DD.terms;
-  const list=terms.map((t,i)=>`
-    <div class="bl-card" id="trm-${s}-${t.id}">
-      <div class="bl-top">
-        <div class="bl-num">${i+1}</div>
-        <input class="bl-ti fi" id="trt-${s}-${t.id}" value="${h(t.title)}" placeholder="כותרת תנאי" ${dis?'disabled':''}>
-        ${!dis?`<button class="bdel" onclick="document.getElementById('trm-${s}-${t.id}').remove()">×</button>`:''}
-      </div>
-      <div class="bl-body"><textarea class="bl-tx fi" id="trb-${s}-${t.id}" placeholder="טקסט..." rows="3" ${dis?'disabled':''}>${h(t.text)}</textarea></div>
-    </div>`).join('');
-  return `<div class="bl-list" id="trml-${s}">${list}</div>
-    ${!dis?`<button class="add-btn" onclick="addTerm(${s})">+ הוסף תנאי</button>`:''}`;
-}
+$('btnAddClient').onclick=()=>{const n=$('nc_name').value.trim();if(!n){alert('נא שם');return}const cid='c_'+Date.now().toString(36);if(!CC.custom_clients)CC.custom_clients={};CC.custom_clients[cid]={name:n,desc:$('nc_desc').value.trim(),url:$('nc_url').value.trim()};if(!Array.isArray(CC.selected_clients))CC.selected_clients=[...DEF.selected_clients];CC.selected_clients.push(cid);const f=$('nc_logo').files[0];if(f)toast(`העלו את הלוגו ידנית ל-GitHub: logos/${cid}.png`);$('addClientModal').classList.remove('show');renderEd();toast('לקוח נוסף: '+n)};
 
-/* ── ADD ITEMS ── */
-function addMs(s){const id='m'+Date.now();const l=document.getElementById('msl-'+s);const i=l.children.length;const el=document.createElement('div');el.className='bl-card';el.id='ms-'+s+'-'+id;el.innerHTML=`<div class="bl-top"><div class="bl-num">${i}</div><input class="bl-ti fi" id="mst-${s}-${id}" placeholder="כותרת"><button class="bdel" onclick="document.getElementById('ms-${s}-${id}').remove()">×</button></div><div class="bl-body"><textarea class="bl-tx fi" id="msd-${s}-${id}" placeholder="תיאור"></textarea></div>`;l.appendChild(el);el.querySelector('input')?.focus()}
-function addWhy(s){const i=document.querySelectorAll(`[id^="wi-${s}-"]`).length;const l=document.getElementById('wil-'+s);const el=document.createElement('div');el.className='why-row';el.innerHTML=`<input class="fi" id="wi-${s}-${i}" placeholder="יתרון"><button class="bdel" onclick="this.parentElement.remove()">×</button>`;l.appendChild(el);el.querySelector('input')?.focus()}
-function tglCl(s,id){document.getElementById('cc-'+s+'-'+id)?.classList.toggle('sel')}
-function addCostRow(s){const i=[...document.querySelectorAll(`[id^="cr-${s}-"]`)].filter(e=>e.id.endsWith('-0')).length;const l=document.getElementById('crl-'+s);const el=document.createElement('div');el.className='tbl-row';el.innerHTML=`<input class="fi" id="cr-${s}-${i}-0" placeholder="פריט"><input class="fi" id="cr-${s}-${i}-1" placeholder="עלות"><button class="bdel" onclick="this.closest('.tbl-row').remove()">×</button>`;l.appendChild(el)}
-function addPay(s){const i=document.querySelectorAll(`[id^="pay-${s}-"]`).length;const l=document.getElementById('payl-'+s);const el=document.createElement('div');el.className='pay-row';el.id='pay-'+s+'-'+i;el.innerHTML=`<div class="pay-rh"><span class="pay-rn">תשלום ${i+1}</span><button class="bdel" onclick="document.getElementById('pay-${s}-${i}').remove()">×</button></div><div class="frow"><div class="f"><div class="fl">כותרת</div><input class="fi" id="pt-${s}-${i}" placeholder="כותרת"></div><div class="f"><div class="fl">סה"כ</div><input class="fi" id="pp-${s}-${i}" placeholder="סכום"></div></div><div class="f"><div class="fl">תיאור</div><textarea class="fi" id="pd-${s}-${i}" rows="2"></textarea></div>`;l.appendChild(el)}
-function addOpt(s){const i=[...document.querySelectorAll(`[id^="op-${s}-"]`)].filter(e=>e.id.endsWith('-t')).length;const l=document.getElementById('optl-'+s);const el=document.createElement('div');el.className='tbl-row';el.innerHTML=`<input class="fi" id="op-${s}-${i}-t" placeholder="שירות"><input class="fi" id="op-${s}-${i}-p" placeholder="מחיר"><button class="bdel" onclick="this.closest('.tbl-row').remove()">×</button>`;l.appendChild(el)}
-function addTokEx(s){const i=document.querySelectorAll(`[id^="te-${s}-"]`).length;const l=document.getElementById('texl-'+s);const el=document.createElement('div');el.className='why-row';el.innerHTML=`<input class="fi" id="te-${s}-${i}" placeholder="דוגמה"><button class="bdel" onclick="this.parentElement.remove()">×</button>`;l.appendChild(el);el.querySelector('input')?.focus()}
-function addTerm(s){const id='t'+Date.now();const l=document.getElementById('trml-'+s);const i=l.children.length;const el=document.createElement('div');el.className='bl-card';el.id='trm-'+s+'-'+id;el.innerHTML=`<div class="bl-top"><div class="bl-num">${i+1}</div><input class="bl-ti fi" id="trt-${s}-${id}" placeholder="כותרת תנאי"><button class="bdel" onclick="document.getElementById('trm-${s}-${id}').remove()">×</button></div><div class="bl-body"><textarea class="bl-tx fi" id="trb-${s}-${id}" placeholder="טקסט..." rows="3"></textarea></div>`;l.appendChild(el);el.querySelector('input')?.focus()}
+function collect(){const d=CC;d.title=$('ed_title').value;d.client_name=$('ed_client_name').value;d.matara=$('ed_matara').value;
+d.section_titles={};document.querySelectorAll('.stitle').forEach(i=>{d.section_titles[i.dataset.sk]=i.value});
+d.milestones=[...$('ed_ms').querySelectorAll('.block-item')].map((e,i)=>({id:'m'+i,num:e.querySelector('.ms-n').value,title:e.querySelector('.ms-t').value,desc:e.querySelector('.ms-d').value}));
+d.why_intro=$('ed_why_intro').value;d.why_items=$('ed_why_items').value.split('\n').filter(x=>x.trim());
+d.selected_clients=[...$('ed_cl').querySelectorAll('.client-logo-item.selected')].map(e=>e.dataset.cid);
+d.costs_subtitle=$('ed_csub').value;d.costs_rows=$('ed_cr').value.split('\n').filter(x=>x.trim()).map(r=>{const p=r.split('|').map(s=>s.trim());return p.length>=2?p:[p[0],'']});
+d.payments=[...$('ed_pay').querySelectorAll('.block-item')].map(e=>({num:parseInt(e.querySelector('.p-n').value)||1,title:e.querySelector('.p-t').value,desc:e.querySelector('.p-d').value,total:e.querySelector('.p-tot').value}));
+d.optional=[...$('ed_opt').querySelectorAll('.block-item')].map(e=>({title:e.querySelector('.o-t').value,price:e.querySelector('.o-p').value}));
+d.token_packages=[...$('ed_tp').querySelectorAll('.block-item')].map(e=>({amount:e.querySelector('.tp-a').value,original:e.querySelector('.tp-o').value,sale:e.querySelector('.tp-s').value,featured:e.querySelector('.tp-f').checked}));
+d.token_examples=$('ed_tex').value.split('\n').filter(x=>x.trim());
+d.terms=[...$('ed_trm').querySelectorAll('.block-item')].map((e,i)=>({id:'t'+(i+1),title:e.querySelector('.tr-t').value,text:e.querySelector('.tr-x').value}))}
 
-/* ── GETTERS ── */
-function getMs(s){return [...document.querySelectorAll(`[id^="ms-${s}-"]`)].map(el=>{const id=el.id.slice((`ms-${s}-`).length);return{id,num:document.getElementById('msl-'+s)?[...document.getElementById('msl-'+s).children].indexOf(el)+'':id,title:document.getElementById('mst-'+s+'-'+id)?.value||'',desc:document.getElementById('msd-'+s+'-'+id)?.value||''}})}
-function getWhy(s){return [...document.querySelectorAll(`[id^="wi-${s}-"]`)].map(e=>e.value).filter(Boolean)}
-function getSel(s){return ALL_CLIENTS.map(c=>c.id).filter(id=>document.getElementById('cc-'+s+'-'+id)?.classList.contains('sel'))}
-function getCostRows(s){return [...document.querySelectorAll(`[id^="cr-${s}-"]`)].filter(e=>e.id.endsWith('-0')).map(e=>{const i=e.id.split('-')[2];return[document.getElementById(`cr-${s}-${i}-0`)?.value||'',document.getElementById(`cr-${s}-${i}-1`)?.value||'']})}
-function getPayments(s){return [...document.querySelectorAll(`[id^="pay-${s}-"]`)].map(e=>{const i=e.id.split('-')[2];return{num:parseInt(i)+1,title:document.getElementById(`pt-${s}-${i}`)?.value||'',desc:document.getElementById(`pd-${s}-${i}`)?.value||'',total:document.getElementById(`pp-${s}-${i}`)?.value||''}})}
-function getOpts(s){return [...document.querySelectorAll(`[id^="op-${s}-"]`)].filter(e=>e.id.endsWith('-t')).map(e=>{const i=e.id.split('-')[2];return{title:document.getElementById(`op-${s}-${i}-t`)?.value||'',price:document.getElementById(`op-${s}-${i}-p`)?.value||''}})}
-function getTokPkgs(s){return [...document.querySelectorAll(`[id^="tp-${s}-"]`)].filter(e=>e.id.endsWith('-a')).map(e=>{const i=e.id.split('-')[2];return{amount:document.getElementById(`tp-${s}-${i}-a`)?.value||'',original:document.getElementById(`tp-${s}-${i}-o`)?.value||'',sale:document.getElementById(`tp-${s}-${i}-s`)?.value||''}})}
-function getTokExs(s){return [...document.querySelectorAll(`[id^="te-${s}-"]`)].map(e=>e.value).filter(Boolean)}
-function getTerms(s){return [...document.querySelectorAll(`[id^="trm-${s}-"]`)].map(e=>{const id=e.id.slice((`trm-${s}-`).length);return{id,title:document.getElementById('trt-'+s+'-'+id)?.value||'',text:document.getElementById('trb-'+s+'-'+id)?.value||''}})}
-
-function buildPayload(s,keepToken){
-  const tok=keepToken?(_sd[s]?.link_token||_sd[s]?.token||''):genToken();
-  return {
-    slot:s, password:pw, signed:false, link_token:tok, token:tok,
-    title:document.getElementById(s+'-title')?.value||'',
-    client_name:document.getElementById(s+'-cname')?.value||'',
-    matara:document.getElementById(s+'-matara')?.value||'',
-    milestones:getMs(s),
-    why_intro:document.getElementById(s+'-whyintro')?.value||'',
-    why_items:getWhy(s),
-    selected_clients:getSel(s),
-    costs_subtitle:document.getElementById(s+'-csubt')?.value||'',
-    costs_rows:getCostRows(s), payments:getPayments(s), optional:getOpts(s),
-    token_packages:getTokPkgs(s), token_examples:getTokExs(s),
-    terms:getTerms(s),
-    versions:_sd[s]?.versions||[]
-  };
-}
-
-/* ── SAVE ── */
-async function saveSlot(s){
-  const btn=document.getElementById('sbtn'+s),sp=document.getElementById('ssp'+s),tx=document.getElementById('stxt'+s),msg=document.getElementById('smsg'+s);
-  btn.disabled=true;sp.style.display='block';tx.textContent='שומר...';
-  const payload=buildPayload(s,true); // keep existing token
-  try{
-    const r=await fetch(N8N_SAVE,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
-    if(!r.ok)throw new Error('שגיאה '+r.status);
-    _sd[s]=payload;updateTab(s);
-    // update link display
-    const ldisp=document.getElementById('linkDisplay-'+s);
-    if(ldisp)ldisp.textContent=getLink(s);
-    msg.textContent='✓ נשמר';msg.className='save-msg ok';setTimeout(()=>msg.textContent='',3000);
-  }catch(e){msg.textContent='שגיאה: '+e.message;msg.className='save-msg err';}
-  btn.disabled=false;sp.style.display='none';tx.textContent='💾 שמור שינויים';
-}
-
-/* ── SAVE VERSION (PDF snapshot) ── */
-async function saveVersion(s){
-  const btn=document.getElementById('vbtn'+s),sp=document.getElementById('vsp'+s),tx=document.getElementById('vtxt'+s),msg=document.getElementById('smsg'+s);
-  btn.disabled=true;sp.style.display='block';tx.textContent='יוצר PDF...';
-  // Use mergeDD data (Drive data + DD defaults) — reliable even if DOM has stale empty values
-  const merged=mergeDD(DD,_sd[s]||{});
-  const tok=_sd[s]?.link_token||_sd[s]?.token||'';
-  const vNum=(merged.versions||[]).length+1;
-  const payload={...merged,slot:s,link_token:tok,token:tok};
-  try{
-    const r=await fetch(N8N_SAVE_VER,{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({...payload,version_number:vNum})});
-    if(!r.ok)throw new Error('שגיאה '+r.status);
-    const resp=await r.json();
-    const cn=merged.client_name||'contract';
-    const today=new Date();const d=pad(today.getDate())+'.'+pad(today.getMonth()+1)+'.'+today.getFullYear();
-    const newVer={name:`${cn}-v${vNum} (${d})`,date:d,url:resp.pdf_url||''};
-    const updPayload={...payload,versions:[...(merged.versions||[]),newVer]};
-    await fetch(N8N_SAVE,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(updPayload)});
-    _sd[s]=updPayload;
-    const vl=document.getElementById('verlist-'+s);
-    if(vl)vl.innerHTML=payload.versions.map(v=>`
-      <div class="ver-item">
-        <div><div class="ver-name">${h(v.name)}</div><div class="ver-date">${h(v.date)}</div></div>
-        ${v.url?`<button class="ver-dl" onclick="window.open('${v.url}','_blank')">⬇ הורד</button>`:''}
-      </div>`).join('');
-    msg.textContent='✓ גרסה נשמרה';msg.className='save-msg ok';setTimeout(()=>msg.textContent='',4000);
-  }catch(e){msg.textContent='שגיאה: '+e.message;msg.className='save-msg err';}
-  btn.disabled=false;sp.style.display='none';tx.textContent='📄 שמור גרסה';
-}
-
-/* ── REFRESH TOKEN (new unique link) ── */
-async function refreshToken(s){
-  if(!confirm('זה ייצור קישור חדש — הקישור הקודם יפסיק לעבוד. להמשיך?'))return;
-  const payload=buildPayload(s,false); // generate new token
-  const msg=document.getElementById('smsg'+s);
-  try{
-    await fetch(N8N_SAVE,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
-    _sd[s]=payload;
-    const newLink=getLink(s);
-    const ldisp=document.getElementById('linkDisplay-'+s);if(ldisp)ldisp.textContent=newLink;
-    msg.textContent='🔄 קישור חודש';msg.className='save-msg ok';setTimeout(()=>msg.textContent='',3000);
-  }catch(e){msg.textContent='שגיאה';msg.className='save-msg err';}
-}
-
-async function resetSlot(s){
-  if(!confirm('לאפס החוזה? ניתן יהיה לחתום שוב'))return;
-  const d=_sd[s]||{};
-  const payload={...d,slot:s,signed:false,signer_name:'',signer_date:'',signer_email:''};
-  try{await fetch(N8N_SAVE,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});_sd[s]=payload;renderPanel(s);updateTab(s);}catch(e){alert('שגיאה');}
-}
-
-async function copyLink(s){
-  await navigator.clipboard.writeText(getLink(s));
-  const b=document.getElementById('cpbtn'+s);b.textContent='✓ הועתק';b.classList.add('ok');
-  setTimeout(()=>{b.textContent='העתק';b.classList.remove('ok')},2500);
-}
-
-function h(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
-function pad(n){return String(n).padStart(2,'0')}
+initLogin();
 </script>
 </body>
 </html>
