@@ -442,6 +442,8 @@ const ALL_CLIENTS=[
 ];
 
 let D={}, SP, fillIds=[];
+const pad=n=>String(n).padStart(2,'0');
+const h=s=>String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 window.addEventListener('scroll',()=>document.getElementById('scrollup').classList.toggle('show',scrollY>400));
 
 (async function init(){
