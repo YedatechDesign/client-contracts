@@ -8,7 +8,7 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{--navy:#0d2680;--blue:#1a56db;--bl:#e8f0fe;--bm:#c7d7fc;
   --sub:#374151;--mu:#6b7280;--fa:#9ca3af;--bg:#f4f6fb;
-  --white:#fff;--bdr:#e5e7eb;--gr:#059669;--rd:#dc2626;--r:12px;--sh:0 2px 8px rgba(0,0,0,.07)}
+  --bdr:#e5e7eb;--gr:#059669;--rd:#dc2626;--or:#d97706;--r:12px;--sh:0 2px 8px rgba(0,0,0,.07)}
 body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--sub);direction:rtl}
 @keyframes spin{to{transform:rotate(360deg)}}
 
@@ -16,8 +16,8 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--sub);direct
 #lw{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
 .lbox{background:#fff;border-radius:var(--r);border:1px solid var(--bdr);box-shadow:var(--sh);
       padding:48px 40px;max-width:380px;width:100%;text-align:center}
-.llogo{font-size:2.2rem;font-weight:900;color:var(--navy);letter-spacing:-2px;margin-bottom:6px}
-.lsub{color:var(--mu);font-size:.85rem;margin-bottom:30px}
+.llogo{font-size:2rem;font-weight:900;color:var(--navy);letter-spacing:-2px;margin-bottom:4px}
+.lsub{color:var(--mu);font-size:.83rem;margin-bottom:28px}
 .linp{width:100%;border:1.5px solid var(--bdr);border-radius:9px;padding:12px 14px;
       font-family:'Heebo',sans-serif;font-size:.95rem;direction:ltr;text-align:center;
       margin-bottom:12px;transition:border-color .2s}
@@ -31,134 +31,164 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--sub);direct
 #app{display:none}
 .topbar{background:#fff;border-bottom:1px solid var(--bdr);height:56px;
         display:flex;align-items:center;justify-content:space-between;padding:0 24px;
-        position:sticky;top:0;z-index:100;box-shadow:0 1px 4px rgba(0,0,0,.05)}
-.tlogo{font-size:1.4rem;font-weight:900;color:var(--navy);letter-spacing:-1.5px}
-.tabs{display:flex;gap:6px}
-.tab{padding:7px 16px;background:none;border:1.5px solid var(--bdr);border-radius:8px;
-     font-family:'Heebo',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer;color:var(--mu);transition:all .15s}
+        position:sticky;top:0;z-index:100;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.tlogo{font-size:1.35rem;font-weight:900;color:var(--navy);letter-spacing:-1.5px}
+.tabs{display:flex;gap:5px}
+.tab{padding:6px 14px;background:none;border:1.5px solid var(--bdr);border-radius:8px;
+     font-family:'Heebo',sans-serif;font-size:.8rem;font-weight:700;cursor:pointer;color:var(--mu);transition:all .15s}
 .tab:hover{border-color:var(--bm);color:var(--blue)}
 .tab.active{background:var(--blue);color:#fff;border-color:var(--blue)}
 .tab .sdot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#4ade80;margin-left:5px;vertical-align:middle}
-.lout{background:none;border:1px solid var(--bdr);border-radius:7px;padding:5px 12px;
-      font-family:'Heebo',sans-serif;font-size:.78rem;color:var(--mu);cursor:pointer}
+.lout{background:none;border:1px solid var(--bdr);border-radius:7px;padding:5px 11px;
+      font-family:'Heebo',sans-serif;font-size:.76rem;color:var(--mu);cursor:pointer}
 .lout:hover{border-color:var(--rd);color:var(--rd)}
 
 /* MAIN */
-.main{max-width:1000px;margin:0 auto;padding:24px 20px 60px}
+.main{max-width:1000px;margin:0 auto;padding:22px 18px 80px}
 .slot-panel{display:none}.slot-panel.active{display:block}
-.signed-banner{background:#fffbeb;border:1.5px solid #fcd34d;border-radius:10px;padding:12px 18px;
-               display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
-.sbtext{font-size:.88rem;font-weight:700;color:#92400e}
+.signed-banner{background:#fffbeb;border:1.5px solid #fcd34d;border-radius:9px;padding:11px 16px;
+               display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.sbtext{font-size:.85rem;font-weight:700;color:#92400e}
 .resetbtn{background:#fff;border:1px solid #f59e0b;color:#d97706;border-radius:7px;
-          padding:5px 14px;font-family:'Heebo',sans-serif;font-size:.78rem;font-weight:700;cursor:pointer}
+          padding:4px 12px;font-family:'Heebo',sans-serif;font-size:.76rem;font-weight:700;cursor:pointer}
 
 /* SECTION ACCORDIONS */
-.sec-accordion{background:#fff;border:1.5px solid var(--bdr);border-radius:var(--r);
-               margin-bottom:12px;overflow:hidden}
-.sec-head{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;
-          cursor:pointer;transition:background .15s}
-.sec-head:hover{background:#f9fafb}
-.sec-head-l{display:flex;align-items:center;gap:10px}
-.sec-icon{width:32px;height:32px;border-radius:8px;background:var(--bl);
-          display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0}
-.sec-title{font-size:.92rem;font-weight:800;color:var(--navy)}
-.sec-arr{color:var(--mu);transition:transform .2s;font-size:.8rem}
-.sec-accordion.open .sec-arr{transform:rotate(180deg)}
-.sec-body{display:none;padding:18px 20px;border-top:1px solid var(--bdr)}
-.sec-accordion.open .sec-body{display:block}
+.acc{background:#fff;border:1.5px solid var(--bdr);border-radius:var(--r);margin-bottom:10px;overflow:hidden}
+.acc-head{display:flex;align-items:center;justify-content:space-between;padding:13px 16px;
+          cursor:pointer;transition:background .15s;user-select:none}
+.acc-head:hover{background:#f9fafb}
+.acc-hl{display:flex;align-items:center;gap:9px}
+.acc-ico{width:30px;height:30px;border-radius:7px;background:var(--bl);display:flex;align-items:center;justify-content:center;font-size:.88rem;flex-shrink:0}
+.acc-t{font-size:.9rem;font-weight:800;color:var(--navy)}
+.acc-arr{color:var(--mu);transition:transform .2s;font-size:.78rem}
+.acc.open .acc-arr{transform:rotate(180deg)}
+.acc-body{display:none;padding:16px 18px;border-top:1px solid var(--bdr)}
+.acc.open .acc-body{display:block}
 
-/* FIELDS */
-.frow{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+/* FORM FIELDS */
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
 .frow.s1{grid-template-columns:1fr}
 .f{display:flex;flex-direction:column;gap:4px}
-.fl{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--mu)}
-.fi{border:1.5px solid var(--bdr);border-radius:8px;padding:9px 12px;
-    font-family:'Heebo',sans-serif;font-size:.88rem;color:var(--sub);
+.fl{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--mu)}
+.fi{border:1.5px solid var(--bdr);border-radius:8px;padding:8px 11px;
+    font-family:'Heebo',sans-serif;font-size:.87rem;color:var(--sub);
     transition:border-color .2s;background:#fafbff;width:100%}
 .fi:focus{outline:none;border-color:var(--blue);background:#fff}
-textarea.fi{resize:vertical;min-height:80px;line-height:1.65}
+textarea.fi{resize:vertical;min-height:76px;line-height:1.65}
 
-/* BLOCKS (milestones, terms, etc) */
-.blocks-list{display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
-.block-card{border:1.5px solid var(--bdr);border-radius:10px;overflow:hidden}
-.block-top{display:flex;align-items:center;gap:8px;padding:9px 12px;background:var(--bg)}
-.bnum{width:22px;height:22px;border-radius:50%;background:var(--blue);color:#fff;
-      font-size:.7rem;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.btitle-inp{flex:1;border:none;background:transparent;font-family:'Heebo',sans-serif;
-            font-size:.88rem;font-weight:700;color:var(--navy);padding:2px 4px;border-radius:4px}
-.btitle-inp:focus{outline:1px solid var(--bm);background:#fff}
+/* BLOCKS */
+.bl-list{display:flex;flex-direction:column;gap:7px;margin-bottom:8px}
+.bl-card{border:1.5px solid var(--bdr);border-radius:9px;overflow:hidden}
+.bl-top{display:flex;align-items:center;gap:7px;padding:8px 11px;background:var(--bg)}
+.bl-num{width:21px;height:21px;border-radius:50%;background:var(--blue);color:#fff;
+        font-size:.68rem;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.bl-ti{flex:1;border:none;background:transparent;font-family:'Heebo',sans-serif;
+       font-size:.86rem;font-weight:700;color:var(--navy);padding:2px 4px;border-radius:4px}
+.bl-ti:focus{outline:1px solid var(--bm);background:#fff}
 .bdel{background:none;border:none;cursor:pointer;color:var(--fa);font-size:1.1rem;
-      padding:2px 6px;border-radius:4px;line-height:1;transition:color .15s}
+      padding:2px 6px;border-radius:4px;line-height:1;transition:color .15s;flex-shrink:0}
 .bdel:hover{color:var(--rd)}
-.block-body{padding:9px 12px}
-.btext-inp{width:100%;border:none;background:transparent;font-family:'Heebo',sans-serif;
-           font-size:.83rem;color:var(--sub);resize:vertical;min-height:64px;line-height:1.7;padding:2px}
-.btext-inp:focus{outline:1px solid var(--bm);background:#fafbff;border-radius:4px}
-.add-btn{display:flex;align-items:center;justify-content:center;gap:7px;
+.bl-body{padding:7px 11px}
+.bl-tx{width:100%;border:none;background:transparent;font-family:'Heebo',sans-serif;
+       font-size:.81rem;color:var(--sub);resize:vertical;min-height:58px;line-height:1.7;padding:2px}
+.bl-tx:focus{outline:1px solid var(--bm);background:#fafbff;border-radius:4px}
+.add-btn{display:flex;align-items:center;justify-content:center;gap:6px;
          background:var(--bl);border:1.5px dashed var(--bm);color:var(--blue);
-         border-radius:9px;padding:9px;font-family:'Heebo',sans-serif;font-size:.83rem;
+         border-radius:8px;padding:8px;font-family:'Heebo',sans-serif;font-size:.81rem;
          font-weight:700;cursor:pointer;width:100%;transition:all .15s}
 .add-btn:hover{background:var(--blue);color:#fff;border-style:solid}
 
-/* WHY ITEMS */
-.why-inp-list{display:flex;flex-direction:column;gap:6px;margin-bottom:10px}
-.why-inp-row{display:flex;align-items:center;gap:8px}
-.why-inp-row input{flex:1}.why-inp-row .bdel{padding:6px 8px}
+/* WHY */
+.why-list{display:flex;flex-direction:column;gap:5px;margin-bottom:8px}
+.why-row{display:flex;align-items:center;gap:7px}
+.why-row input{flex:1}
 
-/* CLIENTS GRID */
-.cl-chk-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:6px}
-.cl-card{border:1.5px solid var(--bdr);border-radius:9px;padding:9px;cursor:pointer;
-         text-align:center;transition:all .15s;position:relative}
-.cl-card:hover{border-color:var(--bm)}
-.cl-card.sel{border-color:var(--blue);background:var(--bl)}
-.cl-card input{position:absolute;opacity:0;pointer-events:none}
-.cl-img{width:100%;height:38px;object-fit:contain;margin-bottom:5px;filter:grayscale(.4)}
-.cl-card.sel .cl-img{filter:none}
-.cl-name{font-size:.68rem;font-weight:700;color:var(--sub)}
-.cl-card.sel .cl-name{color:var(--blue)}
-.chkmark{position:absolute;top:5px;left:5px;width:16px;height:16px;border-radius:50%;
-         background:var(--blue);display:none;align-items:center;justify-content:center}
-.chkmark svg{width:9px;height:9px;stroke:#fff;fill:none;stroke-width:2.5}
-.cl-card.sel .chkmark{display:flex}
+/* CLIENTS */
+.cl-chk{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:5px}
+.cl-c{border:1.5px solid var(--bdr);border-radius:8px;padding:8px 6px;cursor:pointer;
+      text-align:center;transition:all .15s;position:relative}
+.cl-c:hover{border-color:var(--bm)}
+.cl-c.sel{border-color:var(--blue);background:var(--bl)}
+.cl-c img{width:100%;height:34px;object-fit:contain;margin-bottom:4px;filter:grayscale(.4)}
+.cl-c.sel img{filter:none}
+.cl-c-name{font-size:.64rem;font-weight:700;color:var(--sub)}
+.cl-c.sel .cl-c-name{color:var(--blue)}
+.ckm{position:absolute;top:4px;left:4px;width:14px;height:14px;border-radius:50%;
+     background:var(--blue);display:none;align-items:center;justify-content:center}
+.ckm svg{width:8px;height:8px;stroke:#fff;fill:none;stroke-width:2.5}
+.cl-c.sel .ckm{display:flex}
 
-/* COSTS / TABLE EDITOR */
-.table-rows{display:flex;flex-direction:column;gap:6px;margin-bottom:10px}
-.table-row{display:flex;align-items:center;gap:8px}
-.table-row input{flex:1}.table-row .bdel{padding:6px 8px;flex-shrink:0}
-.pay-rows{display:flex;flex-direction:column;gap:10px;margin-bottom:10px}
-.pay-row{border:1px solid var(--bdr);border-radius:10px;padding:12px 14px}
-.pay-row-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
-.pay-row-num{font-size:.72rem;font-weight:800;color:var(--mu)}
+/* TABLE ROWS */
+.tbl-rows{display:flex;flex-direction:column;gap:5px;margin-bottom:8px}
+.tbl-row{display:flex;align-items:center;gap:7px}
+.tbl-row input{flex:1}.tbl-row .bdel{padding:6px 7px;flex-shrink:0}
+.pay-rows{display:flex;flex-direction:column;gap:9px;margin-bottom:8px}
+.pay-row{border:1px solid var(--bdr);border-radius:9px;padding:10px 12px}
+.pay-rh{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px}
+.pay-rn{font-size:.7rem;font-weight:800;color:var(--mu)}
 
 /* TOKEN PACKAGES */
-.tok-pkg-list{display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
-.tok-pkg-row{display:flex;align-items:center;gap:8px}
-.tok-pkg-row input{flex:1}
+.tok-pkg{display:flex;flex-direction:column;gap:7px;margin-bottom:8px}
+.tok-row{display:flex;align-items:center;gap:7px}
+.tok-row input{flex:1}
 
-/* LINK BOX */
-.link-box{background:#f0f3ff;border:1px solid var(--bm);border-radius:9px;
-          padding:10px 14px;display:flex;align-items:center;gap:10px;margin-top:8px}
-.link-url{font-size:.8rem;color:var(--blue);font-weight:600;direction:ltr;text-align:left;flex:1;word-break:break-all}
-.copy-btn{background:var(--blue);color:#fff;border:none;border-radius:7px;padding:6px 14px;
-          font-family:'Heebo',sans-serif;font-size:.76rem;font-weight:700;cursor:pointer;flex-shrink:0}
-.copy-btn:hover{background:var(--navy)}
-.copy-btn.ok{background:var(--gr)}
+/* LINK + TOKEN */
+.link-area{background:#f0f3ff;border:1px solid var(--bm);border-radius:9px;padding:12px 14px;margin-top:8px}
+.link-ttl{font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.4px;color:var(--mu);margin-bottom:7px}
+.link-url{font-size:.77rem;color:var(--blue);font-weight:600;direction:ltr;text-align:left;
+          word-break:break-all;margin-bottom:8px;background:#fff;border:1px solid var(--bm);
+          border-radius:6px;padding:7px 10px}
+.link-btns{display:flex;gap:8px}
+.cp-btn{background:var(--blue);color:#fff;border:none;border-radius:7px;padding:7px 14px;
+        font-family:'Heebo',sans-serif;font-size:.76rem;font-weight:700;cursor:pointer;transition:background .15s}
+.cp-btn:hover{background:var(--navy)}
+.cp-btn.ok{background:var(--gr)}
+.new-token-btn{background:#fff;border:1.5px solid var(--bm);color:var(--blue);border-radius:7px;
+               padding:7px 12px;font-family:'Heebo',sans-serif;font-size:.76rem;font-weight:700;cursor:pointer}
+.new-token-btn:hover{background:var(--bl)}
 
-/* SAVE */
-.save-wrap{position:sticky;bottom:0;background:#fff;border-top:1px solid var(--bdr);
-           padding:14px 20px;margin:0 -20px;z-index:50}
-.save-btn{width:100%;padding:14px;background:var(--blue);color:#fff;border:none;border-radius:10px;
-          font-family:'Heebo',sans-serif;font-size:1rem;font-weight:800;cursor:pointer;
-          display:flex;align-items:center;justify-content:center;gap:8px;
-          transition:all .2s;box-shadow:0 4px 12px rgba(26,86,219,.25)}
+/* VERSION HISTORY */
+.ver-hist{margin-top:12px}
+.ver-ttl{font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.4px;color:var(--mu);margin-bottom:8px}
+.ver-list{display:flex;flex-direction:column;gap:6px}
+.ver-item{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;
+          background:#fff;border:1px solid var(--bdr);border-radius:8px}
+.ver-name{font-size:.81rem;font-weight:700;color:var(--sub)}
+.ver-date{font-size:.71rem;color:var(--mu)}
+.ver-dl{background:none;border:1px solid var(--bdr);color:var(--mu);border-radius:6px;
+        padding:4px 10px;font-family:'Heebo',sans-serif;font-size:.72rem;cursor:pointer}
+.ver-dl:hover{border-color:var(--blue);color:var(--blue)}
+.ver-empty{font-size:.8rem;color:var(--fa);text-align:center;padding:10px}
+
+/* SAVE BAR */
+.save-bar{position:sticky;bottom:0;background:rgba(255,255,255,.97);backdrop-filter:blur(8px);
+          border-top:1px solid var(--bdr);padding:12px 16px;margin:0 -18px;z-index:50;
+          display:flex;gap:10px;align-items:center}
+.save-btn{flex:1;padding:12px;background:var(--blue);color:#fff;border:none;border-radius:9px;
+          font-family:'Heebo',sans-serif;font-size:.9rem;font-weight:800;cursor:pointer;
+          display:flex;align-items:center;justify-content:center;gap:7px;
+          transition:all .2s;box-shadow:0 3px 10px rgba(26,86,219,.22)}
 .save-btn:hover:not(:disabled){background:var(--navy)}
-.save-btn:disabled{opacity:.55;cursor:not-allowed}
-.save-sp{width:18px;height:18px;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;
-         border-radius:50%;animation:spin .6s linear infinite;display:none}
-.save-msg{text-align:center;font-size:.82rem;font-weight:700;height:18px;margin-top:6px}
+.save-btn:disabled{opacity:.5;cursor:not-allowed}
+.ver-btn{padding:12px 18px;background:#fff;border:2px solid var(--or);color:var(--or);
+         border-radius:9px;font-family:'Heebo',sans-serif;font-size:.88rem;font-weight:800;
+         cursor:pointer;display:flex;align-items:center;gap:6px;white-space:nowrap;
+         transition:all .2s;flex-shrink:0}
+.ver-btn:hover:not(:disabled){background:#fff7ed}
+.ver-btn:disabled{opacity:.5;cursor:not-allowed}
+.ssp{width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;
+     border-radius:50%;animation:spin .6s linear infinite;display:none}
+.vsp{width:16px;height:16px;border:2px solid rgba(217,119,6,.3);border-top-color:var(--or);
+     border-radius:50%;animation:spin .6s linear infinite;display:none}
+.save-msg{font-size:.78rem;font-weight:700;min-width:60px;text-align:center}
 .save-msg.ok{color:var(--gr)}.save-msg.err{color:var(--rd)}
-@media(max-width:700px){.topbar{padding:0 12px}.tabs{gap:3px}.tab{padding:5px 10px;font-size:.75rem}
-  .main{padding:16px 12px 60px}.frow{grid-template-columns:1fr}.cl-chk-grid{grid-template-columns:repeat(3,1fr)}}
+
+@media(max-width:700px){
+  .topbar{padding:0 10px}.tabs{gap:3px}.tab{padding:4px 9px;font-size:.73rem}
+  .main{padding:14px 10px 80px}.frow{grid-template-columns:1fr}
+  .cl-chk{grid-template-columns:repeat(3,1fr)}
+  .link-btns{flex-wrap:wrap}.save-bar{flex-wrap:wrap}
+}
 </style>
 </head>
 <body>
@@ -167,7 +197,8 @@ textarea.fi{resize:vertical;min-height:80px;line-height:1.65}
   <div class="lbox">
     <div class="llogo">yeda</div>
     <div class="lsub">ממשק ניהול חוזים</div>
-    <input class="linp" type="password" id="pw" placeholder="סיסמה" onkeydown="if(event.key==='Enter')doLogin()">
+    <input class="linp" type="password" id="pw" placeholder="סיסמה"
+           onkeydown="if(event.key==='Enter')doLogin()">
     <button class="lbtn" onclick="doLogin()">כניסה</button>
     <div class="lerr" id="lerr">סיסמה שגויה</div>
   </div>
@@ -175,7 +206,7 @@ textarea.fi{resize:vertical;min-height:80px;line-height:1.65}
 <!-- APP -->
 <div id="app">
   <div class="topbar">
-    <div class="tlogo">yeda</div>
+    <div class="tlogo">yeda admin</div>
     <div class="tabs" id="tabRow">
       <button class="tab active" data-s="1" onclick="switchSlot(1)">חוזה 1</button>
       <button class="tab" data-s="2" onclick="switchSlot(2)">חוזה 2</button>
@@ -194,13 +225,14 @@ textarea.fi{resize:vertical;min-height:80px;line-height:1.65}
 const PASS='yedacontracts2026';
 const N8N_SAVE='https://yedauto.com/webhook/yeda-save';
 const N8N_LOAD='https://yedauto.com/webhook/yeda-load';
+const N8N_SAVE_VER='https://yedauto.com/webhook/yeda-save-version';
 const PROP_URL='https://yedatechdesign.github.io/client-contracts/proposal.html';
 const LOGOS='https://yedatechdesign.github.io/client-contracts/logos/';
 
 const ALL_CLIENTS=[
-  {id:'client1',name:'HackerU'},{id:'client2',name:'מכללת IPC'},{id:'client3',name:'מכללת אורין שפלטר'},
-  {id:'client4',name:'ThriveDX'},{id:'client5',name:'מרכז גומא גבים'},{id:'client6',name:'מכללת קול המס'},
-  {id:'client7',name:'HIGHQ'},{id:'client8',name:'פירמת עורכי הדין פישר'},{id:'client9',name:'קבוצת מובמנט'},
+  {id:'client1',name:'HackerU'},{id:'client2',name:'IPC'},{id:'client3',name:'אורין שפלטר'},
+  {id:'client4',name:'ThriveDX'},{id:'client5',name:'גומא גבים'},{id:'client6',name:'קול המס'},
+  {id:'client7',name:'HIGHQ'},{id:'client8',name:'פישר'},{id:'client9',name:'מובמנט'},
   {id:'client10',name:'אולג׳ובס'},{id:'client11',name:'מלם טים'},{id:'client12',name:'כלכליסט'},
 ];
 
@@ -211,86 +243,141 @@ const DD={
     {id:'m0',num:'0',title:'חתימה והעברת תשלום ראשון',desc:'חתימת חוזה בין הצדדים והעברת התשלום הראשון, המאשרים התחייבות הצדדים להפעלת הפרויקט.'},
     {id:'m1',num:'1',title:'פגישת אפיון',desc:'פגישה מקיפה עם נציגי הלקוח לתיאור מלא של דרישות המערכת, היכולות הנדרשות, מבנה ההיררכיות הארגוניות וצרכי המשתמשים.'},
     {id:'m2',num:'2',title:'אישור אפיון',desc:'הכנת מסמך אפיון מפורט המפרט את כל הדרישות, ההיכולות והתכונות. אישור מטעם הלקוח על התאמת האפיון לצרכיו.'},
-    {id:'m3',num:'3',title:'הקמת אתר התאחדות ארצית אחד',desc:'ביצוע חיבור טכני של דומיין, הגדרת מבנה תכנים והרשאות, עיצוב והתאמת הפורטל למיתוג ההתאחדות, הכנת תבנית להזנת ההדרכות.'},
+    {id:'m3',num:'3',title:'הקמת אתר',desc:'ביצוע חיבור טכני של דומיין, הגדרת מבנה תכנים והרשאות, עיצוב והתאמת הפורטל למיתוג, הכנת תבנית להזנת ההדרכות.'},
     {id:'m4',num:'4',title:'פיתוח',desc:'פיתוח מערכת יצירת חומרי למידה עם AI בהתאם לאפיון המאושר, והעלאה לאוויר.'}
   ],
-  why_intro:'הפלטפורמה מאפשרת למכללות להקים ולהפעיל מערך קורסים דיגיטליים ופרונטליים, תוך שילוב כלים מתקדמים למעקב אחר התקדמות המשתמשים וביצועיהם. המערכת כוללת דוחות מפורטים עם נתוני צפייה, תוצאות מבחנים וסטטיסטיקות שימוש, ומספקת תמונה מלאה על תהליך הלמידה.',
-  why_items:['פתרון מלא לבניית קורסים דיגיטליים','זמינות גבוהה ומענה מהיר לכל צורך','אבטחת מידע ברמה גבוהה','מנהל תיק אישי זמין לכל התייעצות','דוחות מעקב התקדמות בהתאמה אישית','התנהלות בקבוצת Whatsapp ייחודית'],
+  why_intro:'הפלטפורמה מאפשרת למכללות להקים ולהפעיל מערך קורסים דיגיטליים ופרונטליים, תוך שילוב כלים מתקדמים למעקב אחר התקדמות המשתמשים וביצועיהם.',
+  why_items:['פתרון מלא לבניית קורסים דיגיטליים','זמינות גבוהה ומענה מהיר לכל צורך','אבטחת מידע ברמה גבוהה','מנהל תיק אישי זמין','דוחות מעקב התקדמות','התנהלות בקבוצת Whatsapp'],
   selected_clients:['client1','client2','client3','client4','client5','client6','client7','client8','client9','client10','client11','client12'],
   costs_subtitle:'מחירון - הקמת מערכת ניהול למידה ופיתוח מערכת יצירת חומרי למידה',
   costs_rows:[['פיתוח','250 ₪ לשעה'],['מערכת ניהול למידה (שנה ראשונה)','11,988 ₪ (כולל 100GB אחסון ו-200GB תעבורה)'],["10,000 קרדיטים לכלי AI וצ'אטבוטים",'2,310 ₪']],
   payments:[
     {num:1,title:'חתימה והעברת תשלום ראשון',desc:'100 שעות פיתוח (25,000 ₪) + 1/3 עלות מערכת ניהול למידה (3,996 ₪)',total:'28,996 ₪'},
     {num:2,title:'לאחר אישור אפיון',desc:'1/3 עלות מערכת ניהול למידה (3,996 ₪)',total:'3,996 ₪'},
-    {num:3,title:'לאחר הקמת אתר התאחדות ארצית אחד',desc:'1/3 עלות מערכת ניהול למידה (3,996 ₪) + עלות קרדיטים לשימוש ב-AI (2,310 ₪)',total:'6,306 ₪'},
+    {num:3,title:'לאחר הקמת האתר',desc:'1/3 עלות מערכת ניהול למידה (3,996 ₪) + עלות קרדיטים לשימוש ב-AI (2,310 ₪)',total:'6,306 ₪'},
     {num:4,title:'בסיום הפיתוח',desc:'100 שעות פיתוח לאחר ה-100 שעות הראשונות בהתאם לאפיון המאושר + שעות נוספות לפי 250 ₪ לשעה.',total:'ישתנה'}
   ],
   optional:[{title:'אחסון נוסף עד 1TB',price:'250 ₪ לחודש'},{title:'תעבורה נוספת עד 2TB',price:'250 ₪ לחודש'},{title:'טוקנים נוספים',price:'0.07$ × 3.3 ₪'}],
   token_packages:[{amount:'10,000 טוקנים',original:'3,600₪',sale:'3,420₪'},{amount:'20,000 טוקנים',original:'7,200₪',sale:'6,480₪',featured:true},{amount:'40,000 טוקנים',original:'14,400₪',sale:'12,960₪'}],
-  token_examples:['יצירת 10 סילבוסים = 20-40 טוקנים AI','יצירת תוכן למצגות - 100 שקופיות = 20-25 טוקנים AI','יצירת כתוביות לשעה של וידאו = 15-30 טוקנים AI','יצירת שאלות לשעה של וידאו = 10-15 טוקנים AI','חלוקה לפרקים לשעה של וידאו = 5-10 טוקנים AI','תרגום כתוביות לשעה של וידאו = 80-130 טוקנים AI','יצירת לומדה מקבצים = 300-500 טוקנים AI','3 שאלות לעוזר האישי = 1 טוקן AI'],
+  token_examples:['יצירת 10 סילבוסים = 20-40 טוקנים AI','יצירת 100 שקופיות = 20-25 טוקנים AI','כתוביות לשעה = 15-30 טוקנים AI','שאלות לשעה = 10-15 טוקנים AI','חלוקה לפרקים = 5-10 טוקנים AI','תרגום כתוביות = 80-130 טוקנים AI','לומדה מקבצים = 300-500 טוקנים AI','3 שאלות לעוזר = 1 טוקן AI'],
   terms:[
-    {id:'t1',title:'מערכת ניהול למידה',text:'הלקוח יקבל אתרים אישיים המוקמים על גבי פלטפורמת Yeda ומחוברים לדומיינים של הלקוח, בהתאם למבנה ולמספר האתרים שנרכשו. הפלטפורמה כוללת אתרים מלאים, מערכת ניהול למידה (LMS), אפשרות לחיבור מערכת תשלומים, עדכוני גרסה, תמיכה טכנית מלאה, קבוצת ווטסאפ ייעודית והדרכות. בהתאם להסכם, ההתקשרות היא בהתחייבות ללא אפשרות יציאה מוקדמת. החבילה מאפשרת שימוש ללא הגבלת כמות משתמשים פעילים למשך שלוש שנות פעילות. בתום התקופה, המחיר עשוי להשתנות.'},
-    {id:'t2',title:'פלטפורמת AI ולומדות',text:"בנוסף, הלקוח יקבל גישה לפלטפורמה המיועדת לבנייה, עיצוב, הקלטה ואחסון של מצגות, וידאו, לומדות אינטראקטיביות ועוזרי למידה מבוססי AI. העלויות מפורטות בסיכום המחירים בהתאם לנפחי השימוש, וייתכנו חיובים נוספים במקרה של חריגה."},
-    {id:'t3',title:'הגבלת אחריות',text:'חברת ידע פיתוח סביבות למידה בע"מ ו/או מי מטעמה אינם נושאים כל אחריות בקשר לכל תביעה משפטית הקשורה בדיני אינטרנט, לרבות נגישות, רישום דטאות, שמירה על פרטיות, חוק הספאם ועוד. מומלץ ללקוח להיוועץ בעו"ד המתמחה בתחום.'},
+    {id:'t1',title:'מערכת ניהול למידה',text:'הלקוח יקבל אתרים אישיים המוקמים על גבי פלטפורמת Yeda ומחוברים לדומיינים של הלקוח, בהתאם למבנה ולמספר האתרים שנרכשו. הפלטפורמה כוללת אתרים מלאים, מערכת ניהול למידה (LMS), אפשרות לחיבור מערכת תשלומים, עדכוני גרסה, תמיכה טכנית מלאה, קבוצת ווטסאפ ייעודית והדרכות. בהתאם להסכם, ההתקשרות היא בהתחייבות ללא אפשרות יציאה מוקדמת, והמחיר מפורט בהצעת המחיר. החבילה מאפשרת שימוש ללא הגבלת כמות משתמשים פעילים למשך שלוש שנות פעילות. בתום התקופה, המחיר עשוי להשתנות בהתאם להיקף השימוש בפועל.'},
+    {id:'t2',title:'פלטפורמת AI ולומדות',text:'בנוסף, הלקוח יקבל גישה לפלטפורמה המיועדת לבנייה, עיצוב, הקלטה ואחסון של מצגות, וידאו, לומדות אינטראקטיביות ועוזרי למידה מבוססי AI. העלויות מפורטות בסיכום המחירים בהתאם לנפחי השימוש, וייתכנו חיובים נוספים במקרה של חריגה.'},
+    {id:'t3',title:'הגבלת אחריות',text:'חברת ידע פיתוח סביבות למידה בע"מ ו/או מי מטעמה אינם נושאים כל אחריות בקשר לכל תביעה משפטית הקשורה בדיני אינטרנט, לרבות נגישות, רישום דטאות, שמירה על פרטיות, חוק הספאם ועוד. מומלץ ללקוח להיוועץ בעו"ד המתמחה בתחום. השימוש באתר כפוף למדיניות פרטיות ותקנון תנאי שימוש בנוסחו מעת לעת.'},
     {id:'t4',title:'קניין רוחני',text:'מובהר כי הקניין הרוחני המלא של מוצרי תוכן באתר וזכויות היוצרים יהיו שייכים ללקוח.'},
     {id:'t5',title:'סודיות',text:'חברת ידע בע"מ מתחייבת לשמירה על סודיות וזכויות היוצרים — לא לשלוח ולשתף חומרים מתוך הקורסים, דטאות משתמשים, או מידע אחר עם צד שלישי ללא רשותו של הלקוח.'}
   ],
-  signed:false
+  signed:false, token:'', versions:[]
 };
 
-let pw='',cur=1,sd={1:null,2:null,3:null};
+let _pw='', _cur=1, _sd={1:null,2:null,3:null};
+
+function genToken(){return Math.random().toString(36).slice(2,10)+Date.now().toString(36)}
 
 function doLogin(){
   const v=document.getElementById('pw').value;
-  if(v!==PASS){document.getElementById('lerr').style.display='block';return}
-  pw=v;document.getElementById('lw').style.display='none';document.getElementById('app').style.display='block';
+  if(v!==PASS){document.getElementById('lerr').style.display='block';return;}
+  _pw=v;document.getElementById('lw').style.display='none';document.getElementById('app').style.display='block';
   loadAll();
 }
-function doLogout(){pw='';document.getElementById('lw').style.display='flex';document.getElementById('app').style.display='none';document.getElementById('pw').value=''}
-async function loadAll(){for(let s=1;s<=3;s++){try{const r=await fetch(N8N_LOAD,{method:'POST',headers:{'Content-Type':'application/json'},cache:'no-store',body:JSON.stringify({slot:s,password:pw,mode:'admin'})});const d=await r.json();sd[s]=d.title?d:null}catch(e){sd[s]=null}renderPanel(s);updateTab(s)}}
-function switchSlot(s){cur=s;document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',+t.dataset.s===s));document.querySelectorAll('.slot-panel').forEach(p=>p.classList.remove('active'));document.getElementById('p'+s).classList.add('active')}
-function updateTab(s){const d=sd[s];const t=document.querySelector(`.tab[data-s="${s}"]`);const nm=d?.client_name||'חוזה '+s;const dot=d?.signed?'<span class="sdot"></span>':'';t.innerHTML=dot+nm}
+function doLogout(){_pw='';document.getElementById('lw').style.display='flex';document.getElementById('app').style.display='none';document.getElementById('pw').value=''}
 
-function renderPanel(s){
-  const d=Object.assign({},DD,sd[s]||{});
-  const signed=d.signed===true;
-  const panel=document.getElementById('p'+s);
-  panel.innerHTML=`
-    ${signed?`<div class="signed-banner"><div class="sbtext">✓ נחתם — ${d.signer_name||''} — ${d.signer_date||''}</div><button class="resetbtn" onclick="resetSlot(${s})">🗑 אפס</button></div>`:''}
-    ${secAcc(s,'basic','📋','פרטי הצעה',basicHTML(s,d,signed))}
-    ${secAcc(s,'matara','🎯','מטרה',mataraHTML(s,d,signed))}
-    ${secAcc(s,'ms','🪜','אבני דרך',msHTML(s,d,signed))}
-    ${secAcc(s,'why','💡','למה אנחנו?',whyHTML(s,d,signed))}
-    ${secAcc(s,'clients','🏢','עובדים עם Yeda',clientsHTML(s,d,signed))}
-    ${secAcc(s,'costs','💰','עלויות ותנאי תשלום',costsHTML(s,d,signed))}
-    ${secAcc(s,'opt','➕','שירותים אופציונליים',optHTML(s,d,signed))}
-    ${secAcc(s,'tok','🤖','חבילות טוקנים',tokHTML(s,d,signed))}
-    ${secAcc(s,'terms','📜','תנאי ההסכם',termsHTML(s,d,signed))}
-    <div style="margin-top:12px;padding:12px 16px;background:#fff;border:1px solid var(--bdr);border-radius:var(--r)">
-      <div style="font-size:.78rem;font-weight:700;color:var(--mu);margin-bottom:6px">קישור לחתימה</div>
-      <div class="link-box">
-        <div class="link-url">${PROP_URL}?slot=${s}</div>
-        <button class="copy-btn" id="cpbtn${s}" onclick="copyLink(${s})">העתק</button>
-      </div>
-    </div>
-    ${!signed?`<div class="save-wrap"><button class="save-btn" id="sbtn${s}" onclick="saveSlot(${s})"><div class="save-sp" id="ssp${s}"></div><span id="stxt${s}">שמור שינויים</span></button><div class="save-msg" id="smsg${s}"></div></div>`:''}`;
+async function loadAll(){
+  for(let s=1;s<=3;s++){
+    try{
+      const r=await fetch(N8N_LOAD,{method:'POST',headers:{'Content-Type':'application/json'},
+        cache:'no-store',body:JSON.stringify({slot:s,password:_pw,mode:'admin'})});
+      const d=await r.json();
+      _sd[s]=(d&&(d.title||d.client_name))?d:null;
+    }catch(e){_sd[s]=null;}
+    renderPanel(s);updateTab(s);
+  }
 }
 
-function secAcc(s,id,icon,title,body){
-  return `<div class="sec-accordion" id="sa-${s}-${id}">
-    <div class="sec-head" onclick="toggleSec('${s}','${id}')">
-      <div class="sec-head-l"><div class="sec-icon">${icon}</div><div class="sec-title">${title}</div></div>
-      <span class="sec-arr">▾</span>
+function switchSlot(s){
+  _cur=s;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',+t.dataset.s===s));
+  document.querySelectorAll('.slot-panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('p'+s).classList.add('active');
+}
+
+function updateTab(s){
+  const d=_sd[s];
+  const nm=d?.client_name||'חוזה '+s;
+  const dot=d?.signed?'<span class="sdot"></span>':'';
+  document.querySelector(`.tab[data-s="${s}"]`).innerHTML=dot+nm;
+}
+
+function getLink(s){
+  const tok=_sd[s]?.token||'';
+  return PROP_URL+'?slot='+s+(tok?'&token='+tok:'');
+}
+
+/* ── RENDER PANEL ── */
+function renderPanel(s){
+  const d=Object.assign({},DD,_sd[s]||{});
+  const signed=d.signed===true;
+  const link=getLink(s);
+  const versions=d.versions||[];
+  const p=document.getElementById('p'+s);
+  p.innerHTML=`
+    ${signed?`<div class="signed-banner"><div class="sbtext">✓ נחתם — ${d.signer_name||''} — ${d.signer_date||''}</div><button class="resetbtn" onclick="resetSlot(${s})">🗑 אפס</button></div>`:''}
+    ${acc(s,'basic','📋','פרטי הצעה',basicHTML(s,d,signed),'open')}
+    ${acc(s,'link','🔗','קישור לחתימה',linkHTML(s,link,versions,signed),'open')}
+    ${acc(s,'matara','🎯','מטרה',mataraHTML(s,d,signed))}
+    ${acc(s,'ms','🪜','אבני דרך',msHTML(s,d,signed))}
+    ${acc(s,'why','💡','למה אנחנו?',whyHTML(s,d,signed))}
+    ${acc(s,'clients','🏢','עובדים עם Yeda',clientsHTML(s,d,signed))}
+    ${acc(s,'costs','💰','עלויות ותנאי תשלום',costsHTML(s,d,signed))}
+    ${acc(s,'opt','➕','שירותים אופציונליים',optHTML(s,d,signed))}
+    ${acc(s,'tok','🤖','חבילות טוקנים',tokHTML(s,d,signed))}
+    ${acc(s,'terms','📜','תנאי ההסכם',termsHTML(s,d,signed))}
+    ${!signed?`<div class="save-bar">
+      <button class="save-btn" id="sbtn${s}" onclick="saveSlot(${s})">
+        <div class="ssp" id="ssp${s}"></div><span id="stxt${s}">💾 שמור שינויים</span>
+      </button>
+      <button class="ver-btn" id="vbtn${s}" onclick="saveVersion(${s})" title="שמור גרסת PDF">
+        <div class="vsp" id="vsp${s}"></div><span id="vtxt${s}">📄 שמור גרסה</span>
+      </button>
+      <div class="save-msg" id="smsg${s}"></div>
+    </div>`:''}`;
+}
+
+function acc(s,id,icon,title,body,openClass=''){
+  return `<div class="acc${openClass?' open':''}" id="ac-${s}-${id}">
+    <div class="acc-head" onclick="document.getElementById('ac-${s}-${id}').classList.toggle('open')">
+      <div class="acc-hl"><div class="acc-ico">${icon}</div><div class="acc-t">${title}</div></div>
+      <span class="acc-arr">▾</span>
     </div>
-    <div class="sec-body">${body}</div>
+    <div class="acc-body">${body}</div>
   </div>`;
 }
-function toggleSec(s,id){document.getElementById('sa-'+s+'-'+id).classList.toggle('open')}
 
+/* ── SECTION HTMLs ── */
 function basicHTML(s,d,dis){
   return `<div class="frow">
     <div class="f"><div class="fl">כותרת ההצעה</div><input class="fi" id="${s}-title" value="${h(d.title)}" ${dis?'disabled':''}></div>
     <div class="f"><div class="fl">שם הלקוח</div><input class="fi" id="${s}-cname" value="${h(d.client_name)}" placeholder="שם חברת הלקוח" ${dis?'disabled':''}></div>
+  </div>`;
+}
+
+function linkHTML(s,link,versions,dis){
+  const verItems=versions.length?versions.map(v=>`
+    <div class="ver-item">
+      <div><div class="ver-name">${h(v.name)}</div><div class="ver-date">${h(v.date)}</div></div>
+      ${v.url?`<button class="ver-dl" onclick="window.open('${v.url}','_blank')">⬇ הורד</button>`:''}
+    </div>`).join(''):`<div class="ver-empty">אין גרסאות שמורות עדיין</div>`;
+  return `<div class="link-area">
+    <div class="link-ttl">קישור ייחודי ללקוח</div>
+    <div class="link-url" id="linkDisplay-${s}">${link}</div>
+    <div class="link-btns">
+      <button class="cp-btn" id="cpbtn${s}" onclick="copyLink(${s})">העתק</button>
+      ${!dis?`<button class="new-token-btn" onclick="refreshToken(${s})" title="צור קישור חדש (הקישור הישן יפסיק לעבוד)">🔄 חדש קישור</button>`:''}
+    </div>
+  </div>
+  <div class="ver-hist">
+    <div class="ver-ttl">היסטוריית גרסאות</div>
+    <div class="ver-list" id="verlist-${s}">${verItems}</div>
   </div>`;
 }
 
@@ -299,142 +386,149 @@ function mataraHTML(s,d,dis){
 }
 
 function msHTML(s,d,dis){
-  const list=(d.milestones||DD.milestones).map((m,i)=>`
-    <div class="block-card" id="ms-${s}-${m.id}">
-      <div class="block-top">
-        <div class="bnum">${m.num!==undefined?m.num:i}</div>
-        <input class="btitle-inp fi" id="mst-${s}-${m.id}" value="${h(m.title)}" placeholder="כותרת אבן דרך" ${dis?'disabled':''}>
-        ${!dis?`<button class="bdel" onclick="delMs(${s},'${m.id}')">×</button>`:''}
+  const ms=d.milestones||DD.milestones;
+  const list=ms.map((m,i)=>`
+    <div class="bl-card" id="ms-${s}-${m.id}">
+      <div class="bl-top">
+        <div class="bl-num">${m.num!==undefined?m.num:i}</div>
+        <input class="bl-ti fi" id="mst-${s}-${m.id}" value="${h(m.title)}" placeholder="כותרת" ${dis?'disabled':''}>
+        ${!dis?`<button class="bdel" onclick="document.getElementById('ms-${s}-${m.id}').remove()">×</button>`:''}
       </div>
-      <div class="block-body"><textarea class="btext-inp fi" id="msd-${s}-${m.id}" placeholder="תיאור" ${dis?'disabled':''}>${h(m.desc)}</textarea></div>
+      <div class="bl-body"><textarea class="bl-tx fi" id="msd-${s}-${m.id}" placeholder="תיאור" ${dis?'disabled':''}>${h(m.desc)}</textarea></div>
     </div>`).join('');
-  return `<div class="blocks-list" id="msl-${s}">${list}</div>${!dis?`<button class="add-btn" onclick="addMs(${s})">+ הוסף אבן דרך</button>`:''}`;
+  return `<div class="bl-list" id="msl-${s}">${list}</div>
+    ${!dis?`<button class="add-btn" onclick="addMs(${s})">+ הוסף אבן דרך</button>`:''}`;
 }
 
 function whyHTML(s,d,dis){
-  const items=(d.why_items||DD.why_items);
+  const items=d.why_items||DD.why_items;
   const rows=items.map((it,i)=>`
-    <div class="why-inp-row">
+    <div class="why-row">
       <input class="fi" id="wi-${s}-${i}" value="${h(it)}" placeholder="יתרון" ${dis?'disabled':''}>
-      ${!dis?`<button class="bdel" onclick="delWhy(${s},${i})">×</button>`:''}
+      ${!dis?`<button class="bdel" onclick="this.parentElement.remove()">×</button>`:''}
     </div>`).join('');
-  return `<div class="f" style="margin-bottom:10px"><div class="fl">טקסט מבוא</div><textarea class="fi" id="${s}-whyintro" rows="3" ${dis?'disabled':''}>${h(d.why_intro)}</textarea></div>
-    <div class="fl" style="margin-bottom:6px">פריטי יתרונות</div>
-    <div class="why-inp-list" id="wil-${s}">${rows}</div>
+  return `<div class="f" style="margin-bottom:10px"><div class="fl">טקסט מבוא</div>
+    <textarea class="fi" id="${s}-whyintro" rows="3" ${dis?'disabled':''}>${h(d.why_intro)}</textarea></div>
+    <div class="fl" style="margin-bottom:5px">פריטי יתרונות</div>
+    <div class="why-list" id="wil-${s}">${rows}</div>
     ${!dis?`<button class="add-btn" onclick="addWhy(${s})">+ הוסף יתרון</button>`:''}`;
 }
 
 function clientsHTML(s,d,dis){
   const sel=d.selected_clients||DD.selected_clients;
   const cards=ALL_CLIENTS.map(c=>`
-    <div class="cl-card${sel.includes(c.id)?' sel':''}" id="cc-${s}-${c.id}" onclick="${!dis?`tglCl(${s},'${c.id}')`:''}" title="${c.name}">
-      <div class="chkmark"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
-      <img class="cl-img" src="${LOGOS}${c.id}.png" alt="${c.name}" onerror="this.style.opacity='.2'">
-      <div class="cl-name">${c.name.length>10?c.name.slice(0,10)+'…':c.name}</div>
+    <div class="cl-c${sel.includes(c.id)?' sel':''}" id="cc-${s}-${c.id}"
+         onclick="${!dis?`tglCl(${s},'${c.id}')`:''}" title="${c.name}">
+      <div class="ckm"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <img src="${LOGOS}${c.id}.png" alt="${c.name}" onerror="this.style.opacity='.15'">
+      <div class="cl-c-name">${c.name.length>9?c.name.slice(0,9)+'…':c.name}</div>
     </div>`).join('');
-  return `<div class="cl-chk-grid">${cards}</div><div style="font-size:.75rem;color:var(--mu);margin-top:4px">לחץ על לוגו לבחירה / ביטול</div>`;
+  return `<div class="cl-chk">${cards}</div><div style="font-size:.73rem;color:var(--mu);margin-top:3px">לחץ על לוגו לבחירה/ביטול</div>`;
 }
 
 function costsHTML(s,d,dis){
-  const rows=(d.costs_rows||DD.costs_rows).map((r,i)=>`
-    <div class="table-row">
+  const rows=d.costs_rows||DD.costs_rows;
+  const pays=d.payments||DD.payments;
+  const rHTML=rows.map((r,i)=>`
+    <div class="tbl-row">
       <input class="fi" id="cr-${s}-${i}-0" value="${h(r[0])}" placeholder="פריט" ${dis?'disabled':''}>
       <input class="fi" id="cr-${s}-${i}-1" value="${h(r[1])}" placeholder="עלות" ${dis?'disabled':''}>
-      ${!dis?`<button class="bdel" onclick="delCostRow(${s},${i})">×</button>`:''}
+      ${!dis?`<button class="bdel" onclick="this.closest('.tbl-row').remove()">×</button>`:''}
     </div>`).join('');
-  const pays=(d.payments||DD.payments).map((p,i)=>`
+  const pHTML=pays.map((p,i)=>`
     <div class="pay-row" id="pay-${s}-${i}">
-      <div class="pay-row-head"><span class="pay-row-num">תשלום ${p.num}</span>${!dis?`<button class="bdel" onclick="delPay(${s},${i})">×</button>`:''}</div>
+      <div class="pay-rh"><span class="pay-rn">תשלום ${p.num}</span>
+        ${!dis?`<button class="bdel" onclick="document.getElementById('pay-${s}-${i}').remove()">×</button>`:''}
+      </div>
       <div class="frow">
         <div class="f"><div class="fl">כותרת</div><input class="fi" id="pt-${s}-${i}" value="${h(p.title)}" ${dis?'disabled':''}></div>
         <div class="f"><div class="fl">סה"כ</div><input class="fi" id="pp-${s}-${i}" value="${h(p.total)}" ${dis?'disabled':''}></div>
       </div>
       <div class="f"><div class="fl">תיאור</div><textarea class="fi" id="pd-${s}-${i}" rows="2" ${dis?'disabled':''}>${h(p.desc)}</textarea></div>
     </div>`).join('');
-  return `<div class="f" style="margin-bottom:10px"><div class="fl">כותרת טבלת מחירים</div><input class="fi" id="${s}-csubt" value="${h(d.costs_subtitle||DD.costs_subtitle)}" ${dis?'disabled':''}></div>
-    <div class="fl" style="margin-bottom:6px">שורות טבלה</div>
-    <div class="table-rows" id="crl-${s}">${rows}</div>
-    ${!dis?`<button class="add-btn" onclick="addCostRow(${s})" style="margin-bottom:14px">+ הוסף שורה</button>`:''}
-    <div class="fl" style="margin-bottom:6px">תשלומים</div>
-    <div class="pay-rows" id="payl-${s}">${pays}</div>
+  return `<div class="f" style="margin-bottom:10px"><div class="fl">כותרת טבלה</div>
+    <input class="fi" id="${s}-csubt" value="${h(d.costs_subtitle||DD.costs_subtitle)}" ${dis?'disabled':''}></div>
+    <div class="fl" style="margin-bottom:5px">שורות מחירון</div>
+    <div class="tbl-rows" id="crl-${s}">${rHTML}</div>
+    ${!dis?`<button class="add-btn" onclick="addCostRow(${s})" style="margin-bottom:12px">+ הוסף שורה</button>`:''}
+    <div class="fl" style="margin-bottom:5px">תשלומים</div>
+    <div class="pay-rows" id="payl-${s}">${pHTML}</div>
     ${!dis?`<button class="add-btn" onclick="addPay(${s})">+ הוסף תשלום</button>`:''}`;
 }
 
 function optHTML(s,d,dis){
-  const rows=(d.optional||DD.optional).map((it,i)=>`
-    <div class="table-row">
+  const items=d.optional||DD.optional;
+  const rHTML=items.map((it,i)=>`
+    <div class="tbl-row">
       <input class="fi" id="op-${s}-${i}-t" value="${h(it.title)}" placeholder="שירות" ${dis?'disabled':''}>
       <input class="fi" id="op-${s}-${i}-p" value="${h(it.price)}" placeholder="מחיר" ${dis?'disabled':''}>
-      ${!dis?`<button class="bdel" onclick="delOpt(${s},${i})">×</button>`:''}
+      ${!dis?`<button class="bdel" onclick="this.closest('.tbl-row').remove()">×</button>`:''}
     </div>`).join('');
-  return `<div class="table-rows" id="optl-${s}">${rows}</div>${!dis?`<button class="add-btn" onclick="addOpt(${s})">+ הוסף שירות</button>`:''}`;
+  return `<div class="tbl-rows" id="optl-${s}">${rHTML}</div>
+    ${!dis?`<button class="add-btn" onclick="addOpt(${s})">+ הוסף שירות</button>`:''}`;
 }
 
 function tokHTML(s,d,dis){
-  const pkgs=(d.token_packages||DD.token_packages).map((p,i)=>`
-    <div class="tok-pkg-row">
+  const pkgs=d.token_packages||DD.token_packages;
+  const exs=d.token_examples||DD.token_examples;
+  const pHTML=pkgs.map((p,i)=>`
+    <div class="tok-row">
       <input class="fi" id="tp-${s}-${i}-a" value="${h(p.amount)}" placeholder="כמות" ${dis?'disabled':''}>
       <input class="fi" id="tp-${s}-${i}-o" value="${h(p.original)}" placeholder="מחיר מקורי" ${dis?'disabled':''}>
       <input class="fi" id="tp-${s}-${i}-s" value="${h(p.sale)}" placeholder="מחיר מבצע" ${dis?'disabled':''}>
     </div>`).join('');
-  const exs=(d.token_examples||DD.token_examples).map((ex,i)=>`
-    <div class="why-inp-row">
-      <input class="fi" id="te-${s}-${i}" value="${h(ex)}" ${dis?'disabled':''}>
-      ${!dis?`<button class="bdel" onclick="delTokEx(${s},${i})">×</button>`:''}
+  const eHTML=exs.map((ex,i)=>`
+    <div class="why-row">
+      <input class="fi" id="te-${s}-${i}" value="${h(ex)}" placeholder="דוגמה" ${dis?'disabled':''}>
+      ${!dis?`<button class="bdel" onclick="this.parentElement.remove()">×</button>`:''}
     </div>`).join('');
-  return `<div class="fl" style="margin-bottom:6px">חבילות</div>
-    <div class="tok-pkg-list" id="tpkgl-${s}">${pkgs}</div>
-    <div class="fl" style="margin:10px 0 6px">דוגמאות שימוש</div>
-    <div class="why-inp-list" id="texl-${s}">${exs}</div>
+  return `<div class="fl" style="margin-bottom:5px">חבילות</div>
+    <div class="tok-pkg" id="tpkgl-${s}">${pHTML}</div>
+    <div class="fl" style="margin:10px 0 5px">דוגמאות שימוש</div>
+    <div class="why-list" id="texl-${s}">${eHTML}</div>
     ${!dis?`<button class="add-btn" onclick="addTokEx(${s})">+ הוסף דוגמה</button>`:''}`;
 }
 
 function termsHTML(s,d,dis){
-  const list=(d.terms||DD.terms).map((t,i)=>`
-    <div class="block-card" id="trm-${s}-${t.id}">
-      <div class="block-top">
-        <div class="bnum">${i+1}</div>
-        <input class="btitle-inp fi" id="trt-${s}-${t.id}" value="${h(t.title)}" placeholder="כותרת תנאי" ${dis?'disabled':''}>
-        ${!dis?`<button class="bdel" onclick="delTerm(${s},'${t.id}')">×</button>`:''}
+  const terms=d.terms||DD.terms;
+  const list=terms.map((t,i)=>`
+    <div class="bl-card" id="trm-${s}-${t.id}">
+      <div class="bl-top">
+        <div class="bl-num">${i+1}</div>
+        <input class="bl-ti fi" id="trt-${s}-${t.id}" value="${h(t.title)}" placeholder="כותרת תנאי" ${dis?'disabled':''}>
+        ${!dis?`<button class="bdel" onclick="document.getElementById('trm-${s}-${t.id}').remove()">×</button>`:''}
       </div>
-      <div class="block-body"><textarea class="btext-inp fi" id="trb-${s}-${t.id}" placeholder="טקסט תנאי..." rows="3" ${dis?'disabled':''}>${h(t.text)}</textarea></div>
+      <div class="bl-body"><textarea class="bl-tx fi" id="trb-${s}-${t.id}" placeholder="טקסט..." rows="3" ${dis?'disabled':''}>${h(t.text)}</textarea></div>
     </div>`).join('');
-  return `<div class="blocks-list" id="trml-${s}">${list}</div>${!dis?`<button class="add-btn" onclick="addTerm(${s})">+ הוסף תנאי</button>`:''}`;
+  return `<div class="bl-list" id="trml-${s}">${list}</div>
+    ${!dis?`<button class="add-btn" onclick="addTerm(${s})">+ הוסף תנאי</button>`:''}`;
 }
 
-/* ── GETTERS ── */
-function getMs(s){return Array.from(document.querySelectorAll(`[id^="ms-${s}-"]`)).map(el=>{const id=el.id.slice(('ms-'+s+'-').length);return{id,num:document.querySelectorAll(`[id^="ms-${s}-"]`).length>0?Array.from(document.querySelectorAll(`[id^="ms-${s}-"]`)).indexOf(el)+'':id,title:document.getElementById('mst-'+s+'-'+id)?.value||'',desc:document.getElementById('msd-'+s+'-'+id)?.value||''}})}
-function getWhy(s){return Array.from(document.querySelectorAll(`[id^="wi-${s}-"]`)).map(el=>el.value).filter(Boolean)}
-function getSel(s){return ALL_CLIENTS.map(c=>c.id).filter(id=>document.getElementById('cc-'+s+'-'+id)?.classList.contains('sel'))}
-function getCostRows(s){return Array.from(document.querySelectorAll(`[id^="cr-${s}-"]`)).filter(el=>el.id.endsWith('-0')).map(el=>{const i=el.id.split('-')[2];return[document.getElementById(`cr-${s}-${i}-0`)?.value||'',document.getElementById(`cr-${s}-${i}-1`)?.value||'']})}
-function getPayments(s){return Array.from(document.querySelectorAll(`[id^="pay-${s}-"]`)).map(el=>{const i=el.id.split('-')[2];return{num:parseInt(i)+1,title:document.getElementById(`pt-${s}-${i}`)?.value||'',desc:document.getElementById(`pd-${s}-${i}`)?.value||'',total:document.getElementById(`pp-${s}-${i}`)?.value||''}})}
-function getOpts(s){return Array.from(document.querySelectorAll(`[id^="op-${s}-"]`)).filter(el=>el.id.endsWith('-t')).map(el=>{const i=el.id.split('-')[2];return{title:document.getElementById(`op-${s}-${i}-t`)?.value||'',price:document.getElementById(`op-${s}-${i}-p`)?.value||''}})}
-function getTokPkgs(s){return Array.from(document.querySelectorAll(`[id^="tp-${s}-"]`)).filter(el=>el.id.endsWith('-a')).map(el=>{const i=el.id.split('-')[2];return{amount:document.getElementById(`tp-${s}-${i}-a`)?.value||'',original:document.getElementById(`tp-${s}-${i}-o`)?.value||'',sale:document.getElementById(`tp-${s}-${i}-s`)?.value||''}})}
-function getTokExs(s){return Array.from(document.querySelectorAll(`[id^="te-${s}-"]`)).map(el=>el.value).filter(Boolean)}
-function getTerms(s){return Array.from(document.querySelectorAll(`[id^="trm-${s}-"]`)).map(el=>{const id=el.id.slice(('trm-'+s+'-').length);return{id,title:document.getElementById('trt-'+s+'-'+id)?.value||'',text:document.getElementById('trb-'+s+'-'+id)?.value||''}})}
-
-/* ── ADD/DELETE ── */
-function addMs(s){const id='m'+Date.now(),ms=getMs(s);ms.push({id,num:ms.length,title:'',desc:''});const dd=document.getElementById('msl-'+s);const el=document.createElement('div');el.className='block-card';el.id='ms-'+s+'-'+id;el.innerHTML=`<div class="block-top"><div class="bnum">${ms.length-1}</div><input class="btitle-inp fi" id="mst-${s}-${id}" placeholder="כותרת אבן דרך"><button class="bdel" onclick="delMs(${s},'${id}')">×</button></div><div class="block-body"><textarea class="btext-inp fi" id="msd-${s}-${id}" placeholder="תיאור"></textarea></div>`;dd.appendChild(el);document.getElementById('mst-'+s+'-'+id)?.focus()}
-function delMs(s,id){document.getElementById('ms-'+s+'-'+id)?.remove()}
-function addWhy(s){const i=document.querySelectorAll(`[id^="wi-${s}-"]`).length;const l=document.getElementById('wil-'+s);const el=document.createElement('div');el.className='why-inp-row';el.innerHTML=`<input class="fi" id="wi-${s}-${i}" placeholder="יתרון"><button class="bdel" onclick="this.parentElement.remove()">×</button>`;l.appendChild(el);el.querySelector('input')?.focus()}
-function delWhy(s,i){document.querySelector(`[id="wi-${s}-${i}"]`)?.parentElement?.remove()}
+/* ── ADD ITEMS ── */
+function addMs(s){const id='m'+Date.now();const l=document.getElementById('msl-'+s);const i=l.children.length;const el=document.createElement('div');el.className='bl-card';el.id='ms-'+s+'-'+id;el.innerHTML=`<div class="bl-top"><div class="bl-num">${i}</div><input class="bl-ti fi" id="mst-${s}-${id}" placeholder="כותרת"><button class="bdel" onclick="document.getElementById('ms-${s}-${id}').remove()">×</button></div><div class="bl-body"><textarea class="bl-tx fi" id="msd-${s}-${id}" placeholder="תיאור"></textarea></div>`;l.appendChild(el);el.querySelector('input')?.focus()}
+function addWhy(s){const i=document.querySelectorAll(`[id^="wi-${s}-"]`).length;const l=document.getElementById('wil-'+s);const el=document.createElement('div');el.className='why-row';el.innerHTML=`<input class="fi" id="wi-${s}-${i}" placeholder="יתרון"><button class="bdel" onclick="this.parentElement.remove()">×</button>`;l.appendChild(el);el.querySelector('input')?.focus()}
 function tglCl(s,id){document.getElementById('cc-'+s+'-'+id)?.classList.toggle('sel')}
-function addCostRow(s){const i=document.querySelectorAll(`[id^="cr-${s}-"]`).filter(el=>el.id.endsWith('-0')).length;const l=document.getElementById('crl-'+s);const el=document.createElement('div');el.className='table-row';el.innerHTML=`<input class="fi" id="cr-${s}-${i}-0" placeholder="פריט"><input class="fi" id="cr-${s}-${i}-1" placeholder="עלות"><button class="bdel" onclick="this.parentElement.remove()">×</button>`;l.appendChild(el)}
-function delCostRow(s,i){const row=document.querySelector(`[id="cr-${s}-${i}-0"]`)?.closest('.table-row');row?.remove()}
-function addPay(s){const i=document.querySelectorAll(`[id^="pay-${s}-"]`).length;const l=document.getElementById('payl-'+s);const el=document.createElement('div');el.className='pay-row';el.id='pay-'+s+'-'+i;el.innerHTML=`<div class="pay-row-head"><span class="pay-row-num">תשלום ${i+1}</span><button class="bdel" onclick="this.closest('.pay-row').remove()">×</button></div><div class="frow"><div class="f"><div class="fl">כותרת</div><input class="fi" id="pt-${s}-${i}" placeholder="כותרת תשלום"></div><div class="f"><div class="fl">סה"כ</div><input class="fi" id="pp-${s}-${i}" placeholder="סכום"></div></div><div class="f"><div class="fl">תיאור</div><textarea class="fi" id="pd-${s}-${i}" rows="2"></textarea></div>`;l.appendChild(el)}
-function delPay(s,i){document.getElementById('pay-'+s+'-'+i)?.remove()}
-function addOpt(s){const i=document.querySelectorAll(`[id^="op-${s}-"]`).filter(el=>el.id.endsWith('-t')).length;const l=document.getElementById('optl-'+s);const el=document.createElement('div');el.className='table-row';el.innerHTML=`<input class="fi" id="op-${s}-${i}-t" placeholder="שירות"><input class="fi" id="op-${s}-${i}-p" placeholder="מחיר"><button class="bdel" onclick="this.parentElement.remove()">×</button>`;l.appendChild(el)}
-function delOpt(s,i){document.querySelector(`[id="op-${s}-${i}-t"]`)?.closest('.table-row')?.remove()}
-function addTokEx(s){const i=document.querySelectorAll(`[id^="te-${s}-"]`).length;const l=document.getElementById('texl-'+s);const el=document.createElement('div');el.className='why-inp-row';el.innerHTML=`<input class="fi" id="te-${s}-${i}" placeholder="דוגמה"><button class="bdel" onclick="this.parentElement.remove()">×</button>`;l.appendChild(el);el.querySelector('input')?.focus()}
-function delTokEx(s,i){document.querySelector(`[id="te-${s}-${i}"]`)?.parentElement?.remove()}
-function addTerm(s){const id='t'+Date.now();const l=document.getElementById('trml-'+s);const i=l.children.length;const el=document.createElement('div');el.className='block-card';el.id='trm-'+s+'-'+id;el.innerHTML=`<div class="block-top"><div class="bnum">${i+1}</div><input class="btitle-inp fi" id="trt-${s}-${id}" placeholder="כותרת תנאי"><button class="bdel" onclick="delTerm(${s},'${id}')">×</button></div><div class="block-body"><textarea class="btext-inp fi" id="trb-${s}-${id}" placeholder="טקסט תנאי..." rows="3"></textarea></div>`;l.appendChild(el);document.getElementById('trt-'+s+'-'+id)?.focus()}
-function delTerm(s,id){document.getElementById('trm-'+s+'-'+id)?.remove()}
+function addCostRow(s){const i=document.querySelectorAll(`[id^="cr-${s}-"]`).filter(e=>e.id.endsWith('-0')).length;const l=document.getElementById('crl-'+s);const el=document.createElement('div');el.className='tbl-row';el.innerHTML=`<input class="fi" id="cr-${s}-${i}-0" placeholder="פריט"><input class="fi" id="cr-${s}-${i}-1" placeholder="עלות"><button class="bdel" onclick="this.closest('.tbl-row').remove()">×</button>`;l.appendChild(el)}
+function addPay(s){const i=document.querySelectorAll(`[id^="pay-${s}-"]`).length;const l=document.getElementById('payl-'+s);const el=document.createElement('div');el.className='pay-row';el.id='pay-'+s+'-'+i;el.innerHTML=`<div class="pay-rh"><span class="pay-rn">תשלום ${i+1}</span><button class="bdel" onclick="document.getElementById('pay-${s}-${i}').remove()">×</button></div><div class="frow"><div class="f"><div class="fl">כותרת</div><input class="fi" id="pt-${s}-${i}" placeholder="כותרת"></div><div class="f"><div class="fl">סה"כ</div><input class="fi" id="pp-${s}-${i}" placeholder="סכום"></div></div><div class="f"><div class="fl">תיאור</div><textarea class="fi" id="pd-${s}-${i}" rows="2"></textarea></div>`;l.appendChild(el)}
+function addOpt(s){const i=document.querySelectorAll(`[id^="op-${s}-"]`).filter(e=>e.id.endsWith('-t')).length;const l=document.getElementById('optl-'+s);const el=document.createElement('div');el.className='tbl-row';el.innerHTML=`<input class="fi" id="op-${s}-${i}-t" placeholder="שירות"><input class="fi" id="op-${s}-${i}-p" placeholder="מחיר"><button class="bdel" onclick="this.closest('.tbl-row').remove()">×</button>`;l.appendChild(el)}
+function addTokEx(s){const i=document.querySelectorAll(`[id^="te-${s}-"]`).length;const l=document.getElementById('texl-'+s);const el=document.createElement('div');el.className='why-row';el.innerHTML=`<input class="fi" id="te-${s}-${i}" placeholder="דוגמה"><button class="bdel" onclick="this.parentElement.remove()">×</button>`;l.appendChild(el);el.querySelector('input')?.focus()}
+function addTerm(s){const id='t'+Date.now();const l=document.getElementById('trml-'+s);const i=l.children.length;const el=document.createElement('div');el.className='bl-card';el.id='trm-'+s+'-'+id;el.innerHTML=`<div class="bl-top"><div class="bl-num">${i+1}</div><input class="bl-ti fi" id="trt-${s}-${id}" placeholder="כותרת תנאי"><button class="bdel" onclick="document.getElementById('trm-${s}-${id}').remove()">×</button></div><div class="bl-body"><textarea class="bl-tx fi" id="trb-${s}-${id}" placeholder="טקסט..." rows="3"></textarea></div>`;l.appendChild(el);el.querySelector('input')?.focus()}
 
-/* ── SAVE ── */
-async function saveSlot(s){
-  const btn=document.getElementById('sbtn'+s),sp=document.getElementById('ssp'+s),tx=document.getElementById('stxt'+s),msg=document.getElementById('smsg'+s);
-  btn.disabled=true;sp.style.display='block';tx.textContent='שומר...';
-  const payload={slot:s,password:pw,signed:false,
+/* ── GETTERS ── */
+function getMs(s){return [...document.querySelectorAll(`[id^="ms-${s}-"]`)].map(el=>{const id=el.id.slice((`ms-${s}-`).length);return{id,num:document.getElementById('msl-'+s)?[...document.getElementById('msl-'+s).children].indexOf(el)+'':id,title:document.getElementById('mst-'+s+'-'+id)?.value||'',desc:document.getElementById('msd-'+s+'-'+id)?.value||''}})}
+function getWhy(s){return [...document.querySelectorAll(`[id^="wi-${s}-"]`)].map(e=>e.value).filter(Boolean)}
+function getSel(s){return ALL_CLIENTS.map(c=>c.id).filter(id=>document.getElementById('cc-'+s+'-'+id)?.classList.contains('sel'))}
+function getCostRows(s){return [...document.querySelectorAll(`[id^="cr-${s}-"]`)].filter(e=>e.id.endsWith('-0')).map(e=>{const i=e.id.split('-')[2];return[document.getElementById(`cr-${s}-${i}-0`)?.value||'',document.getElementById(`cr-${s}-${i}-1`)?.value||'']})}
+function getPayments(s){return [...document.querySelectorAll(`[id^="pay-${s}-"]`)].map(e=>{const i=e.id.split('-')[2];return{num:parseInt(i)+1,title:document.getElementById(`pt-${s}-${i}`)?.value||'',desc:document.getElementById(`pd-${s}-${i}`)?.value||'',total:document.getElementById(`pp-${s}-${i}`)?.value||''}})}
+function getOpts(s){return [...document.querySelectorAll(`[id^="op-${s}-"]`)].filter(e=>e.id.endsWith('-t')).map(e=>{const i=e.id.split('-')[2];return{title:document.getElementById(`op-${s}-${i}-t`)?.value||'',price:document.getElementById(`op-${s}-${i}-p`)?.value||''}})}
+function getTokPkgs(s){return [...document.querySelectorAll(`[id^="tp-${s}-"]`)].filter(e=>e.id.endsWith('-a')).map(e=>{const i=e.id.split('-')[2];return{amount:document.getElementById(`tp-${s}-${i}-a`)?.value||'',original:document.getElementById(`tp-${s}-${i}-o`)?.value||'',sale:document.getElementById(`tp-${s}-${i}-s`)?.value||''}})}
+function getTokExs(s){return [...document.querySelectorAll(`[id^="te-${s}-"]`)].map(e=>e.value).filter(Boolean)}
+function getTerms(s){return [...document.querySelectorAll(`[id^="trm-${s}-"]`)].map(e=>{const id=e.id.slice((`trm-${s}-`).length);return{id,title:document.getElementById('trt-'+s+'-'+id)?.value||'',text:document.getElementById('trb-'+s+'-'+id)?.value||''}})}
+
+function buildPayload(s,keepToken){
+  const tok=keepToken?(_sd[s]?.token||genToken()):genToken();
+  return {
+    slot:s, signed:false, token:tok,
     title:document.getElementById(s+'-title')?.value||'',
     client_name:document.getElementById(s+'-cname')?.value||'',
     matara:document.getElementById(s+'-matara')?.value||'',
@@ -443,31 +537,89 @@ async function saveSlot(s){
     why_items:getWhy(s),
     selected_clients:getSel(s),
     costs_subtitle:document.getElementById(s+'-csubt')?.value||'',
-    costs_rows:getCostRows(s),payments:getPayments(s),optional:getOpts(s),
-    token_packages:getTokPkgs(s),token_examples:getTokExs(s),
-    terms:getTerms(s)};
+    costs_rows:getCostRows(s), payments:getPayments(s), optional:getOpts(s),
+    token_packages:getTokPkgs(s), token_examples:getTokExs(s),
+    terms:getTerms(s),
+    versions:_sd[s]?.versions||[]
+  };
+}
+
+/* ── SAVE ── */
+async function saveSlot(s){
+  const btn=document.getElementById('sbtn'+s),sp=document.getElementById('ssp'+s),tx=document.getElementById('stxt'+s),msg=document.getElementById('smsg'+s);
+  btn.disabled=true;sp.style.display='block';tx.textContent='שומר...';
+  const payload=buildPayload(s,true); // keep existing token
   try{
     const r=await fetch(N8N_SAVE,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
-    if(!r.ok)throw new Error('שגיאת שרת '+r.status);
-    sd[s]=payload;updateTab(s);msg.textContent='✓ נשמר';msg.className='save-msg ok';setTimeout(()=>msg.textContent='',3000);
-  }catch(e){msg.textContent='שגיאה: '+e.message;msg.className='save-msg err'}
-  btn.disabled=false;sp.style.display='none';tx.textContent='שמור שינויים';
+    if(!r.ok)throw new Error('שגיאה '+r.status);
+    _sd[s]=payload;updateTab(s);
+    // update link display
+    const ldisp=document.getElementById('linkDisplay-'+s);
+    if(ldisp)ldisp.textContent=getLink(s);
+    msg.textContent='✓ נשמר';msg.className='save-msg ok';setTimeout(()=>msg.textContent='',3000);
+  }catch(e){msg.textContent='שגיאה: '+e.message;msg.className='save-msg err';}
+  btn.disabled=false;sp.style.display='none';tx.textContent='💾 שמור שינויים';
+}
+
+/* ── SAVE VERSION (PDF snapshot) ── */
+async function saveVersion(s){
+  const btn=document.getElementById('vbtn'+s),sp=document.getElementById('vsp'+s),tx=document.getElementById('vtxt'+s),msg=document.getElementById('smsg'+s);
+  btn.disabled=true;sp.style.display='block';tx.textContent='יוצר PDF...';
+  const payload=buildPayload(s,true);
+  const vNum=(payload.versions.length)+1;
+  try{
+    const r=await fetch(N8N_SAVE_VER,{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({...payload,version_number:vNum})});
+    if(!r.ok)throw new Error('שגיאה '+r.status);
+    const resp=await r.json();
+    const cn=payload.client_name||'contract';
+    const today=new Date();const d=pad(today.getDate())+'.'+pad(today.getMonth()+1)+'.'+today.getFullYear();
+    const newVer={name:`${cn}-v${vNum} (${d})`,date:d,url:resp.pdf_url||''};
+    payload.versions=[...payload.versions,newVer];
+    // save updated payload with new version
+    await fetch(N8N_SAVE,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    _sd[s]=payload;
+    // refresh version list
+    const vl=document.getElementById('verlist-'+s);
+    if(vl)vl.innerHTML=payload.versions.map(v=>`
+      <div class="ver-item">
+        <div><div class="ver-name">${h(v.name)}</div><div class="ver-date">${h(v.date)}</div></div>
+        ${v.url?`<button class="ver-dl" onclick="window.open('${v.url}','_blank')">⬇ הורד</button>`:''}
+      </div>`).join('');
+    msg.textContent='✓ גרסה נשמרה';msg.className='save-msg ok';setTimeout(()=>msg.textContent='',4000);
+  }catch(e){msg.textContent='שגיאה: '+e.message;msg.className='save-msg err';}
+  btn.disabled=false;sp.style.display='none';tx.textContent='📄 שמור גרסה';
+}
+
+/* ── REFRESH TOKEN (new unique link) ── */
+async function refreshToken(s){
+  if(!confirm('זה ייצור קישור חדש — הקישור הקודם יפסיק לעבוד. להמשיך?'))return;
+  const payload=buildPayload(s,false); // generate new token
+  const msg=document.getElementById('smsg'+s);
+  try{
+    await fetch(N8N_SAVE,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    _sd[s]=payload;
+    const newLink=getLink(s);
+    const ldisp=document.getElementById('linkDisplay-'+s);if(ldisp)ldisp.textContent=newLink;
+    msg.textContent='🔄 קישור חודש';msg.className='save-msg ok';setTimeout(()=>msg.textContent='',3000);
+  }catch(e){msg.textContent='שגיאה';msg.className='save-msg err';}
 }
 
 async function resetSlot(s){
   if(!confirm('לאפס החוזה? ניתן יהיה לחתום שוב'))return;
-  const d=sd[s]||{};
-  const payload={slot:s,password:pw,...d,signed:false,signer_name:'',signer_date:'',signer_email:''};
-  try{await fetch(N8N_SAVE,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});sd[s]=payload;renderPanel(s);updateTab(s)}catch(e){alert('שגיאה')}
+  const d=_sd[s]||{};
+  const payload={...d,slot:s,signed:false,signer_name:'',signer_date:'',signer_email:''};
+  try{await fetch(N8N_SAVE,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});_sd[s]=payload;renderPanel(s);updateTab(s);}catch(e){alert('שגיאה');}
 }
 
 async function copyLink(s){
-  await navigator.clipboard.writeText(PROP_URL+'?slot='+s);
+  await navigator.clipboard.writeText(getLink(s));
   const b=document.getElementById('cpbtn'+s);b.textContent='✓ הועתק';b.classList.add('ok');
   setTimeout(()=>{b.textContent='העתק';b.classList.remove('ok')},2500);
 }
 
 function h(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function pad(n){return String(n).padStart(2,'0')}
 </script>
 </body>
 </html>
