@@ -684,4 +684,7 @@ async function doSubmit(){
   }catch(e){const er=document.getElementById('serr');er.textContent='שגיאה: '+e.message;er.style.display='block';btn.disabled=false;sp.style.display='none';tx.textContent='אני מאשר/ת ומסכים/ה לתנאי ההסכם ✍️'}
 }
 
-function showError(msg){document.getElementById('ls').style.display='none';document.getElementById('emsg').textContent=msg;document.getElementById('e
+function showError(msg){document.getElementById('ls').style.display='none';document.getElementById('emsg').textContent=msg;document.getElementById('es').style.display='flex';}
+</script>
+</body>
+</html>
