@@ -459,13 +459,9 @@ window.addEventListener('scroll',()=>document.getElementById('scrollup').classLi
     else loaded=raw;
   }catch(e){console.warn('load error',e);}
 
-  // Validate token — if TOKEN in URL doesn't match stored token, reject
+  // Validate token — only reject if BOTH sides have a token AND they don't match
   if(TOKEN && loaded && loaded.token && loaded.token !== TOKEN){
     showError('קישור זה פג תוקפו. יש לפנות לנציג Yeda לקבלת קישור עדכני.'); return;
-  }
-  // If no token in URL but token exists in data — reject
-  if(!TOKEN && loaded && loaded.token){
-    showError('קישור חסר. יש לפנות לנציג Yeda לקבלת הקישור המלא.'); return;
   }
 
   if(loaded && loaded.signed){showError('הסכם זה כבר נחתם.');return;}
