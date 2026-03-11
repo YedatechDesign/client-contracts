@@ -215,7 +215,7 @@ body{font-family:'Heebo',sans-serif;background:#fff;color:var(--sub);direction:r
 .sig-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:14px}
 .slbl{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--mu);margin-bottom:6px}
 .padwrap{border:1.5px solid var(--bdr);border-radius:9px;position:relative;
-         overflow:hidden;background:#fff;height:130px;cursor:crosshair}
+         overflow:hidden;background:#fff;height:170px;cursor:crosshair}
 .padwrap canvas{display:block;width:100%;height:100%}
 .pad-hint{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
           font-size:.78rem;color:var(--fa);pointer-events:none;transition:opacity .2s}
@@ -634,10 +634,16 @@ function buildClientParty(name){
 
 function initSigPad(){
   const c=document.getElementById('sigCanvas'),w=document.getElementById('padWrap');
-  c.width=w.offsetWidth||340;c.height=w.offsetHeight||130;
-  SP={ctx:c.getContext('2d'),drawing:false,empty:true};
-  SP.ctx.strokeStyle='#0d2680';SP.ctx.lineWidth=2.2;SP.ctx.lineCap='round';SP.ctx.lineJoin='round';
-  const pos=e=>{const r=c.getBoundingClientRect(),t=e.touches?e.touches[0]:e;return{x:(t.clientX-r.left)*(c.width/r.width),y:(t.clientY-r.top)*(c.height/r.height)}};
+  const dpr=window.devicePixelRatio||1;
+  const cw=w.offsetWidth||400, ch=w.offsetHeight||160;
+  // Set canvas internal resolution to 2x for crisp export
+  c.width=cw*dpr; c.height=ch*dpr;
+  c.style.width=cw+'px'; c.style.height=ch+'px';
+  SP={ctx:c.getContext('2d'),drawing:false,empty:true,dpr};
+  SP.ctx.scale(dpr,dpr);
+  SP.ctx.strokeStyle='#0d2680';SP.ctx.lineWidth=2.5;SP.ctx.lineCap='round';SP.ctx.lineJoin='round';
+  SP.ctx.shadowColor='rgba(13,38,128,0.15)';SP.ctx.shadowBlur=1;
+  const pos=e=>{const r=c.getBoundingClientRect(),t=e.touches?e.touches[0]:e;return{x:(t.clientX-r.left),y:(t.clientY-r.top)}};
   c.addEventListener('mousedown',e=>{SP.drawing=true;SP.ctx.beginPath();const p=pos(e);SP.ctx.moveTo(p.x,p.y)});
   c.addEventListener('mousemove',e=>{if(!SP.drawing)return;const p=pos(e);SP.ctx.lineTo(p.x,p.y);SP.ctx.stroke();SP.empty=false;document.getElementById('padHint').style.opacity='0'});
   c.addEventListener('mouseup',()=>SP.drawing=false);c.addEventListener('mouseleave',()=>SP.drawing=false);
@@ -645,7 +651,7 @@ function initSigPad(){
   c.addEventListener('touchmove',e=>{e.preventDefault();if(!SP.drawing)return;const p=pos(e);SP.ctx.lineTo(p.x,p.y);SP.ctx.stroke();SP.empty=false;document.getElementById('padHint').style.opacity='0'},{passive:false});
   c.addEventListener('touchend',()=>SP.drawing=false);
 }
-function clearSig(){const c=document.getElementById('sigCanvas');SP.ctx.clearRect(0,0,c.width,c.height);SP.empty=true;document.getElementById('padHint').style.opacity='1'}
+function clearSig(){const c=document.getElementById('sigCanvas');SP.ctx.clearRect(0,0,c.width/SP.dpr,c.height/SP.dpr);SP.empty=true;document.getElementById('padHint').style.opacity='1'}
 
 function validate(){
   let ok=true,miss=[];
