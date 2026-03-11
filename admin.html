@@ -591,21 +591,22 @@ async function saveSlot(s){
 async function saveVersion(s){
   const btn=document.getElementById('vbtn'+s),sp=document.getElementById('vsp'+s),tx=document.getElementById('vtxt'+s),msg=document.getElementById('smsg'+s);
   btn.disabled=true;sp.style.display='block';tx.textContent='יוצר PDF...';
-  const payload=buildPayload(s,true);
-  const vNum=(payload.versions.length)+1;
+  // Use mergeDD data (Drive data + DD defaults) — reliable even if DOM has stale empty values
+  const merged=mergeDD(DD,_sd[s]||{});
+  const tok=_sd[s]?.link_token||_sd[s]?.token||'';
+  const vNum=(merged.versions||[]).length+1;
+  const payload={...merged,slot:s,link_token:tok,token:tok};
   try{
     const r=await fetch(N8N_SAVE_VER,{method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({...payload,version_number:vNum})});
     if(!r.ok)throw new Error('שגיאה '+r.status);
     const resp=await r.json();
-    const cn=payload.client_name||'contract';
+    const cn=merged.client_name||'contract';
     const today=new Date();const d=pad(today.getDate())+'.'+pad(today.getMonth()+1)+'.'+today.getFullYear();
     const newVer={name:`${cn}-v${vNum} (${d})`,date:d,url:resp.pdf_url||''};
-    payload.versions=[...payload.versions,newVer];
-    // save updated payload with new version
-    await fetch(N8N_SAVE,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
-    _sd[s]=payload;
-    // refresh version list
+    const updPayload={...payload,versions:[...(merged.versions||[]),newVer]};
+    await fetch(N8N_SAVE,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(updPayload)});
+    _sd[s]=updPayload;
     const vl=document.getElementById('verlist-'+s);
     if(vl)vl.innerHTML=payload.versions.map(v=>`
       <div class="ver-item">
