@@ -225,6 +225,7 @@ textarea.fi{resize:vertical;min-height:76px;line-height:1.65}
 const PASS='yedacontracts2026';
 const N8N_SAVE='https://yedauto.com/webhook/yeda-save';
 const N8N_LOAD='https://yedauto.com/webhook/yeda-load';
+const N8N_VER='https://yedauto.com/webhook/yeda-save-version';
 const N8N_SAVE_VER='https://yedauto.com/webhook/yeda-save-version';
 const PROP_URL='https://yedatechdesign.github.io/client-contracts/proposal.html';
 const LOGOS='https://yedatechdesign.github.io/client-contracts/logos/';
@@ -237,7 +238,7 @@ const ALL_CLIENTS=[
 ];
 
 const DD={
-  title:'הצעת מחיר – פיתוח מערכת מותאמת אישית',client_name:'',
+  title:'הצעת מחיר – פיתוח מערכת מותאמת אישית',client_name:'',link_token:'',versions:[],
   matara:'פיתוח מערכת מותאמת אישית ליצירת תכנים עם AI לפי אפיון מאושר מראש, הקמת אתר לניהול למידה ומעקב ביצועים תחת מערכת Yeda. המערכת תאפשר ניהול תהליכי למידה ומעקב אחר התקדמות ההכשרות, כולל רישום, צפייה בתכנים, ומדידה של התקדמות המשתתפים לאורך זמן.',
   milestones:[
     {id:'m0',num:'0',title:'חתימה והעברת תשלום ראשון',desc:'חתימת חוזה בין הצדדים והעברת התשלום הראשון, המאשרים התחייבות הצדדים להפעלת הפרויקט.'},
@@ -287,8 +288,20 @@ async function loadAll(){
     try{
       const r=await fetch(N8N_LOAD,{method:'POST',headers:{'Content-Type':'application/json'},
         cache:'no-store',body:JSON.stringify({slot:s,password:_pw,mode:'admin'})});
-      const d=await r.json();
-      _sd[s]=(d&&(d.title||d.client_name))?d:null;
+      const raw=await r.json();
+      let d=null;
+      if(Array.isArray(raw)){
+        const first=raw[0]; d=first?.json||first||null;
+      } else if(raw&&typeof raw==='object'){
+        if(raw.slot!==undefined||raw.matara||raw.title||raw.milestones){ d=raw; }
+        else if(raw.json&&(raw.json.slot!==undefined||raw.json.title||raw.json.matara)){ d=raw.json; }
+        else {
+          const str=raw.rawText||raw.body||raw.data||raw.content||'';
+          if(typeof str==='string'&&str.includes('"slot"')){ try{d=JSON.parse(str);}catch(e){} }
+          if(!d&&Object.keys(raw).length>2) d=raw;
+        }
+      }
+      _sd[s]=(d&&(d.title||d.client_name||d.matara||d.slot))?d:null;
     }catch(e){_sd[s]=null;}
     renderPanel(s);updateTab(s);
   }
@@ -309,8 +322,8 @@ function updateTab(s){
 }
 
 function getLink(s){
-  const tok=_sd[s]?.token||'';
-  return PROP_URL+'?slot='+s+(tok?'&token='+tok:'');
+  const tok=_sd[s]?.link_token||_sd[s]?.token||'';
+  return tok?(PROP_URL+'?slot='+s+'&token='+tok):'';
 }
 
 /* ── RENDER PANEL ── */
@@ -508,9 +521,9 @@ function termsHTML(s,d,dis){
 function addMs(s){const id='m'+Date.now();const l=document.getElementById('msl-'+s);const i=l.children.length;const el=document.createElement('div');el.className='bl-card';el.id='ms-'+s+'-'+id;el.innerHTML=`<div class="bl-top"><div class="bl-num">${i}</div><input class="bl-ti fi" id="mst-${s}-${id}" placeholder="כותרת"><button class="bdel" onclick="document.getElementById('ms-${s}-${id}').remove()">×</button></div><div class="bl-body"><textarea class="bl-tx fi" id="msd-${s}-${id}" placeholder="תיאור"></textarea></div>`;l.appendChild(el);el.querySelector('input')?.focus()}
 function addWhy(s){const i=document.querySelectorAll(`[id^="wi-${s}-"]`).length;const l=document.getElementById('wil-'+s);const el=document.createElement('div');el.className='why-row';el.innerHTML=`<input class="fi" id="wi-${s}-${i}" placeholder="יתרון"><button class="bdel" onclick="this.parentElement.remove()">×</button>`;l.appendChild(el);el.querySelector('input')?.focus()}
 function tglCl(s,id){document.getElementById('cc-'+s+'-'+id)?.classList.toggle('sel')}
-function addCostRow(s){const i=document.querySelectorAll(`[id^="cr-${s}-"]`).filter(e=>e.id.endsWith('-0')).length;const l=document.getElementById('crl-'+s);const el=document.createElement('div');el.className='tbl-row';el.innerHTML=`<input class="fi" id="cr-${s}-${i}-0" placeholder="פריט"><input class="fi" id="cr-${s}-${i}-1" placeholder="עלות"><button class="bdel" onclick="this.closest('.tbl-row').remove()">×</button>`;l.appendChild(el)}
+function addCostRow(s){const i=[...document.querySelectorAll(`[id^="cr-${s}-"]`)].filter(e=>e.id.endsWith('-0')).length;const l=document.getElementById('crl-'+s);const el=document.createElement('div');el.className='tbl-row';el.innerHTML=`<input class="fi" id="cr-${s}-${i}-0" placeholder="פריט"><input class="fi" id="cr-${s}-${i}-1" placeholder="עלות"><button class="bdel" onclick="this.closest('.tbl-row').remove()">×</button>`;l.appendChild(el)}
 function addPay(s){const i=document.querySelectorAll(`[id^="pay-${s}-"]`).length;const l=document.getElementById('payl-'+s);const el=document.createElement('div');el.className='pay-row';el.id='pay-'+s+'-'+i;el.innerHTML=`<div class="pay-rh"><span class="pay-rn">תשלום ${i+1}</span><button class="bdel" onclick="document.getElementById('pay-${s}-${i}').remove()">×</button></div><div class="frow"><div class="f"><div class="fl">כותרת</div><input class="fi" id="pt-${s}-${i}" placeholder="כותרת"></div><div class="f"><div class="fl">סה"כ</div><input class="fi" id="pp-${s}-${i}" placeholder="סכום"></div></div><div class="f"><div class="fl">תיאור</div><textarea class="fi" id="pd-${s}-${i}" rows="2"></textarea></div>`;l.appendChild(el)}
-function addOpt(s){const i=document.querySelectorAll(`[id^="op-${s}-"]`).filter(e=>e.id.endsWith('-t')).length;const l=document.getElementById('optl-'+s);const el=document.createElement('div');el.className='tbl-row';el.innerHTML=`<input class="fi" id="op-${s}-${i}-t" placeholder="שירות"><input class="fi" id="op-${s}-${i}-p" placeholder="מחיר"><button class="bdel" onclick="this.closest('.tbl-row').remove()">×</button>`;l.appendChild(el)}
+function addOpt(s){const i=[...document.querySelectorAll(`[id^="op-${s}-"]`)].filter(e=>e.id.endsWith('-t')).length;const l=document.getElementById('optl-'+s);const el=document.createElement('div');el.className='tbl-row';el.innerHTML=`<input class="fi" id="op-${s}-${i}-t" placeholder="שירות"><input class="fi" id="op-${s}-${i}-p" placeholder="מחיר"><button class="bdel" onclick="this.closest('.tbl-row').remove()">×</button>`;l.appendChild(el)}
 function addTokEx(s){const i=document.querySelectorAll(`[id^="te-${s}-"]`).length;const l=document.getElementById('texl-'+s);const el=document.createElement('div');el.className='why-row';el.innerHTML=`<input class="fi" id="te-${s}-${i}" placeholder="דוגמה"><button class="bdel" onclick="this.parentElement.remove()">×</button>`;l.appendChild(el);el.querySelector('input')?.focus()}
 function addTerm(s){const id='t'+Date.now();const l=document.getElementById('trml-'+s);const i=l.children.length;const el=document.createElement('div');el.className='bl-card';el.id='trm-'+s+'-'+id;el.innerHTML=`<div class="bl-top"><div class="bl-num">${i+1}</div><input class="bl-ti fi" id="trt-${s}-${id}" placeholder="כותרת תנאי"><button class="bdel" onclick="document.getElementById('trm-${s}-${id}').remove()">×</button></div><div class="bl-body"><textarea class="bl-tx fi" id="trb-${s}-${id}" placeholder="טקסט..." rows="3"></textarea></div>`;l.appendChild(el);el.querySelector('input')?.focus()}
 
@@ -526,9 +539,9 @@ function getTokExs(s){return [...document.querySelectorAll(`[id^="te-${s}-"]`)].
 function getTerms(s){return [...document.querySelectorAll(`[id^="trm-${s}-"]`)].map(e=>{const id=e.id.slice((`trm-${s}-`).length);return{id,title:document.getElementById('trt-'+s+'-'+id)?.value||'',text:document.getElementById('trb-'+s+'-'+id)?.value||''}})}
 
 function buildPayload(s,keepToken){
-  const tok=keepToken?(_sd[s]?.token||genToken()):genToken();
+  const tok=keepToken?(_sd[s]?.link_token||_sd[s]?.token||''):genToken();
   return {
-    slot:s, signed:false, token:tok,
+    slot:s, password:pw, signed:false, link_token:tok, token:tok,
     title:document.getElementById(s+'-title')?.value||'',
     client_name:document.getElementById(s+'-cname')?.value||'',
     matara:document.getElementById(s+'-matara')?.value||'',
