@@ -255,7 +255,15 @@ MILESTONES.forEach((m,i)=>{const isRight=i%2===0;const el=document.createElement
 const card=document.createElement('div');card.className='ms-card';card.innerHTML=`<div class="ms-card-title">${esc(m.title)}</div><div class="ms-card-desc">${esc(m.desc)}</div>`;
 const center=document.createElement('div');center.className='ms-center';center.innerHTML=`<div class="ms-num">${m.num}</div>`;
 const spacer=document.createElement('div');spacer.className='ms-spacer';
-if(isRight){el.appendChild(spacer);el.appendChild(center);el.appendChild(card)}else{el.appendChild(card);el.appendChild(center);el.appendChild(spacer)}
+if(isRight){
+  el.appendChild(card);
+  el.appendChild(center);
+  el.appendChild(spacer)
+}else{
+  el.appendChild(spacer);
+  el.appendChild(center);
+  el.appendChild(card)
+}
 wrap.appendChild(el)})}
 
 function renderClients(){$('clGrid').innerHTML=CLIENTS.map(c=>`<a class="cl-card" href="${c.url}" target="_blank" rel="noopener"><img src="${LOGO_BASE}${c.id}.png" onerror="this.style.display='none'" alt="${esc(c.name)}"><div class="cl-name">${esc(c.name)}</div><div class="cl-desc">${esc(c.desc)}</div></a>`).join('')}
