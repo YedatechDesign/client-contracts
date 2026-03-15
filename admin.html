@@ -287,23 +287,36 @@ function setFilter(f,el){
 
 // ── CREATE ────────────────────────────────────────────────────────
 async function createNew(){
-  const title=prompt('כותרת הצעה:','הצעת מחיר – פיתוח מערכת מותאמת אישית');
-  if(!title)return;
-  const client=prompt('שם הלקוח (ניתן לשנות מאוחר יותר):','');
+  const title = prompt('כותרת הצעה:','הצעת מחיר – פיתוח מערכת מותאמת אישית');
+  if(!title) return;
+
+  const client = prompt('שם הלקוח (ניתן לשנות מאוחר יותר):','');
+
   try{
-    const r=await fetch(N8N+'/yeda-contract-create',{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-  password: pw,
-  contract_id: id
-})
-    const data=await r.json();
+    const r = await fetch(
+      N8N + '/yeda-contract-create',
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          password: pw,
+          title: title,
+          client_name: client || ''
+        })
+      }
+    );
+
+    const data = await r.json();
+
     if(data.id){
       await loadList();
       openEditor(data.id);
     }
-  }catch(e){alert('שגיאה ביצירת הסכם');}
-}
 
+  }catch(e){
+    alert('שגיאה ביצירת הסכם');
+  }
+}
 // ── DELETE ────────────────────────────────────────────────────────
 async function deleteContract(id){
   if(!confirm('למחוק הסכם זה לצמיתות?'))return;
