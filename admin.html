@@ -324,7 +324,10 @@ async function openEditor(id){
   document.getElementById('editorPanels').innerHTML='<div class="loading"><div class="loading-spin"></div>טוען הסכם...</div>';
   try{
     const r=await fetch(N8N+'/yeda-contract-load',{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({contract_id:id})});
+      body:JSON.stringify({
+  password: pw,
+  contract_id: id
+})});
     const raw=await r.json();
     curContract=mergeDefaults(raw);
     renderEditor();
