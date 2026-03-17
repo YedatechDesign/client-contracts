@@ -126,7 +126,10 @@ textarea.fi{resize:vertical;min-height:80px}
 @keyframes spin{to{transform:rotate(360deg)}}
 .signed-notice{background:#ecfdf5;border:2px solid var(--green);border-radius:10px;padding:14px 18px;margin-bottom:16px;color:var(--green);font-weight:700;font-size:14px}
 /* Drag-and-drop */
-.acc{cursor:grab;transition:opacity .2s,transform .2s}
+.drag-handle{cursor:grab;font-size:18px;color:var(--faint);margin-left:8px;padding:2px 4px;border-radius:4px;transition:color .2s,background .2s;user-select:none;line-height:1}
+.drag-handle:hover{color:var(--blue);background:#eff6ff}
+.drag-handle:active{cursor:grabbing}
+.acc{transition:opacity .2s,transform .2s}
 .acc.dragging{opacity:.4;transform:scale(.98)}
 .acc.drag-over{border-top:3px solid var(--blue);margin-top:-3px}
 /* Loading */
@@ -557,7 +560,7 @@ function renderEditor(){
 function acc(id,icon,title,body,open=false){
   return `<div class="acc${open?' open':''}" id="ac-${id}">
     <div class="acc-head" onclick="document.getElementById('ac-${id}').classList.toggle('open')">
-      <div style="display:flex;align-items:center"><span class="acc-ico">${icon}</span>${title}</div>
+      <div style="display:flex;align-items:center"><span class="drag-handle" title="גרור לשינוי סדר">⠿</span><span class="acc-ico">${icon}</span>${title}</div>
       <span class="acc-arr">▾</span>
     </div>
     <div class="acc-body">${body}</div>
@@ -636,9 +639,14 @@ function initDrag(){
   const accs=panels.querySelectorAll('.acc');
   let dragEl=null;
   accs.forEach(acc=>{
-    acc.setAttribute('draggable','true');
+    acc.setAttribute('draggable','false');
+    const handle=acc.querySelector('.drag-handle');
+    if(handle){
+      handle.addEventListener('mousedown',()=>{acc.setAttribute('draggable','true');});
+      handle.addEventListener('mouseup',()=>{acc.setAttribute('draggable','false');});
+    }
     acc.addEventListener('dragstart',e=>{dragEl=acc;acc.classList.add('dragging');e.dataTransfer.effectAllowed='move';});
-    acc.addEventListener('dragend',()=>{dragEl=null;acc.classList.remove('dragging');panels.querySelectorAll('.acc').forEach(a=>a.classList.remove('drag-over'));});
+    acc.addEventListener('dragend',()=>{dragEl=null;acc.classList.remove('dragging');acc.setAttribute('draggable','false');panels.querySelectorAll('.acc').forEach(a=>a.classList.remove('drag-over'));});
     acc.addEventListener('dragover',e=>{e.preventDefault();e.dataTransfer.dropEffect='move';if(acc!==dragEl)acc.classList.add('drag-over');});
     acc.addEventListener('dragleave',()=>acc.classList.remove('drag-over'));
     acc.addEventListener('drop',e=>{e.preventDefault();acc.classList.remove('drag-over');if(dragEl&&dragEl!==acc){const parent=acc.parentNode;const allAccs=[...parent.querySelectorAll('.acc')];const dragIdx=allAccs.indexOf(dragEl);const dropIdx=allAccs.indexOf(acc);if(dragIdx<dropIdx)acc.after(dragEl);else acc.before(dragEl);}});
