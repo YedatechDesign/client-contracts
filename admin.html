@@ -522,7 +522,7 @@ function renderEditor(){
 
     ${acc('custom','📝','בלוקים נוספים',`
       <div id="customList">${renderCustomBlocks(d,signed)}</div>
-      ${!signed?'<button class="btn-add" onclick="addCB()">+ הוסף בלוק</button>':''}`)}
+      ${!signed?'<button class="btn-add" onclick="addCB()">+ הוסף בלוק</button>':''}`,true)}
     ${acc('terms','📜','תנאי ההסכם',`
       <div id="termsList">${d.terms.map((t,i)=>`
         <div class="bl-card" id="trm-${t.id}">
