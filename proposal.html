@@ -202,9 +202,14 @@ body{font-family:'Heebo','Segoe UI',Arial,sans-serif;background:var(--bg);color:
     <div id="termsList"></div>
   </div>
 
+  <div class="section" id="secCustom" style="display:none">
+    <div class="section-title"><span style="display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;background:linear-gradient(135deg,#0d2680,#1a56db);border-radius:10px;margin-left:10px;vertical-align:middle;flex-shrink:0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M12 18v-6M9 15h6"/></svg></span>מידע נוסף</div>
+    <div id="customBlocksList"></div>
+  </div>
+
   <div class="divider"></div>
 
-  <div class="agreement" id="agreementSection">
+  <div class="agreement id="agreementSection">
     <h2>הסכם התקשרות</h2>
     <div style="font-size:15px;line-height:1.85"><strong>בין:</strong> חברת ידע פיתוח סביבות לימוד בע"מ (להלן "חברת ידע" או "נותן השירות" או "הספק")</div>
     <div class="ag-line">ח.פ 516072253</div>
@@ -253,12 +258,12 @@ body{font-family:'Heebo','Segoe UI',Arial,sans-serif;background:var(--bg);color:
 
 </div><!-- /container -->
 
-<div class="footer">ידע פיתוח סביבות למידה בע"מ | ח.פ. 516072253 | יגאל אלון 123, תל אביב | <a href="mailto:coo@yedalms.io" style="color:inherit">coo@yedalms.io</a></div>
+<div class="footer">ידע פיתוח סביבות למידה בע"מ | ח.פ. 516072253 | יגאל אלון 123, תל אביב | <a href="/cdn-cgi/l/email-protection#f4979b9bb48d919095989987da9d9b" style="color:inherit"><span class="__cf_email__" data-cfemail="34575b5b744d5150555859471a5d5b">[email&#160;protected]</span></a></div>
 </div><!-- /mainContent -->
 
 <button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 const CONTRACT_ID=new URLSearchParams(location.search).get('id')||'';
 
 const N8N_LOAD='https://yedauto.com/webhook/yeda-contract-load';
@@ -353,6 +358,17 @@ function renderContract(d){
   if(examples.length){
     document.getElementById('tpExamples').innerHTML='<strong>דוגמת פירוט שימוש בטוקנים:</strong><br>'+
       examples.map(ex=>`<span class="tp-bullet">✦</span> ${esc(ex)}<br>`).join('');
+  }
+
+  // Custom blocks
+  const cbs=d.custom_blocks||[];
+  if(cbs.length){
+    document.getElementById('secCustom').style.display='block';
+    document.getElementById('customBlocksList').innerHTML=cbs.map(b=>{
+      const lines=(b.content||'').split('\n');
+      const html=lines.map(l=>{const t=l.trim();if(t.startsWith('•')||t.startsWith('-')||t.startsWith('*'))return'<div style="display:flex;gap:8px;margin:2px 0"><span style="color:#1a56db">●</span><span>'+esc(t.slice(1).trim())+'</span></div>';return'<div>'+esc(l)+'</div>';}).join('');
+      return'<div class="term-item"><div class="term-title"><div class="term-dot"></div>'+esc(b.title)+'</div><div class="term-text">'+html+'</div></div>';
+    }).join('');
   }
 
   document.getElementById('termsList').innerHTML=(d.terms||[]).map(t=>`
@@ -565,7 +581,6 @@ document.getElementById('btnSign').addEventListener('click',async()=>{
     if(result.pdf_url){const dl=document.getElementById('pdfDownload');dl.href=result.pdf_url;dl.style.display='inline-block';}
     document.getElementById('signedBanner').scrollIntoView({behavior:'smooth'});
   }catch(e){
-
     err.textContent='שגיאה: '+e.message;err.style.display='block';
     btn.disabled=false;btn.textContent='אני מאשר/ת ומסכים/ה לתנאי ההסכם ✍️';
   }
