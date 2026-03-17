@@ -1,1 +1,816 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yeda — ניהול הסכמים</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0d2680;--blue:#1a56db;--blue-light:#2563eb;--green:#059669;--red:#dc2626;--amber:#f59e0b;--bg:#f8fafc;--card:#fff;--bdr:#e5e7eb;--text:#1f2937;--muted:#6b7280;--faint:#9ca3af}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Heebo','Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--text);direction:rtl;min-height:100vh}
+/* ── LOGIN ── */
+.login-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;gap:16px}
+.login-box{background:var(--card);border:1px solid var(--bdr);border-radius:16px;padding:40px;width:100%;max-width:380px;box-shadow:0 4px 24px rgba(0,0,0,.06)}
+.login-logo{font-size:32pt;font-weight:900;color:var(--navy);letter-spacing:-2px;text-align:center;margin-bottom:6px}
+.login-sub{text-align:center;color:var(--muted);font-size:13px;margin-bottom:28px}
+.login-box input{width:100%;padding:12px 16px;border:1.5px solid var(--bdr);border-radius:10px;font-size:15px;font-family:inherit;outline:none;margin-bottom:14px;direction:rtl}
+.login-box input:focus{border-color:var(--blue)}
+.btn-primary{width:100%;padding:13px;background:var(--blue);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;transition:background .2s}
+.btn-primary:hover{background:var(--navy)}
+.login-err{color:var(--red);font-size:13px;text-align:center;display:none}
+/* ── LAYOUT ── */
+.app{display:none;min-height:100vh}
+.topbar{background:var(--navy);color:#fff;padding:14px 28px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.topbar-logo{font-size:20pt;font-weight:900;letter-spacing:-1px}
+.topbar-right{display:flex;align-items:center;gap:12px}
+.topbar-title{font-size:15px;font-weight:600;opacity:.8}
+.btn-logout{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:#fff;padding:6px 14px;border-radius:8px;font-size:13px;cursor:pointer;font-family:inherit}
+/* ── LIST VIEW ── */
+.view-list,.view-editor{padding:28px;max-width:1100px;margin:0 auto}
+.list-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px}
+.list-title{font-size:22px;font-weight:800;color:var(--navy)}
+.btn-new{background:var(--blue);color:#fff;border:none;border-radius:10px;padding:10px 22px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:6px;transition:background .2s}
+.btn-new:hover{background:var(--navy)}
+/* Status filter chips */
+.filter-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+.chip{padding:6px 16px;border-radius:20px;border:1.5px solid var(--bdr);background:#fff;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;font-family:inherit}
+.chip.active,.chip:hover{background:var(--blue);border-color:var(--blue);color:#fff}
+.chip.draft.active{background:#6b7280;border-color:#6b7280}
+.chip.sent.active{background:var(--blue);border-color:var(--blue)}
+.chip.signed.active{background:var(--green);border-color:var(--green)}
+.chip.cancelled.active{background:var(--red);border-color:var(--red)}
+/* Badges */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:700}
+.badge.draft{background:#f3f4f6;color:#6b7280}
+.badge.sent{background:#eff6ff;color:var(--blue)}
+.badge.signed{background:#ecfdf5;color:var(--green)}
+.badge.cancelled{background:#fef2f2;color:var(--red)}
+/* Contract cards */
+.contracts-grid{display:flex;flex-direction:column;gap:12px}
+.contract-card{background:var(--card);border:1.5px solid var(--bdr);border-radius:14px;padding:18px 22px;transition:box-shadow .2s,border-color .2s}
+.contract-card:hover{border-color:var(--blue);box-shadow:0 4px 16px rgba(26,86,219,.08)}
+.cc-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.cc-title{font-size:16px;font-weight:800;color:var(--navy)}
+.cc-client{font-size:14px;color:var(--muted);margin-bottom:6px}
+.cc-dates{font-size:12px;color:var(--faint);display:flex;gap:16px}
+.cc-actions{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.btn-sm{padding:6px 14px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;border:1.5px solid var(--bdr);background:#fff;color:var(--text);transition:all .2s}
+.btn-sm:hover{border-color:var(--blue);color:var(--blue)}
+.btn-sm.danger:hover{border-color:var(--red);color:var(--red)}
+.btn-sm.primary{background:var(--blue);border-color:var(--blue);color:#fff}
+.btn-sm.primary:hover{background:var(--navy);border-color:var(--navy)}
+.empty-state{text-align:center;padding:60px 24px;color:var(--muted);font-size:15px}
+.count-badge{background:#e0e7ff;color:var(--blue);border-radius:12px;padding:2px 10px;font-size:12px;font-weight:700;margin-right:8px}
+/* ── EDITOR VIEW ── */
+.editor-back{display:flex;align-items:center;gap:8px;color:var(--blue);cursor:pointer;font-weight:600;font-size:14px;margin-bottom:20px;width:fit-content}
+.editor-back:hover{opacity:.7}
+.editor-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px}
+.editor-title-wrap{display:flex;align-items:center;gap:12px}
+.editor-contract-title{font-size:20px;font-weight:800;color:var(--navy)}
+.status-select{padding:6px 12px;border:1.5px solid var(--bdr);border-radius:8px;font-family:inherit;font-size:13px;cursor:pointer;outline:none}
+.editor-actions{display:flex;gap:8px;flex-wrap:wrap}
+.acc{background:var(--card);border:1.5px solid var(--bdr);border-radius:12px;margin-bottom:12px;overflow:hidden}
+.acc-head{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;cursor:pointer;user-select:none;font-weight:700;color:var(--navy)}
+.acc-head:hover{background:#f8fafc}
+.acc-ico{margin-left:8px}
+.acc-arr{font-size:12px;transition:transform .2s;color:var(--muted)}
+.acc.open .acc-arr{transform:rotate(180deg)}
+.acc-body{display:none;padding:18px;border-top:1px solid var(--bdr)}
+.acc.open .acc-body{display:block}
+/* Form elements */
+.fl{font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px;margin-top:12px}
+.fl:first-child{margin-top:0}
+.fi{width:100%;padding:10px 14px;border:1.5px solid var(--bdr);border-radius:8px;font-size:14px;font-family:inherit;outline:none;direction:rtl}
+.fi:focus{border-color:var(--blue)}
+textarea.fi{resize:vertical;min-height:80px}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.btn-add{background:#eff6ff;border:1.5px dashed var(--blue);color:var(--blue);padding:8px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;margin-top:10px;transition:all .2s}
+.btn-add:hover{background:var(--blue);color:#fff}
+.bl-card{background:#f8fafc;border:1.5px solid var(--bdr);border-radius:10px;padding:14px;margin-bottom:10px}
+.bl-top{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.bl-num{width:30px;height:30px;background:var(--blue);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0}
+.bl-ti{flex:1}
+.bdel{background:none;border:none;color:var(--faint);font-size:20px;cursor:pointer;line-height:1;padding:0 4px;flex-shrink:0}
+.bdel:hover{color:var(--red)}
+.bl-tx{width:100%;padding:8px 12px;border:1.5px solid var(--bdr);border-radius:8px;font-family:inherit;font-size:13px;resize:vertical;min-height:60px;direction:rtl;outline:none}
+.bl-tx:focus{border-color:var(--blue)}
+/* Client grid */
+.cl-sel-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:10px}
+@media(max-width:768px){.cl-sel-grid{grid-template-columns:repeat(2,1fr)}}
+.cc-item{border:1.5px solid var(--bdr);border-radius:10px;padding:10px;text-align:center;cursor:pointer;font-size:11px;font-weight:600;transition:all .2s;background:#fff;display:flex;flex-direction:column;align-items:center;gap:6px}
+.cc-item img{width:70px;height:40px;object-fit:contain;opacity:.7;transition:opacity .2s}
+.cc-item.sel{border-color:var(--blue);background:#eff6ff;color:var(--blue)}
+.cc-item.sel img{opacity:1}
+.cc-item:hover{border-color:var(--blue)}
+.cc-item .cc-desc{font-size:10px;color:var(--muted);font-weight:400;line-height:1.3}
+.cc-item.sel .cc-desc{color:var(--blue)}
+.cc-actions-bar{display:flex;gap:4px;margin-top:4px}
+.cc-actions-bar button{padding:2px 6px;border:1px solid var(--bdr);border-radius:4px;background:#fff;font-size:10px;cursor:pointer;font-family:inherit}
+.cc-actions-bar button:hover{border-color:var(--blue);color:var(--blue)}
+.cc-actions-bar button.cc-del:hover{border-color:var(--red);color:var(--red)}
+.client-form{background:#f8fafc;border:1.5px solid var(--bdr);border-radius:10px;padding:14px;margin-bottom:10px}
+.client-form .frow3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+@media(max-width:768px){.client-form .frow3{grid-template-columns:1fr}}
+/* Cost/payments */
+.tbl-row{display:grid;grid-template-columns:1fr 1fr 30px;gap:8px;align-items:center;margin-bottom:8px}
+.pay-row{background:#f8fafc;border:1.5px solid var(--bdr);border-radius:10px;padding:12px;margin-bottom:10px}
+.pay-rh{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;font-weight:700;color:var(--navy);font-size:14px}
+.tok-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:8px}
+.why-row{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+.why-row .fi{flex:1}
+/* Version list */
+.ver-list{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
+.ver-item{display:flex;align-items:center;justify-content:space-between;background:#f8fafc;border:1px solid var(--bdr);border-radius:8px;padding:10px 14px}
+.ver-name{font-size:13px;font-weight:600}
+.ver-date{font-size:11px;color:var(--muted)}
+.link-display{font-size:12px;word-break:break-all;color:var(--blue);padding:10px 14px;background:#eff6ff;border-radius:8px;margin:10px 0;border:1px solid #dbeafe}
+.save-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:20px;padding-top:16px;border-top:1px solid var(--bdr)}
+.save-msg{font-size:13px;font-weight:600}
+.save-msg.ok{color:var(--green)}
+.save-msg.err{color:var(--red)}
+.spinner-sm{width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;display:none}
+@keyframes spin{to{transform:rotate(360deg)}}
+.signed-notice{background:#ecfdf5;border:2px solid var(--green);border-radius:10px;padding:14px 18px;margin-bottom:16px;color:var(--green);font-weight:700;font-size:14px}
+/* Loading */
+.loading{text-align:center;padding:60px;color:var(--muted)}
+.loading-spin{width:40px;height:40px;border:3px solid var(--bdr);border-top-color:var(--blue);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 16px}
+</style>
+</head>
+<body>
 
+<!-- ── LOGIN ────────────────────────────────────────────────────── -->
+<div class="login-wrap" id="loginWrap">
+  <div class="login-box">
+    <div class="login-logo">yeda</div>
+    <div class="login-sub">ניהול הסכמים</div>
+    <input type="password" id="pwInput" placeholder="סיסמה" onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="btn-primary" onclick="doLogin()">כניסה</button>
+    <div class="login-err" id="loginErr">סיסמה שגויה</div>
+  </div>
+</div>
+
+<!-- ── APP ──────────────────────────────────────────────────────── -->
+<div class="app" id="app">
+  <div class="topbar">
+    <div class="topbar-logo">yeda</div>
+    <div class="topbar-right">
+      <div class="topbar-title">ניהול הסכמים</div>
+      <button class="btn-logout" onclick="doLogout()">יציאה</button>
+    </div>
+  </div>
+
+  <!-- LIST -->
+  <div class="view-list" id="viewList">
+    <div class="list-header">
+      <div class="list-title">📄 הסכמים <span class="count-badge" id="countBadge">0</span></div>
+      <button class="btn-new" onclick="createNew()">➕ הסכם חדש</button>
+    </div>
+    <div class="filter-bar" id="filterBar">
+      <button class="chip active" data-filter="all" onclick="setFilter('all',this)">הכל</button>
+      <button class="chip draft" data-filter="draft" onclick="setFilter('draft',this)">טיוטה</button>
+      <button class="chip sent" data-filter="sent" onclick="setFilter('sent',this)">נשלח</button>
+      <button class="chip signed" data-filter="signed" onclick="setFilter('signed',this)">נחתם ✓</button>
+      <button class="chip cancelled" data-filter="cancelled" onclick="setFilter('cancelled',this)">בוטל</button>
+    </div>
+    <div id="contractsList"><div class="loading"><div class="loading-spin"></div>טוען הסכמים...</div></div>
+  </div>
+
+  <!-- EDITOR -->
+  <div class="view-editor" id="viewEditor" style="display:none">
+    <div class="editor-back" onclick="backToList()">← חזור לרשימה</div>
+    <div class="editor-top">
+      <div class="editor-title-wrap">
+        <div class="editor-contract-title" id="editorTitle">הסכם</div>
+        <select class="status-select" id="statusSelect" onchange="changeStatus()">
+          <option value="draft">טיוטה</option>
+          <option value="sent">נשלח</option>
+          <option value="signed">נחתם ✓</option>
+          <option value="cancelled">בוטל</option>
+        </select>
+      </div>
+      <div class="editor-actions">
+        <button class="btn-sm" onclick="copyLink()">🔗 העתק קישור</button>
+        <button class="btn-sm" onclick="saveVersion()" id="vbtn"><span class="spinner-sm" id="vsp"></span><span id="vtxt">📄 שמור גרסה</span></button>
+        <button class="btn-sm primary" onclick="saveContract()" id="sbtn"><span class="spinner-sm" id="ssp"></span><span id="stxt">💾 שמור</span></button>
+      </div>
+    </div>
+    <div id="saveMsg" class="save-msg" style="margin-bottom:12px"></div>
+    <div id="editorPanels"></div>
+  </div>
+</div>
+
+<script>
+const PASS='yedacontracts2026';
+const N8N='https://yedauto.com/webhook';
+const PROP_URL='https://yedatechdesign.github.io/client-contracts/proposal.html';
+const LOGOS='https://yedatechdesign.github.io/client-contracts/logos/';
+const ALL_CLIENTS=[
+  {id:'client1',name:'HackerU',desc:'המכללה המובילה בארץ להכשרה במקצועות סייבר והייטק',url:'https://www.hackeru.co.il/'},
+  {id:'client2',name:'מכללת IPC',desc:'המכללה המובילה בתחום ההכשרות המקצועיות',url:'https://campus-ipc.co.il/'},
+  {id:'client3',name:'מכללת אורין שפלטר',desc:'המכללה המובילה להוראה הפיננסית',url:'https://oscrypto.academy/'},
+  {id:'client4',name:'ThriveDX',desc:'חברה גלובלית המתמחה בהכשרות דיגיטליות',url:'https://thrivedx.com/'},
+  {id:'client5',name:'מרכז גומא גבים',desc:'המכללה המובילה לגישור, אימון ולימודי משפחה',url:'https://study.gomegevim.co.il/'},
+  {id:'client6',name:'מכללת קול המס',desc:'מכללה בפיקוח לשכת רו"ח ולשכת יועצי המס',url:'https://finance-courses.co.il/'},
+  {id:'client7',name:'HIGHQ',desc:'המכללה המובילה בישראל להכנה לבחינות בגרות ופסיכומטרי',url:'https://www.high-q.co.il/'},
+  {id:'client8',name:'פירמת עורכי הדין פישר',desc:'משרדי עורכי הדין הגדולים והמובילים בישראל',url:'https://www.fbclawyers.com/'},
+  {id:'client9',name:'קבוצת מובמנט',desc:'החברה המובילה בארץ לקידום בריאות בארגונים',url:'https://online.allencarr.co.il/'},
+  {id:'client10',name:'אולג׳ובס',desc:'האתר המוביל לחיפוש עבודה',url:'https://allcourses.co.il/'},
+  {id:'client11',name:'מלם טים',desc:'קבוצת שירותי ה-IT המובילה בישראל',url:'https://academia.teamcad.co.il/'},
+  {id:'client12',name:'כלכליסט',desc:'אתר החדשות הכלכלי המוביל בישראל',url:'https://study.calcalist.co.il/'}
+];
+
+let pw='', curFilter='all', curContract=null, contracts=[];
+const pad=n=>String(n).padStart(2,'0');
+const h=s=>String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+// ── AUTH ──────────────────────────────────────────────────────────
+function doLogin(){
+  const v=document.getElementById('pwInput').value;
+  if(v!==PASS){document.getElementById('loginErr').style.display='block';return;}
+  pw=v;
+  sessionStorage.setItem('ypw',pw);
+  document.getElementById('loginWrap').style.display='none';
+  document.getElementById('app').style.display='block';
+  loadList();
+}
+function doLogout(){
+  sessionStorage.removeItem('ypw');
+  location.reload();
+}
+(function(){
+  const saved=sessionStorage.getItem('ypw');
+  if(saved===PASS){
+    pw=saved;
+    document.getElementById('loginWrap').style.display='none';
+    document.getElementById('app').style.display='block';
+    loadList();
+  }
+})();
+
+// ── STATUS LABEL/COLOR ────────────────────────────────────────────
+function statusLabel(s){return{draft:'טיוטה',sent:'נשלח',signed:'נחתם ✓',cancelled:'בוטל'}[s]||s;}
+function statusBadge(s){return`<span class="badge ${s}">${statusLabel(s)}</span>`;}
+
+// ── FORMAT DATE ───────────────────────────────────────────────────
+function fmtDate(iso){if(!iso)return'—';const d=new Date(iso);return pad(d.getDate())+'.'+pad(d.getMonth()+1)+'.'+d.getFullYear();}
+
+// ── LOAD LIST ─────────────────────────────────────────────────────
+async function loadList(filter){
+  filter=filter||curFilter;
+  document.getElementById('contractsList').innerHTML='<div class="loading"><div class="loading-spin"></div>טוען...</div>';
+  try{
+    const r=await fetch(N8N+'/yeda-contracts-list',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({password:pw,status_filter:filter})});
+    const data=await r.json();
+    contracts=Array.isArray(data.contracts)?data.contracts:(Array.isArray(data)?data:[]);
+    renderList();
+  }catch(e){
+    document.getElementById('contractsList').innerHTML='<div class="empty-state">שגיאה בטעינה. בדוק חיבור.</div>';
+  }
+}
+
+function renderList(){
+  document.getElementById('countBadge').textContent=contracts.length;
+  const el=document.getElementById('contractsList');
+  if(!contracts.length){el.innerHTML='<div class="empty-state">אין הסכמים</div>';return;}
+  el.innerHTML='<div class="contracts-grid">'+contracts.map(c=>`
+    <div class="contract-card">
+      <div class="cc-top">
+        <div>
+          <div class="cc-title">${h(c.title||'ללא כותרת')}</div>
+          <div class="cc-client">${h(c.client_name||'לא הוגדר לקוח')}</div>
+        </div>
+        ${statusBadge(c.status||'draft')}
+      </div>
+      <div class="cc-dates">
+        <span>נוצר: ${fmtDate(c.created_at)}</span>
+        <span>עודכן: ${fmtDate(c.updated_at)}</span>
+        ${c.signed_at?`<span>נחתם: ${fmtDate(c.signed_at)}</span>`:''}
+      </div>
+      <div class="cc-actions">
+        <button class="btn-sm primary" onclick="openEditor('${c.id}')">✏ ערוך</button>
+        <button class="btn-sm" onclick="copyContractLink('${c.id}','${c.token||''}')">🔗 העתק קישור</button>
+        ${c.signed_pdf_url?`<button class="btn-sm" onclick="window.open('${c.signed_pdf_url}','_blank')">📄 PDF חתום</button>`:''}
+        <button class="btn-sm danger" onclick="deleteContract('${c.id}')">🗑 מחק</button>
+      </div>
+    </div>`).join('')+'</div>';
+}
+
+function setFilter(f,el){
+  curFilter=f;
+  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  loadList(f);
+}
+
+// ── CREATE ────────────────────────────────────────────────────────
+async function createNew(){
+  const btn=document.querySelector('.btn-new');
+  const origTxt=btn.innerHTML;
+  btn.innerHTML='⏳ יוצר...';btn.disabled=true;
+  try{
+    const r=await fetch(N8N+'/yeda-contract-create',{method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({password:pw})});
+    const data=await r.json();
+    if(data.id){
+      await loadList();
+      openEditor(data.id);
+    } else {
+      alert('שגיאה ביצירת הסכם: '+JSON.stringify(data));
+    }
+  }catch(e){alert('שגיאה ביצירת הסכם: '+e.message);}
+  btn.innerHTML=origTxt;btn.disabled=false;
+}
+// ── DELETE ────────────────────────────────────────────────────────
+async function deleteContract(id){
+  if(!confirm('למחוק הסכם זה לצמיתות?'))return;
+  const c=contracts.find(x=>x.id===id);
+  try{
+    await fetch(N8N+'/yeda-contract-delete',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({password:pw,contract_id:id,drive_file_id:c?.slot_drive_file_id||''})});
+    loadList();
+  }catch(e){alert('שגיאה במחיקה');}
+}
+
+function copyContractLink(id,token){
+  const url=PROP_URL+'?id='+id+(token?'&token='+token:'');
+  navigator.clipboard.writeText(url).then(()=>alert('הקישור הועתק!')).catch(()=>prompt('העתק:',url));
+}
+
+// ── OPEN EDITOR ───────────────────────────────────────────────────
+let editorContractId=''; // always stores the Supabase UUID we opened
+async function openEditor(id){
+  editorContractId=id; // save so saveVersion always knows the id
+  document.getElementById('viewList').style.display='none';
+  document.getElementById('viewEditor').style.display='block';
+  document.getElementById('editorPanels').innerHTML='<div class="loading"><div class="loading-spin"></div>טוען הסכם...</div>';
+  try{
+    const r=await fetch(N8N+'/yeda-contract-load',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({password:pw,contract_id:id})});
+    const raw=await r.json();
+    curContract=mergeDefaults(raw);
+    // ALWAYS ensure contract_id and id are set from what we opened
+    curContract.contract_id=curContract.contract_id||curContract.id||id;
+    curContract.id=curContract.id||id;
+    renderEditor();
+  }catch(e){
+    // Even on error, set minimal contract so save/version work
+    curContract=mergeDefaults({});
+    curContract.contract_id=id;
+    curContract.id=id;
+    document.getElementById('editorPanels').innerHTML='<div class="empty-state">שגיאה בטעינה — נסה שוב</div>';
+  }
+}
+
+function backToList(){
+  document.getElementById('viewEditor').style.display='none';
+  document.getElementById('viewList').style.display='block';
+  curContract=null;
+  loadList();
+}
+
+// ── DEFAULTS ──────────────────────────────────────────────────────
+const DD={
+  title:'הצעת מחיר – פיתוח מערכת מותאמת אישית',client_name:'',
+  matara:'פיתוח מערכת מותאמת אישית ליצירת תכנים עם AI לפי אפיון מאושר מראש, הקמת אתר לניהול למידה ומעקב ביצועים תחת מערכת Yeda. המערכת תאפשר ניהול תהליכי למידה ומעקב אחר התקדמות ההכשרות, כולל רישום, צפייה בתכנים, ומדידה של התקדמות המשתתפים לאורך זמן.',
+  milestones:[{id:'m0',num:'0',title:'חתימה והעברת תשלום ראשון',desc:'חתימת חוזה בין הצדדים והעברת התשלום הראשון, המאשרים התחייבות הצדדים להפעלת הפרויקט.'},{id:'m1',num:'1',title:'פגישת אפיון',desc:'פגישה מקיפה עם נציגי הלקוח לתיאור מלא של דרישות המערכת, היכולות הנדרשות, מבנה ההיררכיות הארגוניות וצרכי המשתמשים.'},{id:'m2',num:'2',title:'אישור אפיון',desc:'הכנת מסמך אפיון מפורט המפרט את כל הדרישות, ההיכולות והתכונות. אישור מטעם הלקוח על התאמת האפיון לצרכיו.'},{id:'m3',num:'3',title:'הקמת אתר',desc:'ביצוע חיבור טכני של דומיין, הגדרת מבנה תכנים והרשאות, עיצוב והתאמת הפורטל למיתוג.'},{id:'m4',num:'4',title:'פיתוח',desc:'פיתוח מערכת יצירת חומרי למידה עם AI בהתאם לאפיון המאושר, והעלאה לאוויר.'}],
+  why_intro:'הפלטפורמה מאפשרת למכללות להקים ולהפעיל מערך קורסים דיגיטליים ופרונטליים, תוך שילוב כלים מתקדמים למעקב אחר התקדמות המשתמשים וביצועיהם. המערכת כוללת דוחות מפורטים עם נתוני צפייה, תוצאות מבחנים וסטטיסטיקות שימוש, ומספקת תמונה מלאה על תהליך הלמידה. כל זאת, תוך שמירה על אבטחת מידע ברמה הגבוהה ותמיכה מלאה בניהול התכנים וליווי שוטף.',
+  why_items:['פתרון מלא לבניית קורסים דיגיטליים','זמינות גבוהה ומענה מהיר לכל צורך','אבטחת מידע ברמה גבוהה','מנהל תיק אישי זמין לכל התייעצות','דוחות מעקב התקדמות בהתאמה אישית','התנהלות בקבוצת Whatsapp ייחודית'],
+  selected_clients:['client1','client2','client3','client4','client5','client6','client7','client8','client9','client10','client11','client12'],
+  clients:ALL_CLIENTS.map(c=>({...c,logo:LOGOS+c.id+'.png',selected:true})),
+  costs_subtitle:'מחירון — הקמת מערכת ניהול למידה ופיתוח מערכת יצירת חומרי למידה',
+  costs_rows:[['פיתוח','250 ₪ לשעה'],['מערכת ניהול למידה (שנה ראשונה)','11,988 ₪ (כולל 100GB אחסון ו-200GB תעבורה)'],["10,000 קרדיטים לכלי AI וצ'אטבוטים",'2,310 ₪']],
+  payments:[{num:1,title:'חתימה והעברת תשלום ראשון',desc:'100 שעות פיתוח (25,000 ₪) + 1/3 עלות מערכת ניהול למידה (3,996 ₪)',total:'28,996 ₪'},{num:2,title:'לאחר אישור אפיון',desc:'1/3 עלות מערכת ניהול למידה (3,996 ₪)',total:'3,996 ₪'},{num:3,title:'לאחר הקמת האתר',desc:'1/3 עלות מערכת ניהול למידה (3,996 ₪) + עלות קרדיטים (2,310 ₪)',total:'6,306 ₪'},{num:4,title:'בסיום הפיתוח',desc:'100 שעות פיתוח + שעות נוספות לפי 250 ₪ לשעה.',total:'ישתנה'}],
+  optional:[{title:'אחסון נוסף עד 1TB',price:'250 ₪ לחודש'},{title:'תעבורה נוספת עד 2TB',price:'250 ₪ לחודש'},{title:'טוקנים נוספים',price:'0.07$ × 3.3 ₪'}],
+  token_packages:[{amount:'10,000 טוקנים',original:'3,600₪',sale:'3,420₪',featured:false},{amount:'20,000 טוקנים',original:'7,200₪',sale:'6,480₪',featured:true},{amount:'40,000 טוקנים',original:'14,400₪',sale:'12,960₪',featured:false}],
+  token_examples:['יצירת 10 סילבוסים = 20-40 טוקנים AI','יצירת 100 שקופיות = 20-25 טוקנים AI','כתוביות לשעה = 15-30 טוקנים AI','שאלות לשעה = 10-15 טוקנים AI','חלוקה לפרקים = 5-10 טוקנים AI','תרגום כתוביות = 80-130 טוקנים AI','לומדה מקבצים = 300-500 טוקנים AI','3 שאלות לעוזר = 1 טוקן AI'],
+  terms:[{id:'t1',title:'מערכת ניהול למידה',text:'הלקוח יקבל אתרים אישיים המוקמים על גבי פלטפורמת Yeda ומחוברים לדומיינים של הלקוח. הפלטפורמה כוללת LMS, עדכוני גרסה, תמיכה טכנית מלאה, קבוצת ווטסאפ ייעודית והדרכות. ההתקשרות ללא אפשרות יציאה מוקדמת. שימוש ללא הגבלת משתמשים למשך 3 שנות פעילות.'},{id:'t2',title:'פלטפורמת AI ולומדות',text:'הלקוח יקבל גישה לפלטפורמה לבנייה, עיצוב, הקלטה ואחסון של מצגות, וידאו, לומדות אינטראקטיביות ועוזרי למידה מבוססי AI.'},{id:'t3',title:'הגבלת אחריות',text:'חברת ידע אינה נושאת אחריות לתביעות הקשורות בדיני אינטרנט, נגישות, פרטיות, ספאם ועוד.'},{id:'t4',title:'קניין רוחני',text:'הקניין הרוחני המלא של מוצרי תוכן באתר שייך ללקוח.'},{id:'t5',title:'סודיות',text:'חברת ידע מתחייבת לא לשתף חומרים, דטאות משתמשים, או מידע אחר עם צד שלישי ללא רשות הלקוח.'}],
+  signed:false,versions:[]
+};
+
+function mergeDefaults(loaded){
+  const out={};
+  for(const k of Object.keys(DD)){
+    const lv=loaded[k];
+    if(Array.isArray(DD[k])) out[k]=(Array.isArray(lv)&&lv.length>0)?lv:DD[k];
+    else out[k]=(lv!==undefined&&lv!==null&&lv!=='')?lv:DD[k];
+  }
+  for(const k of Object.keys(loaded)){if(!(k in out))out[k]=loaded[k];}
+  return out;
+}
+
+// ── RENDER EDITOR ─────────────────────────────────────────────────
+function renderEditor(){
+  const d=curContract;
+  document.getElementById('editorTitle').textContent=d.title||'הסכם';
+  const ss=document.getElementById('statusSelect');
+  ss.value=d.status||'draft';
+
+  const signed=d.signed===true;
+  const link=PROP_URL+'?id='+d.contract_id+(d.token?'&token='+d.token:'');
+
+  const versions=d.versions||[];
+  const verItems=versions.length?versions.map(v=>`
+    <div class="ver-item">
+      <div><div class="ver-name">${h(v.name)}</div><div class="ver-date">${h(v.date)}</div></div>
+      ${v.url?`<button class="btn-sm" onclick="window.open('${v.url}','_blank')">⬇ הורד</button>`:''}
+    </div>`).join(''):'<div style="color:var(--muted);font-size:13px">אין גרסאות</div>';
+
+  document.getElementById('editorPanels').innerHTML=`
+    ${signed?`<div class="signed-notice">✓ הסכם זה נחתם על ידי ${h(d.signer_name||'')} בתאריך ${h(d.signer_date||'')}
+      ${d.signed_pdf_url?`<br><a href="${d.signed_pdf_url}" target="_blank" style="color:var(--green)">📄 הורד PDF חתום</a>`:''}</div>`:''}
+    
+    ${acc('basic','📋','פרטי הצעה',`
+      <div class="frow">
+        <div><div class="fl">כותרת ההצעה</div><input class="fi" id="e-title" value="${h(d.title)}" ${signed?'disabled':''}></div>
+        <div><div class="fl">שם הלקוח</div><input class="fi" id="e-cname" value="${h(d.client_name)}" ${signed?'disabled':''}></div>
+      </div>`,true)}
+
+    ${acc('link','🔗','קישור וגרסאות',`
+      <div class="fl">קישור ייחודי ללקוח</div>
+      <div class="link-display" id="linkDisp">${link}</div>
+      <div style="display:flex;gap:8px;margin-bottom:16px">
+        <button class="btn-sm" onclick="copyLink()">📋 העתק</button>
+      </div>
+      <div class="fl" style="margin-bottom:8px">גרסאות שנשמרו</div>
+      <div class="ver-list" id="verList">${verItems}</div>
+`,true)}
+
+    ${acc('matara','🎯','מטרה',`
+      <div class="fl">טקסט מטרה</div>
+      <textarea class="fi" id="e-matara" rows="4" ${signed?'disabled':''}>${h(d.matara)}</textarea>`)}
+
+    ${acc('ms','🪜','אבני דרך',`
+      <div id="msList">${d.milestones.map((m,i)=>`
+        <div class="bl-card" id="ms-${m.id}">
+          <div class="bl-top">
+            <div class="bl-num">${m.num!==undefined?m.num:i}</div>
+            <input class="fi bl-ti" id="mst-${m.id}" value="${h(m.title)}" placeholder="כותרת" ${signed?'disabled':''}>
+            ${!signed?`<button class="bdel" onclick="document.getElementById('ms-${m.id}').remove()">×</button>`:''}
+          </div>
+          <textarea class="bl-tx" id="msd-${m.id}" rows="2" ${signed?'disabled':''}>${h(m.desc)}</textarea>
+        </div>`).join('')}
+      </div>
+      ${!signed?`<button class="btn-add" onclick="addMs()">+ הוסף אבן דרך</button>`:''}`)}
+
+    ${acc('why','💡','למה אנחנו?',`
+      <div class="fl">מבוא</div>
+      <textarea class="fi" id="e-whyintro" rows="3" ${signed?'disabled':''}>${h(d.why_intro)}</textarea>
+      <div class="fl" style="margin-bottom:8px">פריטים</div>
+      <div id="whyList">${d.why_items.map((it,i)=>`
+        <div class="why-row">
+          <input class="fi" id="wi-${i}" value="${h(it)}" placeholder="יתרון" ${signed?'disabled':''}>
+          ${!signed?`<button class="bdel" onclick="this.parentElement.remove()">×</button>`:''}
+        </div>`).join('')}
+      </div>
+      ${!signed?`<button class="btn-add" onclick="addWhy()">+ הוסף</button>`:''}`)}
+
+    ${acc('clients','🏢','עובדים עם Yeda',`
+      <div id="clientsList">${getClientsList(d, signed)}</div>
+      ${!signed?`<button class="btn-add" onclick="addClient()">+ הוסף לקוח</button>`:''}`)}
+
+    ${acc('costs','💰','עלויות ותנאי תשלום',`
+      <div class="fl">כותרת מחירון</div>
+      <input class="fi" id="e-csubt" value="${h(d.costs_subtitle)}" ${signed?'disabled':''}>
+      <div class="fl" style="margin:12px 0 8px">שורות מחירון</div>
+      <div id="costsList">${d.costs_rows.map((r,i)=>`
+        <div class="tbl-row">
+          <input class="fi" id="cr-${i}-0" value="${h(r[0])}" placeholder="פריט" ${signed?'disabled':''}>
+          <input class="fi" id="cr-${i}-1" value="${h(r[1])}" placeholder="עלות" ${signed?'disabled':''}>
+          ${!signed?`<button class="bdel" onclick="this.closest('.tbl-row').remove()">×</button>`:''}
+        </div>`).join('')}
+      </div>
+      ${!signed?`<button class="btn-add" onclick="addCostRow()" style="margin-bottom:12px">+ הוסף שורה</button>`:''}
+      <div class="fl" style="margin-bottom:8px">תשלומים</div>
+      <div id="paysList">${d.payments.map((p,i)=>`
+        <div class="pay-row" id="pay-${i}">
+          <div class="pay-rh">תשלום ${p.num} ${!signed?`<button class="bdel" onclick="document.getElementById('pay-${i}').remove()">×</button>`:''}</div>
+          <div class="frow">
+            <div><div class="fl">כותרת</div><input class="fi" id="pt-${i}" value="${h(p.title)}" ${signed?'disabled':''}></div>
+            <div><div class="fl">סה"כ</div><input class="fi" id="pp-${i}" value="${h(p.total)}" ${signed?'disabled':''}></div>
+          </div>
+          <div class="fl">תיאור</div><textarea class="fi" id="pd-${i}" rows="2" ${signed?'disabled':''}>${h(p.desc)}</textarea>
+        </div>`).join('')}
+      </div>
+      ${!signed?`<button class="btn-add" onclick="addPay()">+ הוסף תשלום</button>`:''}`)}
+
+    ${acc('opt','➕','שירותים אופציונליים',`
+      <div id="optList">${d.optional.map((it,i)=>`
+        <div class="tbl-row">
+          <input class="fi" id="op-${i}-t" value="${h(it.title)}" placeholder="שירות" ${signed?'disabled':''}>
+          <input class="fi" id="op-${i}-p" value="${h(it.price)}" placeholder="מחיר" ${signed?'disabled':''}>
+          ${!signed?`<button class="bdel" onclick="this.closest('.tbl-row').remove()">×</button>`:''}
+        </div>`).join('')}
+      </div>
+      ${!signed?`<button class="btn-add" onclick="addOpt()">+ הוסף</button>`:''}`)}
+
+    ${acc('tok','🤖','חבילות טוקנים',`
+      <div class="fl" style="margin-bottom:8px">חבילות</div>
+      <div id="tokPkgList">${d.token_packages.map((p,i)=>`
+        <div class="tok-row">
+          <input class="fi" id="tp-${i}-a" value="${h(p.amount)}" placeholder="כמות" ${signed?'disabled':''}>
+          <input class="fi" id="tp-${i}-o" value="${h(p.original)}" placeholder="מחיר מקורי" ${signed?'disabled':''}>
+          <input class="fi" id="tp-${i}-s" value="${h(p.sale)}" placeholder="מחיר מבצע" ${signed?'disabled':''}>
+        </div>`).join('')}
+      </div>
+      <div class="fl" style="margin:10px 0 8px">דוגמאות</div>
+      <div id="tokExList">${d.token_examples.map((ex,i)=>`
+        <div class="why-row">
+          <input class="fi" id="te-${i}" value="${h(ex)}" placeholder="דוגמה" ${signed?'disabled':''}>
+          ${!signed?`<button class="bdel" onclick="this.parentElement.remove()">×</button>`:''}
+        </div>`).join('')}
+      </div>
+      ${!signed?`<button class="btn-add" onclick="addTokEx()">+ הוסף דוגמה</button>`:''}`)}
+
+    ${acc('terms','📜','תנאי ההסכם',`
+      <div id="termsList">${d.terms.map((t,i)=>`
+        <div class="bl-card" id="trm-${t.id}">
+          <div class="bl-top">
+            <div class="bl-num">${i+1}</div>
+            <input class="fi bl-ti" id="trt-${t.id}" value="${h(t.title)}" placeholder="כותרת" ${signed?'disabled':''}>
+            ${!signed?`<button class="bdel" onclick="document.getElementById('trm-${t.id}').remove()">×</button>`:''}
+          </div>
+          <textarea class="bl-tx" id="trb-${t.id}" rows="3" ${signed?'disabled':''}>${h(t.text)}</textarea>
+        </div>`).join('')}
+      </div>
+      ${!signed?`<button class="btn-add" onclick="addTerm()">+ הוסף תנאי</button>`:''}`)}
+  `;
+}
+
+function acc(id,icon,title,body,open=false){
+  return `<div class="acc${open?' open':''}" id="ac-${id}">
+    <div class="acc-head" onclick="document.getElementById('ac-${id}').classList.toggle('open')">
+      <div style="display:flex;align-items:center"><span class="acc-ico">${icon}</span>${title}</div>
+      <span class="acc-arr">▾</span>
+    </div>
+    <div class="acc-body">${body}</div>
+  </div>`;
+}
+
+// ── GETTERS ───────────────────────────────────────────────────────
+function getMs(){return [...document.querySelectorAll('[id^="ms-"]')].filter(e=>e.classList.contains('bl-card')).map(el=>{const id=el.id.slice(3);return{id,num:document.getElementById('mst-'+id)?[...document.getElementById('msList').children].indexOf(el)+'':id,title:document.getElementById('mst-'+id)?.value||'',desc:document.getElementById('msd-'+id)?.value||''}});}
+function getWhy(){return[...document.querySelectorAll('[id^="wi-"]')].map(e=>e.value).filter(Boolean);}
+function getClients(){
+  // Build selected_clients for backward compat
+  return [...document.querySelectorAll('.cc-item.sel')].map(el=>el.dataset.clientId).filter(Boolean);
+}
+function getFullClients(){
+  // Get full client objects from editor
+  return [...document.querySelectorAll('[id^="clcard-"]')].map(el=>{
+    const cid=el.id.slice(7);
+    return{
+      id:cid,
+      name:document.getElementById('cln-'+cid)?.value||'',
+      desc:document.getElementById('cld-'+cid)?.value||'',
+      url:document.getElementById('clu-'+cid)?.value||'',
+      logo:document.getElementById('cll-'+cid)?.value||'',
+      selected:el.classList.contains('sel')
+    };
+  }).filter(c=>c.name);
+}
+function getCosts(){return[...document.querySelectorAll('[id^="cr-"]')].filter(e=>e.id.endsWith('-0')).map(e=>{const i=e.id.split('-')[1];return[document.getElementById('cr-'+i+'-0')?.value||'',document.getElementById('cr-'+i+'-1')?.value||'']});}
+function getPayments(){return[...document.querySelectorAll('[id^="pay-"]')].filter(e=>e.classList.contains('pay-row')).map((e,i)=>{const idx=e.id.split('-')[1];return{num:i+1,title:document.getElementById('pt-'+idx)?.value||'',desc:document.getElementById('pd-'+idx)?.value||'',total:document.getElementById('pp-'+idx)?.value||''}});}
+function getOpts(){return[...document.querySelectorAll('[id^="op-"]')].filter(e=>e.id.endsWith('-t')).map(e=>{const i=e.id.split('-')[1];return{title:document.getElementById('op-'+i+'-t')?.value||'',price:document.getElementById('op-'+i+'-p')?.value||''}});}
+function getTokPkgs(){return[...document.querySelectorAll('[id^="tp-"]')].filter(e=>e.id.endsWith('-a')).map(e=>{const i=e.id.split('-')[1];return{amount:document.getElementById('tp-'+i+'-a')?.value||'',original:document.getElementById('tp-'+i+'-o')?.value||'',sale:document.getElementById('tp-'+i+'-s')?.value||''}});}
+function getTokEx(){return[...document.querySelectorAll('[id^="te-"]')].map(e=>e.value).filter(Boolean);}
+function getTerms(){return[...document.querySelectorAll('[id^="trm-"]')].filter(e=>e.classList.contains('bl-card')).map(e=>{const id=e.id.slice(4);return{id,title:document.getElementById('trt-'+id)?.value||'',text:document.getElementById('trb-'+id)?.value||''}});}
+
+function buildPayload(){
+  const cid=curContract.contract_id||curContract.id||editorContractId;
+  return{
+    ...curContract,
+    password:pw,
+    contract_id:cid,
+    id:cid,
+    title:document.getElementById('e-title')?.value||curContract.title,
+    client_name:document.getElementById('e-cname')?.value||curContract.client_name,
+    matara:document.getElementById('e-matara')?.value||curContract.matara,
+    milestones:getMs(),why_intro:document.getElementById('e-whyintro')?.value||curContract.why_intro,
+    why_items:getWhy(),selected_clients:getClients(),clients:getFullClients(),
+    costs_subtitle:document.getElementById('e-csubt')?.value||curContract.costs_subtitle,
+    costs_rows:getCosts(),payments:getPayments(),optional:getOpts(),
+    token_packages:getTokPkgs(),token_examples:getTokEx(),terms:getTerms()
+  };
+}
+
+// ── ADD ITEMS ─────────────────────────────────────────────────────
+function addMs(){const id='m'+Date.now();const l=document.getElementById('msList');const i=l.children.length;const el=document.createElement('div');el.className='bl-card';el.id='ms-'+id;el.innerHTML=`<div class="bl-top"><div class="bl-num">${i}</div><input class="fi bl-ti" id="mst-${id}" placeholder="כותרת"><button class="bdel" onclick="document.getElementById('ms-${id}').remove()">×</button></div><textarea class="bl-tx" id="msd-${id}" rows="2" placeholder="תיאור"></textarea>`;l.appendChild(el);}
+function addWhy(){const i=document.querySelectorAll('[id^="wi-"]').length;const l=document.getElementById('whyList');const el=document.createElement('div');el.className='why-row';el.innerHTML=`<input class="fi" id="wi-${i}" placeholder="יתרון"><button class="bdel" onclick="this.parentElement.remove()">×</button>`;l.appendChild(el);}
+function tglClient(cid){document.getElementById('clcard-'+cid)?.classList.toggle('sel');}
+
+// ── CLIENT CRUD ──────────────────────────────────────────────
+function getClientsList(d, signed){
+  // Build clients array: from d.clients or from ALL_CLIENTS + selected_clients
+  let clients;
+  if(Array.isArray(d.clients)&&d.clients.length){
+    clients=d.clients;
+  } else {
+    clients=ALL_CLIENTS.map(c=>({
+      ...c,
+      logo:LOGOS+c.id+'.png',
+      selected:(d.selected_clients||[]).includes(c.id)
+    }));
+  }
+  if(!clients.length) return '<div style="color:var(--muted);font-size:13px">אין לקוחות</div>';
+  return '<div class="cl-sel-grid">'+clients.map(c=>{
+    const cid=c.id||('cl'+Date.now()+Math.random().toString(36).slice(2,6));
+    return `<div class="cc-item${c.selected!==false?' sel':''}" id="clcard-${cid}" data-client-id="${cid}" onclick="tglClient('${cid}')">
+      <img src="${h(c.logo||LOGOS+cid+'.png')}" alt="${h(c.name)}" onerror="this.style.display='none'" style="width:70px;height:40px;object-fit:contain">
+      <div>${h(c.name)}</div>
+      <div class="cc-desc">${h(c.desc)}</div>
+      ${!signed?`<div class="cc-actions-bar" onclick="event.stopPropagation()">
+        <button onclick="editClientInline('${cid}')">✏</button>
+        <button class="cc-del" onclick="deleteClient('${cid}')">×</button>
+      </div>`:''}
+      <input type="hidden" id="cln-${cid}" value="${h(c.name)}">
+      <input type="hidden" id="cld-${cid}" value="${h(c.desc)}">
+      <input type="hidden" id="clu-${cid}" value="${h(c.url||'')}">
+      <input type="hidden" id="cll-${cid}" value="${h(c.logo||'')}">
+    </div>`;
+  }).join('')+'</div>';
+}
+
+function addClient(){
+  const cid='cl'+Date.now();
+  const list=document.querySelector('#clientsList .cl-sel-grid');
+  if(!list){
+    document.getElementById('clientsList').innerHTML='<div class="cl-sel-grid"></div>';
+  }
+  const grid=document.querySelector('#clientsList .cl-sel-grid');
+  const el=document.createElement('div');
+  el.className='cc-item sel';
+  el.id='clcard-'+cid;
+  el.dataset.clientId=cid;
+  el.onclick=function(){tglClient(cid)};
+  el.innerHTML=`
+    <div style="font-weight:700;color:var(--blue);font-size:12px">לקוח חדש</div>
+    <div class="cc-actions-bar" onclick="event.stopPropagation()">
+      <button onclick="editClientInline('${cid}')">✏</button>
+      <button class="cc-del" onclick="deleteClient('${cid}')">×</button>
+    </div>
+    <input type="hidden" id="cln-${cid}" value="">
+    <input type="hidden" id="cld-${cid}" value="">
+    <input type="hidden" id="clu-${cid}" value="">
+    <input type="hidden" id="cll-${cid}" value="">`;
+  grid.appendChild(el);
+  editClientInline(cid);
+}
+
+function editClientInline(cid){
+  const card=document.getElementById('clcard-'+cid);
+  if(!card)return;
+  const name=document.getElementById('cln-'+cid)?.value||'';
+  const desc=document.getElementById('cld-'+cid)?.value||'';
+  const url=document.getElementById('clu-'+cid)?.value||'';
+  const logo=document.getElementById('cll-'+cid)?.value||'';
+  const isSel=card.classList.contains('sel');
+  card.onclick=null;
+  card.innerHTML=`
+    <div class="client-form" onclick="event.stopPropagation()">
+      <div class="fl">שם</div>
+      <input class="fi" id="clne-${cid}" value="${h(name)}" placeholder="שם הלקוח">
+      <div class="fl">תיאור</div>
+      <input class="fi" id="clde-${cid}" value="${h(desc)}" placeholder="תיאור קצר">
+      <div class="frow">
+        <div><div class="fl">קישור</div><input class="fi" id="clue-${cid}" value="${h(url)}" placeholder="https://..."></div>
+        <div><div class="fl">לוגו (שם קובץ או URL)</div><input class="fi" id="clle-${cid}" value="${h(logo)}" placeholder="${LOGOS}clientN.png"></div>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:10px">
+        <button class="btn-sm primary" onclick="saveClientEdit('${cid}',${isSel})">✓ שמור</button>
+        <button class="btn-sm" onclick="cancelClientEdit('${cid}')">ביטול</button>
+      </div>
+    </div>`;
+}
+
+function saveClientEdit(cid,wasSel){
+  const name=document.getElementById('clne-'+cid)?.value||'';
+  const desc=document.getElementById('clde-'+cid)?.value||'';
+  const url=document.getElementById('clue-'+cid)?.value||'';
+  const logo=document.getElementById('clle-'+cid)?.value||'';
+  const card=document.getElementById('clcard-'+cid);
+  if(!card)return;
+  const logoUrl=logo||LOGOS+cid+'.png';
+  card.className='cc-item'+(wasSel?' sel':'');
+  card.dataset.clientId=cid;
+  card.onclick=function(){tglClient(cid)};
+  card.innerHTML=`
+    <img src="${h(logoUrl)}" alt="${h(name)}" onerror="this.style.display='none'" style="width:70px;height:40px;object-fit:contain">
+    <div>${h(name||'ללא שם')}</div>
+    <div class="cc-desc">${h(desc)}</div>
+    <div class="cc-actions-bar" onclick="event.stopPropagation()">
+      <button onclick="editClientInline('${cid}')">✏</button>
+      <button class="cc-del" onclick="deleteClient('${cid}')">×</button>
+    </div>
+    <input type="hidden" id="cln-${cid}" value="${h(name)}">
+    <input type="hidden" id="cld-${cid}" value="${h(desc)}">
+    <input type="hidden" id="clu-${cid}" value="${h(url)}">
+    <input type="hidden" id="cll-${cid}" value="${h(logo)}">`;
+}
+
+function cancelClientEdit(cid){
+  // Re-render from hidden fields
+  const name=document.getElementById('cln-'+cid)?.value||'';
+  if(!name){
+    // New client with no data — just remove
+    document.getElementById('clcard-'+cid)?.remove();
+    return;
+  }
+  saveClientEdit(cid, document.getElementById('clcard-'+cid)?.classList.contains('sel'));
+}
+
+function deleteClient(cid){
+  if(!confirm('להסיר לקוח זה?'))return;
+  document.getElementById('clcard-'+cid)?.remove();
+}
+function addCostRow(){const i=[...document.querySelectorAll('[id^="cr-"]')].filter(e=>e.id.endsWith('-0')).length;const l=document.getElementById('costsList');const el=document.createElement('div');el.className='tbl-row';el.innerHTML=`<input class="fi" id="cr-${i}-0" placeholder="פריט"><input class="fi" id="cr-${i}-1" placeholder="עלות"><button class="bdel" onclick="this.closest('.tbl-row').remove()">×</button>`;l.appendChild(el);}
+function addPay(){const i=document.querySelectorAll('.pay-row').length;const l=document.getElementById('paysList');const el=document.createElement('div');el.className='pay-row';el.id='pay-'+i;el.innerHTML=`<div class="pay-rh">תשלום ${i+1}<button class="bdel" onclick="document.getElementById('pay-${i}').remove()">×</button></div><div class="frow"><div><div class="fl">כותרת</div><input class="fi" id="pt-${i}" placeholder="כותרת"></div><div><div class="fl">סה"כ</div><input class="fi" id="pp-${i}" placeholder="סכום"></div></div><div class="fl">תיאור</div><textarea class="fi" id="pd-${i}" rows="2"></textarea>`;l.appendChild(el);}
+function addOpt(){const i=[...document.querySelectorAll('[id^="op-"]')].filter(e=>e.id.endsWith('-t')).length;const l=document.getElementById('optList');const el=document.createElement('div');el.className='tbl-row';el.innerHTML=`<input class="fi" id="op-${i}-t" placeholder="שירות"><input class="fi" id="op-${i}-p" placeholder="מחיר"><button class="bdel" onclick="this.closest('.tbl-row').remove()">×</button>`;l.appendChild(el);}
+function addTokEx(){const i=document.querySelectorAll('[id^="te-"]').length;const l=document.getElementById('tokExList');const el=document.createElement('div');el.className='why-row';el.innerHTML=`<input class="fi" id="te-${i}" placeholder="דוגמה"><button class="bdel" onclick="this.parentElement.remove()">×</button>`;l.appendChild(el);}
+function addTerm(){const id='t'+Date.now();const l=document.getElementById('termsList');const i=l.children.length;const el=document.createElement('div');el.className='bl-card';el.id='trm-'+id;el.innerHTML=`<div class="bl-top"><div class="bl-num">${i+1}</div><input class="fi bl-ti" id="trt-${id}" placeholder="כותרת תנאי"><button class="bdel" onclick="document.getElementById('trm-${id}').remove()">×</button></div><textarea class="bl-tx" id="trb-${id}" rows="3" placeholder="טקסט..."></textarea>`;l.appendChild(el);}
+
+// ── SAVE ──────────────────────────────────────────────────────────
+async function saveContract(){
+  const btn=document.getElementById('sbtn'),sp=document.getElementById('ssp'),tx=document.getElementById('stxt'),msg=document.getElementById('saveMsg');
+  btn.disabled=true;sp.style.display='inline-block';tx.textContent='שומר...';
+  const payload=buildPayload();
+  try{
+    const r=await fetch(N8N+'/yeda-contract-save',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    if(!r.ok)throw new Error('שגיאה '+r.status);
+    curContract=payload;
+    document.getElementById('editorTitle').textContent=payload.title||'הסכם';
+    msg.textContent='✓ נשמר';msg.className='save-msg ok';setTimeout(()=>msg.textContent='',3000);
+  }catch(e){msg.textContent='שגיאה: '+e.message;msg.className='save-msg err';}
+  btn.disabled=false;sp.style.display='none';tx.textContent='💾 שמור';
+}
+
+// ── SAVE VERSION ──────────────────────────────────────────────────
+async function saveVersion(){
+  const btn=document.getElementById('vbtn'),sp=document.getElementById('vsp'),tx=document.getElementById('vtxt'),msg=document.getElementById('saveMsg');
+  btn.disabled=true;sp.style.display='inline-block';tx.textContent='יוצר PDF...';
+  const merged=mergeDefaults(curContract);
+  const cid=curContract.contract_id||curContract.id||editorContractId;
+  const vNum=(merged.versions||[]).length+1;
+  const payload={...merged,password:pw,version_number:vNum,contract_id:cid,id:cid};
+  try{
+    const r=await fetch(N8N+'/yeda-save-version',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    if(!r.ok)throw new Error('שגיאה '+r.status);
+    const resp=await r.json();
+    // Reload contract to get updated versions
+    const r2=await fetch(N8N+'/yeda-contract-load',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({password:pw,contract_id:cid})
+    });
+    const updated=await r2.json();
+    curContract=mergeDefaults(updated);
+    curContract.contract_id=curContract.contract_id||curContract.id||cid;
+    curContract.id=curContract.id||cid;
+    // Update version list UI
+    const versions=curContract.versions||[];
+    const vl=document.getElementById('verList');
+    if(vl) vl.innerHTML=versions.length?versions.map(v=>`
+      <div class="ver-item">
+        <div><div class="ver-name">${h(v.name)}</div><div class="ver-date">${h(v.date)}</div></div>
+        ${v.url?`<button class="btn-sm" onclick="window.open('${v.url}','_blank')">⬇ הורד</button>`:''}
+      </div>`).join(''):'<div style="color:var(--muted);font-size:13px">אין גרסאות</div>';
+    msg.textContent='✓ גרסה נשמרה';msg.className='save-msg ok';setTimeout(()=>msg.textContent='',3000);
+  }catch(e){msg.textContent='שגיאה: '+e.message;msg.className='save-msg err';}
+  btn.disabled=false;sp.style.display='none';tx.textContent='📄 שמור גרסה';
+}
+
+// ── STATUS CHANGE ─────────────────────────────────────────────────
+async function changeStatus(){
+  const newStatus=document.getElementById('statusSelect').value;
+  const cid=curContract?.contract_id||curContract?.id||editorContractId;
+  if(!cid)return;
+  try{
+    await fetch(N8N+'/yeda-status-update',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({password:pw,contract_id:cid,status:newStatus})});
+    curContract.status=newStatus;
+  }catch(e){}
+}
+
+// ── LINK ──────────────────────────────────────────────────────────
+function copyLink(){
+  if(!curContract)return;
+  const cid=curContract.contract_id||curContract.id||editorContractId;
+  const url=PROP_URL+'?id='+cid+(curContract.token?'&token='+curContract.token:'');
+  navigator.clipboard.writeText(url).then(()=>{
+    const msg=document.getElementById('saveMsg');
+    msg.textContent='✓ קישור הועתק';msg.className='save-msg ok';setTimeout(()=>msg.textContent='',2000);
+  }).catch(()=>prompt('העתק:',url));
+}
+
+async function refreshToken(){
+  if(!confirm('צור קישור חדש? הקישור הישן יפסיק לעבוד.'))return;
+  const newToken=Math.random().toString(36).slice(2,10)+Date.now().toString(36);
+  curContract.token=newToken;
+  await saveContract();
+  const cid=curContract.contract_id||curContract.id||editorContractId;
+  const link=PROP_URL+'?id='+cid+'&token='+newToken;
+  document.getElementById('linkDisp').textContent=link;
+}
+</script>
+</body>
+</html>
