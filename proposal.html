@@ -6,562 +6,67 @@
 <title>הצעת מחיר והסכם התקשרות — Yeda LMS</title>
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-:root{--navy:#0d2680;--blue:#1a56db;--blue-light:#2563eb;--green:#059669;--bg:#f8fafc;--card:#fff;--bdr:#e5e7eb;--text:#1f2937;--muted:#6b7280;--faint:#9ca3af;--red:#ef4444}
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Heebo','Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--text);direction:rtl;min-height:100vh;line-height:1.7;overflow-x:hidden}
-.state{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;gap:16px}
-.state img{height:52px}
-.spinner{width:36px;height:36px;border:3px solid var(--bdr);border-top-color:var(--blue);border-radius:50%;animation:spin .7s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-/* Hero */
-.hero{position:relative;background:linear-gradient(135deg,#071a5e 0%,#0d2680 30%,#1a56db 70%,#2563eb 100%);color:#fff;padding:52px 28px 0;text-align:center;overflow:visible}
-.hero canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
-.hero-inner{position:relative;z-index:2;max-width:720px;margin:0 auto}
-.hero .logo-img{height:64px;filter:brightness(0) invert(1);margin-bottom:12px}
-.hero .company-info{font-size:12px;opacity:.55;margin-top:4px;letter-spacing:.3px}
-.hero h1{font-size:26px;font-weight:800;margin-top:28px;line-height:1.5}
-.hero .matara-text{margin:18px auto 0;font-size:15px;line-height:1.85;opacity:.9;max-width:640px;text-align:center;font-weight:300}
-.hero .client-bar{margin-top:28px;padding:14px 24px;background:rgba(255,255,255,.12);border-radius:12px;font-size:20px;font-weight:700;letter-spacing:.5px;backdrop-filter:blur(8px);display:inline-block}
-.container{max-width:860px;margin:0 auto;padding:0 24px}
-.section{margin:44px 0}
-.section-title{font-size:24px;font-weight:800;color:var(--navy);margin-bottom:20px;position:relative;display:inline-block;padding-bottom:8px}
-.section-title::after{content:'';position:absolute;bottom:0;right:0;width:100%;height:3px;background:linear-gradient(90deg,var(--blue),var(--blue-light));border-radius:2px}
-/* Milestones */
-.ms-wrap{position:relative;padding:24px 0}
-.ms-line{position:absolute;left:50%;top:0;bottom:0;width:3px;background:linear-gradient(to bottom,var(--blue),#60a5fa,var(--blue));transform:translateX(-50%);border-radius:2px}
-.ms-item{display:flex;align-items:flex-start;margin-bottom:44px;position:relative;width:100%}
-.ms-card{width:calc(50% - 54px);background:var(--card);border:1px solid var(--bdr);border-radius:14px;padding:20px 24px;box-shadow:0 2px 12px rgba(0,0,0,.04);transition:box-shadow .25s,transform .25s}
-.ms-card:hover{box-shadow:0 6px 24px rgba(13,38,128,.08);transform:translateY(-2px)}
-.ms-card-title{font-weight:700;color:var(--navy);font-size:16px;margin-bottom:6px}
-.ms-card-desc{font-size:14px;color:#374151;line-height:1.7}
-.ms-center{width:108px;display:flex;justify-content:center;flex-shrink:0;padding-top:16px}
-.ms-num{width:44px;height:44px;background:linear-gradient(135deg,var(--blue),var(--blue-light));color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:17px;z-index:2;box-shadow:0 3px 12px rgba(26,86,219,.3)}
-.ms-spacer{width:calc(50% - 54px)}
-@media(max-width:640px){
-  .ms-line{left:auto;right:28px;transform:none}
-  .ms-item{flex-direction:row!important}
-  .ms-center{width:56px;order:-1}
-  .ms-card{width:calc(100% - 68px)}
-  .ms-spacer{display:none}
-  .ms-num{width:38px;height:38px;font-size:15px}
-}
-/* Why */
-.why-intro{font-size:15px;line-height:1.8;color:#374151;margin-bottom:20px}
-.why-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px 24px}
-@media(max-width:640px){.why-grid{grid-template-columns:1fr}}
-.why-item{display:flex;align-items:center;gap:10px;font-size:14.5px;font-weight:500;padding:6px 0}
-.why-check{color:var(--blue);font-size:20px;flex-shrink:0}
-/* Clients */
-.cl-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
-@media(max-width:768px){.cl-grid{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:480px){.cl-grid{grid-template-columns:1fr}}
-.cl-card{background:var(--card);border:2px solid var(--bdr);border-radius:14px;padding:18px 14px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;transition:all .25s;text-decoration:none;color:inherit}
-.cl-card:hover{border-color:var(--blue);box-shadow:0 4px 20px rgba(26,86,219,.1);transform:translateY(-3px)}
-.cl-card img{width:100px;height:60px;object-fit:contain}
-.cl-card .cl-name{font-size:13px;font-weight:700;color:var(--text)}
-.cl-card .cl-desc{font-size:11px;color:var(--muted);line-height:1.4}
-/* Costs */
-.cost-tbl{width:100%;border-collapse:separate;border-spacing:0;border-radius:14px;overflow:hidden;margin-bottom:28px;box-shadow:0 2px 12px rgba(0,0,0,.05)}
-.cost-tbl th{background:linear-gradient(135deg,#0d2680,#1a56db);color:#fff;padding:16px 22px;font-size:16px;font-weight:700;text-align:right}
-.cost-tbl td{padding:16px 22px;font-size:14px;background:#fff;border-bottom:1px solid #f0f1f3}
-.cost-tbl tr:last-child td{border-bottom:none}
-.cost-tbl td:first-child{font-weight:600;color:var(--navy)}
-.pay-card{border-right:4px solid var(--blue);padding:16px 22px;margin-bottom:14px;background:var(--card);border-radius:0 14px 14px 0;box-shadow:0 1px 6px rgba(0,0,0,.04)}
-.pay-title{font-weight:700;font-size:15px;color:var(--navy)}
-.pay-desc{font-size:13.5px;color:#374151;margin-top:4px}
-.pay-total{font-weight:800;color:var(--blue);margin-top:6px;font-size:16px}
-.note-vat{font-weight:800;color:var(--navy);margin:14px 0;font-size:16px}
-/* Optional */
-.opt-box{background:linear-gradient(135deg,#eff6ff,#f0f4ff);border-radius:14px;padding:22px 24px;margin:18px 0;border:1px solid #dbeafe}
-.opt-item{margin-bottom:8px;font-size:14.5px}
-.opt-item strong{color:var(--navy)}
-/* Tokens */
-.tp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-@media(max-width:640px){.tp-grid{grid-template-columns:1fr}}
-.tp-card{background:var(--card);border:2px solid var(--bdr);border-radius:14px;padding:22px;text-align:center;transition:all .2s}
-.tp-card.featured{border-color:var(--blue);background:#eff6ff;transform:scale(1.04);box-shadow:0 4px 20px rgba(26,86,219,.1)}
-.tp-amount{font-size:20px;font-weight:800;color:var(--navy);text-decoration:underline}
-.tp-prices{margin-top:12px;font-size:17px}
-.tp-orig{text-decoration:line-through;color:var(--faint);margin-left:8px}
-.tp-sale{font-weight:800;color:var(--blue)}
-.tp-examples{margin-top:24px;font-size:13.5px;color:#374151;line-height:2.1}
-.tp-bullet{color:var(--blue);font-size:13px;margin-left:6px}
-/* Terms */
-.term-item{margin-bottom:14px;font-size:14px;line-height:1.8;color:#374151}
-.term-bullet{color:var(--navy);font-weight:700;margin-left:6px}
-/* Agreement */
-.agreement{background:var(--card);border:2px solid var(--navy);border-radius:18px;padding:36px 32px;margin:48px 0;box-shadow:0 4px 24px rgba(13,38,128,.06)}
-.agreement h2{font-size:26px;font-weight:800;color:var(--navy);margin-bottom:24px;text-align:center}
-.ag-line{border-bottom:1.5px solid var(--bdr);padding:10px 0;margin:6px 0;font-size:15px}
-.ag-input{border:none;border-bottom:2px solid var(--blue);background:transparent;font-size:15px;font-family:inherit;padding:4px 10px;min-width:80px;width:auto;outline:none;color:var(--navy);font-weight:600;direction:rtl;display:inline-block}
-.ag-input::placeholder{color:var(--faint);font-weight:400}
-.ag-input:focus{border-bottom-color:var(--green)}
-.hoail{margin:24px 0;font-size:15px;line-height:1.85;color:#374151}
-/* Sign */
-.sign-section{background:var(--card);border:2px solid var(--blue);border-radius:18px;padding:32px;margin:48px 0;box-shadow:0 4px 24px rgba(26,86,219,.06)}
-.sign-section h2{font-size:22px;font-weight:800;color:var(--navy);margin-bottom:24px;text-align:center}
-.sign-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-@media(max-width:640px){.sign-row{grid-template-columns:1fr}}
-.sign-section label{display:block;font-size:13px;font-weight:600;color:var(--muted);margin-bottom:5px;margin-top:14px}
-.sign-section input{width:100%;padding:12px 16px;border:1.5px solid var(--bdr);border-radius:10px;font-size:15px;font-family:inherit;outline:none;direction:rtl}
-.sign-section input:focus{border-color:var(--blue)}
-.sign-section input.bad{border-color:var(--red)}
-.sig-wrap{border:2px dashed var(--bdr);border-radius:14px;margin-top:18px;position:relative;min-height:180px;background:#fff;cursor:crosshair}
-.sig-wrap canvas{display:block;width:100%;height:100%;border-radius:14px}
-.sig-clear{position:absolute;top:10px;left:10px;background:var(--card);border:1px solid var(--bdr);border-radius:8px;padding:5px 12px;font-size:12px;cursor:pointer;color:var(--muted);font-family:inherit}
-.sig-placeholder{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:var(--faint);font-size:15px;pointer-events:none}
-.decl{font-size:14px;font-weight:700;color:var(--navy);margin:20px 0;text-align:center}
-.btn-sign{display:block;width:100%;margin-top:22px;padding:18px;background:linear-gradient(135deg,var(--green),#047857);color:#fff;border:none;border-radius:14px;font-size:17px;font-weight:800;cursor:pointer;font-family:inherit;transition:all .2s;box-shadow:0 4px 16px rgba(5,150,105,.2)}
-.btn-sign:hover{transform:translateY(-1px);box-shadow:0 6px 24px rgba(5,150,105,.3)}
-.btn-sign:disabled{background:var(--muted);cursor:not-allowed;box-shadow:none;transform:none}
-.sub-err{color:var(--red);font-size:13px;margin-top:10px;text-align:center;display:none}
-.signed-banner{text-align:center;padding:60px 24px;color:var(--green)}
-.signed-banner .icon{font-size:72px}
-.signed-banner h2{margin-top:16px;font-size:24px}
-.signed-banner p{color:var(--muted);margin-top:10px;font-size:15px}
-.btn-download{display:inline-block;margin-top:20px;padding:14px 32px;background:var(--blue);color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;text-decoration:none;font-family:inherit}
-.btn-download:hover{background:var(--navy)}
-.footer{text-align:center;padding:32px 24px;color:var(--faint);font-size:12px;border-top:1px solid var(--bdr);margin-top:48px}
-.scroll-top{position:fixed;bottom:24px;left:24px;width:50px;height:50px;background:var(--blue);color:#fff;border:none;border-radius:50%;font-size:24px;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.18);z-index:999;display:none;align-items:center;justify-content:center;transition:all .2s;font-family:inherit}
-.scroll-top.show{display:flex}
-.divider{height:1px;background:linear-gradient(90deg,transparent,var(--bdr),transparent);margin:40px 0}
+:root{--navy:#071a5e;--navy2:#0d2680;--blue:#1a56db;--blue-light:#2563eb;--blue-glow:#3b82f6;--green:#059669;--green-dark:#047857;--bg:#f8fafc;--card:#fff;--bdr:#e2e8f0;--text:#1e293b;--muted:#64748b;--faint:#94a3b8;--red:#ef4444;--radius:16px;--shadow:0 4px 24px rgba(7,26,94,.07)}
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);direction:rtl;min-height:100vh;line-height:1.75;overflow-x:hidden;-webkit-font-smoothing:antialiased}::selection{background:#1a56db;color:#fff}
+.state{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;gap:16px}.state .logo{font-size:2.5rem;font-weight:900;color:var(--navy2);letter-spacing:-2px}.spinner{width:36px;height:36px;border:3px solid #e2e8f0;border-top-color:var(--blue);border-radius:50%;animation:spin .7s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+.hero{position:relative;background:linear-gradient(160deg,#040e3a 0%,#071a5e 25%,#0d2680 50%,#1a56db 80%,#2563eb 100%);color:#fff;padding:72px 28px 0;text-align:center;overflow:hidden}.hero::before{content:'';position:absolute;top:-40%;right:-20%;width:80%;height:180%;background:radial-gradient(ellipse,rgba(37,99,235,.2),transparent 70%);pointer-events:none}.hero-inner{position:relative;z-index:2;max-width:700px;margin:0 auto;animation:fadeUp .8s ease-out}.hero .logo-img{height:60px;filter:brightness(0) invert(1);margin-bottom:8px}.hero .logo-text{font-size:2.8rem;font-weight:900;letter-spacing:-2px}.hero .company-info{font-size:11.5px;opacity:.45;letter-spacing:.5px;font-weight:300}.hero h1{font-size:28px;font-weight:800;margin-top:36px;line-height:1.5}.hero .matara-text{margin:20px auto 0;font-size:15px;line-height:1.9;opacity:.85;max-width:620px;font-weight:300}.hero .client-bar{margin-top:32px;padding:16px 32px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:14px;font-size:22px;font-weight:700;backdrop-filter:blur(12px);display:inline-block}.hero-wave{display:block;width:140%;margin-right:-20%;margin-top:40px}
+.container{max-width:880px;margin:0 auto;padding:0 24px}.section{margin:52px 0;animation:fadeUp .6s ease-out both}.section-header{display:flex;align-items:center;gap:12px;margin-bottom:24px}.section-icon{width:44px;height:44px;background:linear-gradient(135deg,var(--navy2),var(--blue));border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff;flex-shrink:0;box-shadow:0 4px 12px rgba(13,38,128,.2)}.section-title{font-size:22px;font-weight:800;color:var(--navy2)}.divider{height:1px;background:linear-gradient(90deg,transparent,var(--bdr),transparent);margin:52px 0}
+.ms-wrap{position:relative;padding:20px 0}.ms-line{position:absolute;left:50%;top:0;bottom:0;width:3px;background:linear-gradient(to bottom,var(--blue),var(--blue-glow),var(--blue));transform:translateX(-50%);border-radius:2px;opacity:.4}.ms-item{display:flex;align-items:flex-start;margin-bottom:48px;position:relative;width:100%}.ms-card{width:calc(50% - 54px);background:var(--card);border:1px solid var(--bdr);border-radius:var(--radius);padding:22px 26px;box-shadow:var(--shadow);transition:all .3s}.ms-card:hover{box-shadow:0 8px 32px rgba(7,26,94,.1);transform:translateY(-3px)}.ms-card-title{font-weight:700;color:var(--navy2);font-size:16px;margin-bottom:6px}.ms-card-desc{font-size:14px;color:var(--muted);line-height:1.75}.ms-center{width:108px;display:flex;justify-content:center;flex-shrink:0;padding-top:16px}.ms-num{width:46px;height:46px;background:linear-gradient(135deg,var(--navy2),var(--blue));color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:17px;z-index:2;box-shadow:0 4px 16px rgba(13,38,128,.25);border:3px solid #fff}.ms-spacer{width:calc(50% - 54px)}@media(max-width:640px){.ms-line{left:auto;right:28px;transform:none}.ms-item{flex-direction:row!important}.ms-center{width:56px;order:-1}.ms-card{width:calc(100% - 68px)}.ms-spacer{display:none}.ms-num{width:40px;height:40px;font-size:15px}}
+.why-intro{font-size:15px;line-height:1.85;color:var(--muted);margin-bottom:24px;padding:20px 24px;background:linear-gradient(135deg,#f0f4ff,#f8fafc);border-radius:var(--radius);border-right:4px solid var(--blue)}.why-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}@media(max-width:640px){.why-grid{grid-template-columns:1fr}}.why-item{display:flex;align-items:center;gap:12px;font-size:14.5px;font-weight:500;padding:10px 16px;border-radius:10px;background:var(--card);border:1px solid var(--bdr);transition:all .2s}.why-item:hover{border-color:var(--blue)}.why-check{width:28px;height:28px;background:linear-gradient(135deg,#059669,#10b981);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;flex-shrink:0}
+.cl-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}@media(max-width:768px){.cl-grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:480px){.cl-grid{grid-template-columns:1fr}}.cl-card{background:var(--card);border:1.5px solid var(--bdr);border-radius:var(--radius);padding:20px 14px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;transition:all .3s;text-decoration:none;color:inherit}.cl-card:hover{border-color:var(--blue);box-shadow:0 6px 24px rgba(26,86,219,.08);transform:translateY(-3px)}.cl-card img{width:100px;height:55px;object-fit:contain}.cl-card .cl-name{font-size:13px;font-weight:700;color:var(--navy2)}.cl-card .cl-desc{font-size:11px;color:var(--muted);line-height:1.4}.cl-card .cl-link{display:flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:8px;background:#eff6ff;color:var(--blue);font-size:13px;margin-top:4px;transition:all .2s}.cl-card:hover .cl-link{background:var(--blue);color:#fff}
+.cost-tbl{width:100%;border-collapse:separate;border-spacing:0;border-radius:var(--radius);overflow:hidden;margin-bottom:32px;box-shadow:var(--shadow);border:1px solid var(--bdr)}.cost-tbl th{background:linear-gradient(135deg,var(--navy),var(--navy2));color:#fff;padding:16px 24px;font-size:15px;font-weight:700;text-align:right}.cost-tbl td{padding:16px 24px;font-size:14px;background:#fff;border-bottom:1px solid #f1f5f9}.cost-tbl tr:last-child td{border-bottom:none}.cost-tbl td:first-child{font-weight:600;color:var(--navy2)}.pay-card{position:relative;padding:20px 24px;margin-bottom:14px;background:var(--card);border-radius:var(--radius);box-shadow:0 2px 8px rgba(0,0,0,.04);border:1px solid var(--bdr);border-right:4px solid var(--blue);transition:all .2s}.pay-card:hover{box-shadow:var(--shadow)}.pay-title{font-weight:700;font-size:15px;color:var(--navy2)}.pay-desc{font-size:13.5px;color:var(--muted);margin-top:4px;line-height:1.7}.pay-total{font-weight:800;color:var(--blue);margin-top:8px;font-size:17px}.note-vat{font-weight:800;color:var(--navy2);margin:20px 0;font-size:16px;text-align:center;padding:14px;background:linear-gradient(135deg,#fef3c7,#fffbeb);border-radius:12px;border:1px solid #fde68a}
+.opt-box{background:linear-gradient(135deg,#eff6ff,#f0f4ff);border-radius:var(--radius);padding:24px;border:1px solid #dbeafe}.opt-item{margin-bottom:8px;font-size:14.5px;display:flex;align-items:center;gap:8px}.opt-item strong{color:var(--navy2)}.opt-dot{width:6px;height:6px;background:var(--blue);border-radius:50%;flex-shrink:0}
+.tp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}@media(max-width:640px){.tp-grid{grid-template-columns:1fr}}.tp-card{background:var(--card);border:2px solid var(--bdr);border-radius:var(--radius);padding:28px 20px;text-align:center;transition:all .3s;position:relative}.tp-card.featured{border-color:var(--blue);background:linear-gradient(to bottom,#eff6ff,#fff);transform:scale(1.04);box-shadow:0 8px 32px rgba(26,86,219,.12)}.tp-card.featured::before{content:'מומלץ';position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--blue);color:#fff;padding:4px 16px;border-radius:20px;font-size:11px;font-weight:700}.tp-amount{font-size:20px;font-weight:800;color:var(--navy2);text-decoration:underline;text-underline-offset:4px}.tp-prices{margin-top:14px;font-size:17px}.tp-orig{text-decoration:line-through;color:var(--faint);margin-left:8px}.tp-sale{font-weight:800;color:var(--blue)}.tp-examples{margin-top:28px;padding:24px;background:var(--card);border-radius:var(--radius);border:1px solid var(--bdr);font-size:13.5px;color:var(--muted);line-height:2.2}.tp-examples strong{color:var(--navy2);display:block;margin-bottom:8px;font-size:15px}
+.term-item{margin-bottom:16px;padding:18px 22px;border-radius:var(--radius);background:var(--card);border:1px solid var(--bdr);transition:all .2s}.term-item:hover{border-color:rgba(26,86,219,.2)}.term-title{font-weight:700;color:var(--navy2);margin-bottom:4px;display:flex;align-items:center;gap:8px}.term-dot{width:8px;height:8px;background:linear-gradient(135deg,var(--navy2),var(--blue));border-radius:50%;flex-shrink:0}.term-text{font-size:13.5px;color:var(--muted);line-height:1.85;padding-right:16px}
+.agreement{background:var(--card);border:2px solid var(--navy2);border-radius:20px;padding:40px 36px;margin:52px 0;box-shadow:0 8px 32px rgba(7,26,94,.06)}.agreement h2{font-size:26px;font-weight:800;color:var(--navy2);margin-bottom:28px;text-align:center}.ag-party{padding:20px 24px;background:#f8fafc;border-radius:14px;margin-bottom:20px;border:1px solid var(--bdr)}.ag-party-label{font-weight:700;color:var(--navy2);font-size:16px;margin-bottom:12px}.ag-line{padding:8px 0;font-size:14.5px}.ag-input{border:none;border-bottom:2px solid var(--blue);background:transparent;font-size:15px;font-family:inherit;padding:4px 10px;min-width:80px;width:auto;outline:none;color:var(--navy2);font-weight:600;direction:rtl;display:inline-block;transition:border-color .2s}.ag-input::placeholder{color:var(--faint);font-weight:400}.ag-input:focus{border-bottom-color:var(--green)}.hoail{margin:24px 0;font-size:15px;line-height:1.85;color:var(--muted);padding:20px 24px;background:#f8fafc;border-radius:14px;border:1px solid var(--bdr)}
+.sign-section{background:var(--card);border:2px solid var(--blue);border-radius:20px;padding:36px;margin:52px 0;box-shadow:0 8px 32px rgba(26,86,219,.06)}.sign-section h2{font-size:22px;font-weight:800;color:var(--navy2);margin-bottom:24px;text-align:center}.sign-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}@media(max-width:640px){.sign-row{grid-template-columns:1fr}}.sign-section label{display:block;font-size:12.5px;font-weight:600;color:var(--muted);margin-bottom:5px;margin-top:16px;text-transform:uppercase;letter-spacing:.5px}.sign-section input{width:100%;padding:13px 16px;border:1.5px solid var(--bdr);border-radius:12px;font-size:15px;font-family:inherit;outline:none;direction:rtl;transition:all .2s;background:#fff}.sign-section input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(26,86,219,.08)}.sign-section input.bad{border-color:var(--red)}.sig-wrap{border:2px dashed var(--bdr);border-radius:16px;margin-top:18px;position:relative;min-height:180px;background:#fafbfc;cursor:crosshair}.sig-wrap canvas{display:block;width:100%;height:100%;border-radius:16px}.sig-clear{position:absolute;top:10px;left:10px;background:var(--card);border:1px solid var(--bdr);border-radius:8px;padding:5px 14px;font-size:12px;cursor:pointer;color:var(--muted);font-family:inherit}.sig-placeholder{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:var(--faint);font-size:15px;pointer-events:none}.decl{font-size:14px;font-weight:700;color:var(--navy2);margin:22px 0;text-align:center}.btn-sign{display:block;width:100%;margin-top:24px;padding:18px;background:linear-gradient(135deg,var(--green),var(--green-dark));color:#fff;border:none;border-radius:16px;font-size:17px;font-weight:800;cursor:pointer;font-family:inherit;transition:all .25s;box-shadow:0 6px 20px rgba(5,150,105,.2)}.btn-sign:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(5,150,105,.3)}.btn-sign:disabled{background:var(--muted);cursor:not-allowed;box-shadow:none;transform:none}.sub-err{color:var(--red);font-size:13px;margin-top:10px;text-align:center;display:none}.signed-banner{text-align:center;padding:60px 24px}.signed-banner .icon{font-size:72px}.signed-banner h2{margin-top:16px;font-size:24px;color:var(--navy2)}.signed-banner p{color:var(--muted);margin-top:10px;font-size:15px}.btn-download{display:inline-block;margin-top:20px;padding:14px 32px;background:var(--blue);color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;text-decoration:none;font-family:inherit;transition:all .2s}.btn-download:hover{background:var(--navy2)}
+.footer{text-align:center;padding:36px 24px;color:var(--faint);font-size:12px;border-top:1px solid var(--bdr);margin-top:52px;background:#fff}.footer a{color:var(--muted);text-decoration:none}.scroll-top{position:fixed;bottom:24px;left:24px;width:48px;height:48px;background:var(--navy2);color:#fff;border:none;border-radius:14px;font-size:20px;cursor:pointer;box-shadow:0 4px 16px rgba(7,26,94,.2);z-index:999;display:none;align-items:center;justify-content:center;transition:all .2s;font-family:inherit}.scroll-top.show{display:flex}.scroll-top:hover{background:var(--blue)}
 </style>
 </head>
 <body>
-
-<div id="loadingState" class="state">
-  <img src="https://yedatechdesign.github.io/client-contracts/logos/yeda-logo.png" alt="yeda" onerror="this.outerHTML='<div style=\'font-size:2rem;font-weight:900;color:#0d2680\'>yeda</div>'">
-  <div class="spinner"></div>
-  <div style="color:var(--muted)">טוען הסכם...</div>
-</div>
-
-<div id="errorState" class="state" style="display:none">
-  <img src="https://yedatechdesign.github.io/client-contracts/logos/yeda-logo.png" alt="yeda" onerror="this.outerHTML='<div style=\'font-size:2rem;font-weight:900;color:#0d2680\'>yeda</div>'">
-  <div id="errMsg" style="color:var(--red);font-size:16px;text-align:center;max-width:400px;padding:0 24px"></div>
-</div>
-
+<div id="loadingState" class="state"><img src="https://yedatechdesign.github.io/client-contracts/logos/yeda-logo.png" alt="yeda" style="height:52px" onerror="this.outerHTML='<div class=\'logo\'>yeda</div>'"><div class="spinner"></div><div style="color:var(--muted);font-size:14px">טוען הסכם...</div></div>
+<div id="errorState" class="state" style="display:none"><img src="https://yedatechdesign.github.io/client-contracts/logos/yeda-logo.png" alt="yeda" style="height:52px" onerror="this.outerHTML='<div class=\'logo\'>yeda</div>'"><div id="errMsg" style="color:var(--red);font-size:16px;text-align:center;max-width:400px;padding:0 24px"></div></div>
 <div id="mainContent" style="display:none">
-
-<div class="hero">
-  <canvas id="starsCanvas"></canvas>
-  <div class="hero-inner">
-    <img src="https://yedatechdesign.github.io/client-contracts/logos/yeda-logo.png" class="logo-img" alt="Yeda" onerror="this.outerHTML='<div style=\'font-size:2.5rem;font-weight:900;letter-spacing:-2px;margin-bottom:12px\'>yeda</div>'">
-    <div class="company-info">ידע פיתוח סביבות למידה בע"מ · ח.פ 516072253 · יגאל אלון 123, תל אביב</div>
-    <h1 id="heroTitle">הצעת מחיר והסכם התקשרות</h1>
-    <div class="matara-text" id="heroMatara"></div>
-    <div class="client-bar" id="heroClient"></div>
-  </div>
-  <svg style="display:block;width:140%;margin-right:-20%;height:90px" viewBox="0 0 1440 120" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M0,60 C240,100 480,20 720,60 C960,100 1200,20 1440,60 L1440,120 L0,120 Z" fill="#f8fafc"/>
-  </svg>
-</div>
-
+<div class="hero"><div class="hero-inner"><img src="https://yedatechdesign.github.io/client-contracts/logos/yeda-logo.png" class="logo-img" alt="Yeda" onerror="this.outerHTML='<div class=\'logo-text\'>yeda</div>'"><div class="company-info">ידע פיתוח סביבות למידה בע"מ · ח.פ 516072253 · יגאל אלון 123, תל אביב</div><h1 id="heroTitle">הצעת מחיר והסכם התקשרות</h1><div class="matara-text" id="heroMatara"></div><div class="client-bar" id="heroClient"></div></div><svg class="hero-wave" viewBox="0 0 1440 120" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path d="M0,60 C360,100 720,20 1080,60 C1260,80 1380,40 1440,50 L1440,120 L0,120 Z" fill="#f8fafc"/></svg></div>
 <div class="container">
-
-  <div class="section">
-    <div class="section-title">אבני דרך</div>
-    <div class="ms-wrap" id="msWrap"></div>
-  </div>
-
-  <div class="section">
-    <div class="section-title">למה אנחנו?</div>
-    <div class="why-intro" id="whyIntro"></div>
-    <div class="why-grid" id="whyGrid"></div>
-  </div>
-
-  <div class="section" id="secClients">
-    <div class="section-title">עובדים עם Yeda:</div>
-    <div class="cl-grid" id="clGrid"></div>
-  </div>
-
-  <div class="divider"></div>
-
-  <div class="section">
-    <div class="section-title">עלויות ותנאי תשלום</div>
-    <p style="color:var(--muted);margin-bottom:16px;font-size:14.5px" id="costsSubtitle"></p>
-    <table class="cost-tbl"><thead><tr><th>פריט</th><th>עלות</th></tr></thead><tbody id="costsTbody"></tbody></table>
-    <div id="paysContainer"></div>
-    <div class="note-vat">כל המחירים ללא מע״מ</div>
-  </div>
-
-  <div class="section">
-    <div class="section-title">שירותים אופציונליים לפי שימוש בפועל</div>
-    <div class="opt-box" id="optBox"></div>
-  </div>
-
-  <div class="section">
-    <div class="section-title">חבילות טוקנים לשימוש ב-AI וצ'אטבוט</div>
-    <div class="tp-grid" id="tpGrid"></div>
-    <div class="tp-examples" id="tpExamples"></div>
-  </div>
-
-  <div class="divider"></div>
-
-  <div class="section">
-    <div class="section-title">תנאי ההסכם</div>
-    <div id="termsList"></div>
-  </div>
-
-  <div class="divider"></div>
-
-  <div class="agreement" id="agreementSection">
-    <h2>הסכם התקשרות</h2>
-    <div style="font-size:15px;line-height:1.85"><strong>בין:</strong> חברת ידע פיתוח סביבות לימוד בע"מ (להלן "חברת ידע" או "נותן השירות" או "הספק")</div>
-    <div class="ag-line">ח.פ 516072253</div>
-    <div class="ag-line">כתובת: יגאל אלון 123, תל אביב</div>
-    <div class="ag-line">איש קשר: אלכסיי קוגן</div>
-    <div style="font-size:15px;margin-top:28px"><strong>לבין:</strong> <input class="ag-input" id="agName" placeholder="שם החברה / הלקוח"></div>
-    <div class="ag-line">(להלן "הלקוח")</div>
-    <div class="ag-line">ח.פ: <input class="ag-input" id="agHP" placeholder="ח.פ"></div>
-    <div class="ag-line">כתובת: <input class="ag-input" id="agAddr" placeholder="כתובת"></div>
-    <div class="hoail">
-      <strong>הואיל ו:</strong><br>
-      חברת ידע פיתחה מערכת לניהול סביבות לימוד (להלן "המערכת" או/ו "הפלטפורמה").<br><br>
-      חברת <input class="ag-input" id="agName2" placeholder="שם החברה"><br>
-      מעוניינת להשתמש במערכת, נציגים מוסמכים מטעם חברת, בחנו את המערכת ויכולותיה.
-    </div>
-  </div>
-
-  <div id="signSection" class="sign-section">
-    <h2>פרטי איש קשר וחתימה</h2>
-    <div class="sign-row">
-      <div><label>שם מלא איש קשר *</label><input type="text" id="sigName"></div>
-      <div><label>תפקיד בחברה</label><input type="text" id="sigRole"></div>
-    </div>
-    <div class="sign-row">
-      <div><label>מייל *</label><input type="email" id="sigEmail"></div>
-      <div><label>ת.ז / ח.פ *</label><input type="text" id="sigId"></div>
-    </div>
-    <div><label>תאריך</label><input type="text" id="sigDate" readonly></div>
-    <div class="decl">הנני מצהיר/ה כי כל הפרטים שמסרתי נכונים ומחייבים.</div>
-    <label>חתימה *</label>
-    <div class="sig-wrap" id="sigWrap">
-      <canvas id="sigCanvas"></canvas>
-      <button class="sig-clear" id="sigClear">נקה</button>
-      <div class="sig-placeholder" id="sigPlaceholder">חתום כאן</div>
-    </div>
-    <div class="sub-err" id="subErr"></div>
-    <button class="btn-sign" id="btnSign">אני מאשר/ת ומסכים/ה לתנאי ההסכם ✍️</button>
-  </div>
-
-  <div id="signedBanner" class="signed-banner" style="display:none">
-    <div class="icon">✅</div>
-    <h2>ההסכם נחתם בהצלחה</h2>
-    <p>תודה רבה! עותק ישלח למייל שלכם.</p>
-    <a id="pdfDownload" class="btn-download" href="#" target="_blank" style="display:none">📄 הורד PDF של ההסכם</a>
-  </div>
-
-</div><!-- /container -->
-
-<div class="footer">ידע פיתוח סביבות למידה בע"מ | ח.פ. 516072253 | יגאל אלון 123, תל אביב | <a href="mailto:coo@yedalms.io" style="color:inherit">coo@yedalms.io</a></div>
-</div><!-- /mainContent -->
-
+<div class="section"><div class="section-header"><div class="section-icon">🎯</div><div class="section-title">אבני דרך</div></div><div class="ms-wrap" id="msWrap"></div></div>
+<div class="section"><div class="section-header"><div class="section-icon">💡</div><div class="section-title">למה אנחנו?</div></div><div class="why-intro" id="whyIntro"></div><div class="why-grid" id="whyGrid"></div></div>
+<div class="section" id="secClients"><div class="section-header"><div class="section-icon">🏢</div><div class="section-title">עובדים עם Yeda:</div></div><div class="cl-grid" id="clGrid"></div></div>
+<div class="divider"></div>
+<div class="section"><div class="section-header"><div class="section-icon">💰</div><div class="section-title">עלויות ותנאי תשלום</div></div><p style="color:var(--muted);margin-bottom:18px;font-size:14.5px" id="costsSubtitle"></p><table class="cost-tbl"><thead><tr><th>פריט</th><th>עלות</th></tr></thead><tbody id="costsTbody"></tbody></table><div id="paysContainer"></div><div class="note-vat">⚡ כל המחירים ללא מע״מ</div></div>
+<div class="section"><div class="section-header"><div class="section-icon">➕</div><div class="section-title">שירותים אופציונליים לפי שימוש בפועל</div></div><div class="opt-box" id="optBox"></div></div>
+<div class="section"><div class="section-header"><div class="section-icon">🤖</div><div class="section-title">חבילות טוקנים לשימוש ב-AI וצ'אטבוט</div></div><div class="tp-grid" id="tpGrid"></div><div class="tp-examples" id="tpExamples"></div></div>
+<div class="divider"></div>
+<div class="section"><div class="section-header"><div class="section-icon">📜</div><div class="section-title">תנאי ההסכם</div></div><div id="termsList"></div></div>
+<div class="divider"></div>
+<div class="agreement" id="agreementSection"><h2>הסכם התקשרות</h2><div class="ag-party"><div class="ag-party-label">בין: נותן השירות</div><div class="ag-line">חברת ידע פיתוח סביבות לימוד בע"מ (להלן "חברת ידע" או "נותן השירות" או "הספק")</div><div class="ag-line">ח.פ 516072253</div><div class="ag-line">כתובת: יגאל אלון 123, תל אביב</div><div class="ag-line">איש קשר: אלכסיי קוגן</div></div><div class="ag-party"><div class="ag-party-label">לבין: הלקוח</div><div class="ag-line">שם: <input class="ag-input" id="agName" placeholder="שם החברה / הלקוח"></div><div class="ag-line">ח.פ: <input class="ag-input" id="agHP" placeholder="ח.פ"></div><div class="ag-line">כתובת: <input class="ag-input" id="agAddr" placeholder="כתובת"></div></div><div class="hoail"><strong>הואיל ו:</strong><br>חברת ידע פיתחה מערכת לניהול סביבות לימוד (להלן "המערכת" או/ו "הפלטפורמה").<br><br>חברת <input class="ag-input" id="agName2" placeholder="שם החברה"> מעוניינת להשתמש במערכת, נציגים מוסמכים מטעם חברת, בחנו את המערכת ויכולותיה.</div></div>
+<div id="signSection" class="sign-section"><h2>פרטי איש קשר וחתימה</h2><div class="sign-row"><div><label>שם מלא איש קשר *</label><input type="text" id="sigName"></div><div><label>תפקיד בחברה</label><input type="text" id="sigRole"></div></div><div class="sign-row"><div><label>מייל *</label><input type="email" id="sigEmail"></div><div><label>ת.ז / ח.פ *</label><input type="text" id="sigId"></div></div><div><label>תאריך</label><input type="text" id="sigDate" readonly></div><div class="decl">הנני מצהיר/ה כי כל הפרטים שמסרתי נכונים ומחייבים.</div><label>חתימה *</label><div class="sig-wrap" id="sigWrap"><canvas id="sigCanvas"></canvas><button class="sig-clear" id="sigClear">נקה</button><div class="sig-placeholder" id="sigPlaceholder">חתום כאן</div></div><div class="sub-err" id="subErr"></div><button class="btn-sign" id="btnSign">אני מאשר/ת ומסכים/ה לתנאי ההסכם ✍️</button></div>
+<div id="signedBanner" class="signed-banner" style="display:none"><div class="icon">✅</div><h2>ההסכם נחתם בהצלחה</h2><p>תודה רבה! עותק ישלח למייל שלכם.</p><a id="pdfDownload" class="btn-download" href="#" target="_blank" style="display:none">📄 הורד PDF של ההסכם</a></div>
+</div>
+<div class="footer">ידע פיתוח סביבות למידה בע"מ | ח.פ. 516072253 | יגאל אלון 123, תל אביב | <a href="mailto:coo@yedalms.io">coo@yedalms.io</a></div>
+</div>
 <button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
-
 <script>
 const CONTRACT_ID=new URLSearchParams(location.search).get('id')||'';
 const TOKEN=new URLSearchParams(location.search).get('token')||'';
 const N8N_LOAD='https://yedauto.com/webhook/yeda-contract-load';
 const N8N_SIGN='https://yedauto.com/webhook/yeda-sign';
 const LOGOS='https://yedatechdesign.github.io/client-contracts/logos/';
-
-const ALL_CLIENTS=[
-  {id:'client1',name:'HackerU',desc:'המכללה המובילה בארץ להכשרה במקצועות סייבר והייטק',url:'https://www.hackeru.co.il/'},
-  {id:'client2',name:'מכללת IPC',desc:'המכללה המובילה בתחום ההכשרות המקצועיות',url:'https://campus-ipc.co.il/'},
-  {id:'client3',name:'מכללת אורין שפלטר',desc:'המכללה המובילה להוראה הפיננסית',url:'https://oscrypto.academy/'},
-  {id:'client4',name:'ThriveDX',desc:'חברה גלובלית המתמחה בהכשרות דיגיטליות',url:'https://thrivedx.com/'},
-  {id:'client5',name:'מרכז גומא גבים',desc:'המכללה המובילה לגישור, אימון ולימודי משפחה',url:'https://study.gomegevim.co.il/'},
-  {id:'client6',name:'מכללת קול המס',desc:'מכללה בפיקוח לשכת רו"ח ולשכת יועצי המס',url:'https://finance-courses.co.il/'},
-  {id:'client7',name:'HIGHQ',desc:'המכללה המובילה בישראל להכנה לבחינות בגרות ופסיכומטרי',url:'https://www.high-q.co.il/'},
-  {id:'client8',name:'פירמת עורכי הדין פישר',desc:'משרדי עורכי הדין הגדולים והמובילים בישראל',url:'https://www.fbclawyers.com/'},
-  {id:'client9',name:'קבוצת מובמנט',desc:'החברה המובילה בארץ לקידום בריאות בארגונים',url:'https://online.allencarr.co.il/'},
-  {id:'client10',name:'אולג׳ובס',desc:'האתר המוביל לחיפוש עבודה',url:'https://allcourses.co.il/'},
-  {id:'client11',name:'מלם טים',desc:'קבוצת שירותי ה-IT המובילה בישראל',url:'https://academia.teamcad.co.il/'},
-  {id:'client12',name:'כלכליסט',desc:'אתר החדשות הכלכלי המוביל בישראל',url:'https://study.calcalist.co.il/'}
-];
-
+const ALL_CLIENTS=[{id:'client1',name:'HackerU',desc:'המכללה המובילה בארץ להכשרה במקצועות סייבר והייטק',url:'https://www.hackeru.co.il/'},{id:'client2',name:'מכללת IPC',desc:'המכללה המובילה בתחום ההכשרות המקצועיות',url:'https://campus-ipc.co.il/'},{id:'client3',name:'מכללת אורין שפלטר',desc:'המכללה המובילה להוראה הפיננסית',url:'https://oscrypto.academy/'},{id:'client4',name:'ThriveDX',desc:'חברה גלובלית המתמחה בהכשרות דיגיטליות',url:'https://thrivedx.com/'},{id:'client5',name:'מרכז גומא גבים',desc:'המכללה המובילה לגישור, אימון ולימודי משפחה',url:'https://study.gomegevim.co.il/'},{id:'client6',name:'מכללת קול המס',desc:'מכללה בפיקוח לשכת רו"ח ולשכת יועצי המס',url:'https://finance-courses.co.il/'},{id:'client7',name:'HIGHQ',desc:'המכללה המובילה בישראל להכנה לבחינות בגרות ופסיכומטרי',url:'https://www.high-q.co.il/'},{id:'client8',name:'פירמת עורכי הדין פישר',desc:'משרדי עורכי הדין הגדולים והמובילים בישראל',url:'https://www.fbclawyers.com/'},{id:'client9',name:'קבוצת מובמנט',desc:'החברה המובילה בארץ לקידום בריאות בארגונים',url:'https://online.allencarr.co.il/'},{id:'client10',name:'אולג׳ובס',desc:'האתר המוביל לחיפוש עבודה',url:'https://allcourses.co.il/'},{id:'client11',name:'מלם טים',desc:'קבוצת שירותי ה-IT המובילה בישראל',url:'https://academia.teamcad.co.il/'},{id:'client12',name:'כלכליסט',desc:'אתר החדשות הכלכלי המוביל בישראל',url:'https://study.calcalist.co.il/'}];
 const esc=s=>{const d=document.createElement('div');d.textContent=s;return d.innerHTML};
 const pad=n=>String(n).padStart(2,'0');
-
-// ── STARS ────────────────────────────────────────────────────────
-function initStars(){
-  const c=document.getElementById('starsCanvas'),ctx=c.getContext('2d');
-  let w,h;const stars=[];
-  function resize(){w=c.width=c.offsetWidth;h=c.height=c.offsetHeight;stars.length=0;for(let i=0;i<3;i++)stars.push({x:w*(.15+i*.35)+(Math.random()-.5)*80,y:h*(.2+Math.random()*.5),r:7+Math.random()*5,dx:(Math.random()-.5)*.12,dy:(Math.random()-.5)*.12,a:.2+Math.random()*.15,ph:Math.random()*Math.PI*2})}
-  resize();window.addEventListener('resize',resize);
-  function draw(){ctx.clearRect(0,0,w,h);stars.forEach(s=>{ctx.save();ctx.translate(s.x,s.y);ctx.globalAlpha=s.a+Math.sin(Date.now()/2000+s.ph)*.1;ctx.fillStyle='#fff';ctx.beginPath();for(let i=0;i<4;i++){const a=i*Math.PI/2;ctx.lineTo(Math.cos(a)*s.r,Math.sin(a)*s.r);ctx.lineTo(Math.cos(a+Math.PI/4)*s.r*.3,Math.sin(a+Math.PI/4)*s.r*.3)}ctx.closePath();ctx.fill();ctx.restore();s.x+=s.dx;s.y+=s.dy;if(s.x<-20||s.x>w+20)s.dx*=-1;if(s.y<-20||s.y>h+20)s.dy*=-1});requestAnimationFrame(draw)}
-  draw();
-}
-
-// ── MILESTONES ───────────────────────────────────────────────────
-function renderMilestones(ms){
-  const wrap=document.getElementById('msWrap');
-  wrap.innerHTML='<div class="ms-line"></div>';
-  ms.forEach((m,i)=>{
-    const isRight=i%2===0;
-    const el=document.createElement('div');
-    el.className='ms-item';el.style.justifyContent='center';
-    const card=document.createElement('div');card.className='ms-card';
-    card.innerHTML=`<div class="ms-card-title">${esc(m.title)}</div><div class="ms-card-desc">${esc(m.desc)}</div>`;
-    const center=document.createElement('div');center.className='ms-center';
-    center.innerHTML=`<div class="ms-num">${m.num!==undefined?m.num:i}</div>`;
-    const spacer=document.createElement('div');spacer.className='ms-spacer';
-    if(isRight){el.appendChild(card);el.appendChild(center);el.appendChild(spacer);}
-    else{el.appendChild(spacer);el.appendChild(center);el.appendChild(card);}
-    wrap.appendChild(el);
-  });
-}
-
-// ── RENDER ALL ────────────────────────────────────────────────────
-function renderContract(d){
-  document.getElementById('heroTitle').textContent=d.title||'הצעת מחיר והסכם התקשרות';
-  document.getElementById('heroMatara').textContent=d.matara||'';
-  document.getElementById('heroClient').textContent=d.client_name?'עבור: '+d.client_name:'';
-
-  renderMilestones(d.milestones||[]);
-
-  document.getElementById('whyIntro').textContent=d.why_intro||'';
-  document.getElementById('whyGrid').innerHTML=(d.why_items||[]).map(it=>`<div class="why-item"><span class="why-check">✔</span>${esc(it)}</div>`).join('');
-
-  const selClients=ALL_CLIENTS.filter(c=>(d.selected_clients||[]).includes(c.id));
-  if(selClients.length){
-    document.getElementById('clGrid').innerHTML=selClients.map(c=>`
-      <a class="cl-card" href="${c.url}" target="_blank" rel="noopener">
-        <img src="${LOGOS}${c.id}.png" onerror="this.style.display='none'" alt="${esc(c.name)}">
-        <div class="cl-name">${esc(c.name)}</div>
-        <div class="cl-desc">${esc(c.desc)}</div>
-      </a>`).join('');
-  } else {
-    document.getElementById('secClients').style.display='none';
-  }
-
-  document.getElementById('costsSubtitle').textContent=d.costs_subtitle||'';
-  document.getElementById('costsTbody').innerHTML=(d.costs_rows||[]).map(r=>`<tr><td>${esc(r[0])}</td><td>${esc(r[1])}</td></tr>`).join('');
-  document.getElementById('paysContainer').innerHTML=(d.payments||[]).map(p=>`
-    <div class="pay-card">
-      <div class="pay-title">תשלום ${p.num} - ${esc(p.title)}:</div>
-      <div class="pay-desc">${esc(p.desc)}</div>
-      <div class="pay-total">סה"כ: ${esc(p.total)}</div>
-    </div>`).join('');
-
-  document.getElementById('optBox').innerHTML=(d.optional||[]).map(it=>`
-    <div class="opt-item"><strong>${esc(it.title)}:</strong> <span dir="ltr">${esc(it.price)}</span></div>`).join('');
-
-  document.getElementById('tpGrid').innerHTML=(d.token_packages||[]).map(p=>`
-    <div class="tp-card${p.featured?' featured':''}">
-      <div class="tp-amount">${esc(p.amount)}</div>
-      <div class="tp-prices"><span class="tp-orig">${esc(p.original)}</span> <span class="tp-sale">${esc(p.sale)}</span></div>
-    </div>`).join('');
-  const examples=d.token_examples||[];
-  if(examples.length){
-    document.getElementById('tpExamples').innerHTML='<strong>דוגמת פירוט שימוש בטוקנים:</strong><br>'+
-      examples.map(ex=>`<span class="tp-bullet">✦</span> ${esc(ex)}<br>`).join('');
-  }
-
-  document.getElementById('termsList').innerHTML=(d.terms||[]).map(t=>`
-    <div class="term-item"><span class="term-bullet">●</span>${esc(t.title)} — ${esc(t.text)}</div>`).join('');
-}
-
-// ── SIGNATURE ─────────────────────────────────────────────────────
-let sigHasContent=false;
-function initSignature(){
-  const wrap=document.getElementById('sigWrap'),canvas=document.getElementById('sigCanvas'),ctx=canvas.getContext('2d');
-  function resize(){
-    const dpr=window.devicePixelRatio||1;
-    canvas.width=wrap.offsetWidth*dpr;
-    canvas.height=Math.max(wrap.offsetHeight,180)*dpr;
-    canvas.style.width=wrap.offsetWidth+'px';
-    canvas.style.height=Math.max(wrap.offsetHeight,180)+'px';
-    ctx.scale(dpr,dpr);
-    ctx.strokeStyle='#1f2937';ctx.lineWidth=2.2;ctx.lineCap='round';ctx.lineJoin='round';
-  }
-  resize();window.addEventListener('resize',resize);
-  let drawing=false;
-  function getPos(e){const rect=canvas.getBoundingClientRect();return{x:(e.touches?e.touches[0].clientX:e.clientX)-rect.left,y:(e.touches?e.touches[0].clientY:e.clientY)-rect.top};}
-  canvas.addEventListener('mousedown',e=>{drawing=true;sigHasContent=true;document.getElementById('sigPlaceholder').style.display='none';const p=getPos(e);ctx.beginPath();ctx.moveTo(p.x,p.y)});
-  canvas.addEventListener('mousemove',e=>{if(!drawing)return;const p=getPos(e);ctx.lineTo(p.x,p.y);ctx.stroke()});
-  canvas.addEventListener('mouseup',()=>drawing=false);
-  canvas.addEventListener('mouseleave',()=>drawing=false);
-  canvas.addEventListener('touchstart',e=>{e.preventDefault();drawing=true;sigHasContent=true;document.getElementById('sigPlaceholder').style.display='none';const p=getPos(e);ctx.beginPath();ctx.moveTo(p.x,p.y)},{passive:false});
-  canvas.addEventListener('touchmove',e=>{e.preventDefault();if(!drawing)return;const p=getPos(e);ctx.lineTo(p.x,p.y);ctx.stroke()},{passive:false});
-  canvas.addEventListener('touchend',()=>drawing=false);
-  document.getElementById('sigClear').onclick=()=>{
-    const dpr=window.devicePixelRatio||1;
-    ctx.setTransform(1,0,0,1,0,0);
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    ctx.scale(dpr,dpr);
-    sigHasContent=false;
-    document.getElementById('sigPlaceholder').style.display='block';
-  };
-}
-
-function autoSize(input){
-  const span=document.createElement('span');span.style.cssText='visibility:hidden;position:absolute;white-space:pre;font:'+getComputedStyle(input).font;
-  span.textContent=input.value||input.placeholder||'';document.body.appendChild(span);
-  input.style.width=Math.max(80,span.offsetWidth+20)+'px';span.remove();
-}
-document.querySelectorAll('.ag-input').forEach(inp=>{inp.addEventListener('input',()=>autoSize(inp));setTimeout(()=>autoSize(inp),100)});
-document.getElementById('agName')?.addEventListener('input',()=>{const a=document.getElementById('agName2');a.value=document.getElementById('agName').value;autoSize(a);});
-
-window.addEventListener('scroll',()=>document.getElementById('scrollTop').classList.toggle('show',window.scrollY>400));
-
-// ── LOAD ──────────────────────────────────────────────────────────
-const DEF={
-  title:'הצעת מחיר – פיתוח מערכת מותאמת אישית',client_name:'',
-  matara:'פיתוח מערכת מותאמת אישית ליצירת תכנים עם AI לפי אפיון מאושר מראש, הקמת אתר לניהול למידה ומעקב ביצועים תחת מערכת Yeda. המערכת תאפשר ניהול תהליכי למידה ומעקב אחר התקדמות ההכשרות, כולל רישום, צפייה בתכנים, ומדידה של התקדמות המשתתפים לאורך זמן.',
-  milestones:[
-    {id:'m0',num:'0',title:'חתימה והעברת תשלום ראשון',desc:'חתימת חוזה בין הצדדים והעברת התשלום הראשון, המאשרים התחייבות הצדדים להפעלת הפרויקט.'},
-    {id:'m1',num:'1',title:'פגישת אפיון',desc:'פגישה מקיפה עם נציגי הלקוח לתיאור מלא של דרישות המערכת, היכולות הנדרשות, מבנה ההיררכיות הארגוניות וצרכי המשתמשים.'},
-    {id:'m2',num:'2',title:'אישור אפיון',desc:'הכנת מסמך אפיון מפורט המפרט את כל הדרישות, ההיכולות והתכונות המערכת. אישור מטעם הלקוח על התאמת האפיון לצרכיו.'},
-    {id:'m3',num:'3',title:'הקמת אתר התאחדות ארצית אחד',desc:'ביצוע חיבור טכני של דומיין, הגדרת מבנה תכנים והרשאות, עיצוב והתאמת הפורטל למיתוג ההתאחדות, הכנת תבנית להזנת ההדרכות.'},
-    {id:'m4',num:'4',title:'פיתוח',desc:'פיתוח מערכת יצירת חומרי למידה עם AI בהתאם לאפיון המאושר, והעלאה לאוויר.'}
-  ],
-  why_intro:'הפלטפורמה מאפשרת למכללות להקים ולהפעיל מערך קורסים דיגיטליים ופרונטליים, תוך שילוב כלים מתקדמים למעקב אחר התקדמות המשתמשים וביצועיהם. המערכת כוללת דוחות מפורטים עם נתוני צפייה, תוצאות מבחנים וסטטיסטיקות שימוש, ומספקת תמונה מלאה על תהליך הלמידה. כל זאת, תוך שמירה על אבטחת מידע ברמה הגבוהה ותמיכה מלאה בניהול התכנים וליווי שוטף.',
-  why_items:['פתרון מלא לבניית קורסים דיגיטליים','זמינות גבוהה ומענה מהיר לכל צורך','אבטחת מידע ברמה גבוהה','מנהל תיק אישי זמין לכל התייעצות','דוחות מעקב התקדמות בהתאמה אישית','התנהלות בקבוצת Whatsapp ייחודית'],
-  selected_clients:['client1','client2','client3','client4','client5','client6','client7','client8','client9','client10','client11','client12'],
-  costs_subtitle:'מחירון - הקמת מערכת ניהול למידה ופיתוח מערכת יצירת חומרי למידה',
-  costs_rows:[['פיתוח','250 ₪ לשעה'],['מערכת ניהול למידה (שנה ראשונה)','11,988 ₪ (כולל 100GB אחסון ו-200GB תעבורה)'],["10,000 קרדיטים לכלי AI וצ'אטבוטים",'2,310 ₪']],
-  payments:[
-    {num:1,title:'חתימה והעברת תשלום ראשון',desc:'100 שעות פיתוח (25,000 ₪) + 1/3 עלות מערכת ניהול למידה (3,996 ₪)',total:'28,996 ₪'},
-    {num:2,title:'לאחר אישור אפיון',desc:'1/3 עלות מערכת ניהול למידה (3,996 ₪)',total:'3,996 ₪'},
-    {num:3,title:'לאחר הקמת אתר התאחדות ארצית אחד',desc:'1/3 עלות מערכת ניהול למידה (3,996 ₪) + עלות קרדיטים לשימוש ב-AI (2,310 ₪)',total:'6,306 ₪'},
-    {num:4,title:'בסיום הפיתוח',desc:'100 שעות פיתוח לאחר ה-100 שעות הראשונות בהתאם לאפיון המאושר + שעות נוספות במידת הצורך, לפי 250 ₪ לשעה.',total:'ישתנה'}
-  ],
-  optional:[{title:'אחסון נוסף עד 1TB',price:'250 ₪ לחודש'},{title:'תעבורה נוספת עד 2TB',price:'250 ₪ לחודש'},{title:'טוקנים נוספים',price:'0.07$ × 3.3 ₪'}],
-  token_packages:[{amount:'10,000 טוקנים',original:'3,600₪',sale:'3,420₪',featured:false},{amount:'20,000 טוקנים',original:'7,200₪',sale:'6,480₪',featured:true},{amount:'40,000 טוקנים',original:'14,400₪',sale:'12,960₪',featured:false}],
-  token_examples:['יצירת 10 סילבוסים = 20-40 טוקנים AI','יצירת תוכן למצגות - 100 שקופיות = 20-25 טוקנים AI','יצירת כתוביות לשעה של וידאו = 15-30 טוקנים AI','יצירת שאלות לשעה של וידאו = 10-15 טוקנים AI','חלוקה לפרקים לשעה של וידאו = 5-10 טוקנים AI','תרגום כתוביות לשעה של וידאו = 80-130 טוקנים AI','יצירת לומדה מקבצים = 300-500 טוקנים AI','3 שאלות לעוזר האישי = 1 טוקן AI'],
-  terms:[
-    {id:'t1',title:'מערכת ניהול למידה',text:'הלקוח יקבל אתרים אישיים המוקמים על גבי פלטפורמת Yeda ומחוברים לדומיינים של הלקוח, בהתאם למבנה ולמספר האתרים שנרכשו. הפלטפורמה כוללת אתרים מלאים, מערכת ניהול למידה (LMS), אפשרות לחיבור מערכת תשלומים, עדכוני גרסה, תמיכה טכנית מלאה, קבוצת ווטסאפ ייעודית והדרכות. בהתאם להסכם, ההתקשרות היא בהתחייבות ללא אפשרות יציאה מוקדמת, והמחיר מפורט בהצעת המחיר. החבילה מאפשרת שימוש ללא הגבלת כמות משתמשים פעילים למשך שלוש שנות פעילות. בתום התקופה, המחיר עשוי להשתנות בהתאם להיקף השימוש בפועל.'},
-    {id:'t2',title:'פלטפורמת AI ולומדות',text:'בנוסף, הלקוח יקבל גישה לפלטפורמה המיועדת לבנייה, עיצוב, הקלטה ואחסון של מצגות, וידאו, לומדות אינטראקטיביות ועוזרי למידה מבוססי AI. העלויות מפורטות בסיכום המחירים בהתאם לנפחי השימוש, וייתכנו חיובים נוספים במקרה של חריגה מהיקפי השימוש הכלולים בתקופת ההתקשרות.'},
-    {id:'t3',title:'הגבלת אחריות',text:'חברת ידע פיתוח סביבות למידה בע"מ ו/או מי מטעמה אינם נושאים כל אחריות בקשר לכל תביעה משפטית או כל תלונה אחרת שהלקוח עלול לקבל בגין עבירה על חוקים ומגבלות הקשורים בדיני אינטרנט, לרבות הנושא נגישות, רישום דטאות, שמירה על פרטיות, חוק הספאם ועוד. מומלץ ללקוח להיוועץ בעו"ד המתמחה בתחום, על מנת להבטיח שלא תוגש כנגדו תלונה. השימוש באתר כפוף למדיניות פרטיות ותקנון תנאי שימוש בנוסחו מעת לעת.'},
-    {id:'t4',title:'קניין רוחני',text:'מובהר כי הקניין הרוחני המלא של המוצרי תוכן באתר וזכויות היוצרים יהיו שייכים ללקוח.'},
-    {id:'t5',title:'סודיות',text:'חברת ידע בע"מ מתחייבת לשמירה על סודיות וזכויות היוצרים - לא לשלוח ולשתף חומרים מתוך הקורסים או / ו דטאות משתמשים או / ו מידע הנחשף כלשהו וחומרים אחרים שאינם נחלת הכלל עם צד שלישי ללא רשותו של הלקוח.'}
-  ]
-};
-
-function mergeD(def,loaded){
-  const out={};
-  for(const k of Object.keys(def)){
-    const lv=loaded[k];
-    if(Array.isArray(def[k])) out[k]=(Array.isArray(lv)&&lv.length>0)?lv:def[k];
-    else out[k]=(lv!==undefined&&lv!==null&&lv!=='')?lv:def[k];
-  }
-  for(const k of Object.keys(loaded)){if(!(k in out))out[k]=loaded[k];}
-  return out;
-}
-
+function renderMilestones(ms){const wrap=document.getElementById('msWrap');wrap.innerHTML='<div class="ms-line"></div>';ms.forEach((m,i)=>{const isRight=i%2===0;const el=document.createElement('div');el.className='ms-item';el.style.justifyContent='center';const card=document.createElement('div');card.className='ms-card';card.innerHTML=`<div class="ms-card-title">${esc(m.title)}</div><div class="ms-card-desc">${esc(m.desc)}</div>`;const center=document.createElement('div');center.className='ms-center';center.innerHTML=`<div class="ms-num">${m.num!==undefined?m.num:i}</div>`;const spacer=document.createElement('div');spacer.className='ms-spacer';if(isRight){el.appendChild(card);el.appendChild(center);el.appendChild(spacer);}else{el.appendChild(spacer);el.appendChild(center);el.appendChild(card);}wrap.appendChild(el);});}
+function renderContract(d){document.getElementById('heroTitle').textContent=d.title||'הצעת מחיר והסכם התקשרות';document.getElementById('heroMatara').textContent=d.matara||'';const clientEl=document.getElementById('heroClient');if(d.client_name){clientEl.textContent='עבור: '+d.client_name;clientEl.style.display='inline-block';}else clientEl.style.display='none';renderMilestones(d.milestones||[]);document.getElementById('whyIntro').textContent=d.why_intro||'';document.getElementById('whyGrid').innerHTML=(d.why_items||[]).map(it=>`<div class="why-item"><div class="why-check">✔</div>${esc(it)}</div>`).join('');const selClients=ALL_CLIENTS.filter(c=>(d.selected_clients||[]).includes(c.id));if(selClients.length){document.getElementById('clGrid').innerHTML=selClients.map(c=>`<a class="cl-card" href="${c.url}" target="_blank" rel="noopener"><img src="${LOGOS}${c.id}.png" onerror="this.style.display='none'" alt="${esc(c.name)}"><div class="cl-name">${esc(c.name)}</div><div class="cl-desc">${esc(c.desc)}</div><div class="cl-link">🔗</div></a>`).join('');}else{document.getElementById('secClients').style.display='none';}document.getElementById('costsSubtitle').textContent=d.costs_subtitle||'';document.getElementById('costsTbody').innerHTML=(d.costs_rows||[]).map(r=>`<tr><td>${esc(r[0])}</td><td>${esc(r[1])}</td></tr>`).join('');document.getElementById('paysContainer').innerHTML=(d.payments||[]).map(p=>`<div class="pay-card"><div class="pay-title">תשלום ${p.num} — ${esc(p.title)}:</div><div class="pay-desc">${esc(p.desc)}</div><div class="pay-total">סה"כ: <span dir="ltr">${esc(p.total)}</span></div></div>`).join('');document.getElementById('optBox').innerHTML=(d.optional||[]).map(it=>`<div class="opt-item"><div class="opt-dot"></div><strong>${esc(it.title)}:</strong> <span dir="ltr">${esc(it.price)}</span></div>`).join('');document.getElementById('tpGrid').innerHTML=(d.token_packages||[]).map(p=>`<div class="tp-card${p.featured?' featured':''}"><div class="tp-amount">${esc(p.amount)}</div><div class="tp-prices"><span class="tp-orig">${esc(p.original)}</span> <span class="tp-sale">${esc(p.sale)}</span></div></div>`).join('');const examples=d.token_examples||[];if(examples.length){document.getElementById('tpExamples').innerHTML='<strong>דוגמת פירוט שימוש בטוקנים:</strong>'+examples.map(ex=>`<div>✦ ${esc(ex)}</div>`).join('');}document.getElementById('termsList').innerHTML=(d.terms||[]).map(t=>`<div class="term-item"><div class="term-title"><div class="term-dot"></div>${esc(t.title)}</div><div class="term-text">${esc(t.text)}</div></div>`).join('');}
+let sigHasContent=false;function initSignature(){const wrap=document.getElementById('sigWrap'),canvas=document.getElementById('sigCanvas'),ctx=canvas.getContext('2d');function resize(){const dpr=window.devicePixelRatio||1;canvas.width=wrap.offsetWidth*dpr;canvas.height=Math.max(wrap.offsetHeight,180)*dpr;canvas.style.width=wrap.offsetWidth+'px';canvas.style.height=Math.max(wrap.offsetHeight,180)+'px';ctx.scale(dpr,dpr);ctx.strokeStyle='#1e293b';ctx.lineWidth=2.2;ctx.lineCap='round';ctx.lineJoin='round';}resize();window.addEventListener('resize',resize);let drawing=false;function getPos(e){const rect=canvas.getBoundingClientRect();return{x:(e.touches?e.touches[0].clientX:e.clientX)-rect.left,y:(e.touches?e.touches[0].clientY:e.clientY)-rect.top};}canvas.addEventListener('mousedown',e=>{drawing=true;sigHasContent=true;document.getElementById('sigPlaceholder').style.display='none';const p=getPos(e);ctx.beginPath();ctx.moveTo(p.x,p.y)});canvas.addEventListener('mousemove',e=>{if(!drawing)return;const p=getPos(e);ctx.lineTo(p.x,p.y);ctx.stroke()});canvas.addEventListener('mouseup',()=>drawing=false);canvas.addEventListener('mouseleave',()=>drawing=false);canvas.addEventListener('touchstart',e=>{e.preventDefault();drawing=true;sigHasContent=true;document.getElementById('sigPlaceholder').style.display='none';const p=getPos(e);ctx.beginPath();ctx.moveTo(p.x,p.y)},{passive:false});canvas.addEventListener('touchmove',e=>{e.preventDefault();if(!drawing)return;const p=getPos(e);ctx.lineTo(p.x,p.y);ctx.stroke()},{passive:false});canvas.addEventListener('touchend',()=>drawing=false);document.getElementById('sigClear').onclick=()=>{const dpr=window.devicePixelRatio||1;ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,canvas.width,canvas.height);ctx.scale(dpr,dpr);ctx.strokeStyle='#1e293b';ctx.lineWidth=2.2;ctx.lineCap='round';ctx.lineJoin='round';sigHasContent=false;document.getElementById('sigPlaceholder').style.display='block';};}
+function autoSize(input){const span=document.createElement('span');span.style.cssText='visibility:hidden;position:absolute;white-space:pre;font:'+getComputedStyle(input).font;span.textContent=input.value||input.placeholder||'';document.body.appendChild(span);input.style.width=Math.max(80,span.offsetWidth+20)+'px';span.remove();}document.querySelectorAll('.ag-input').forEach(inp=>{inp.addEventListener('input',()=>autoSize(inp));setTimeout(()=>autoSize(inp),100)});document.getElementById('agName')?.addEventListener('input',()=>{const a=document.getElementById('agName2');a.value=document.getElementById('agName').value;autoSize(a);});window.addEventListener('scroll',()=>document.getElementById('scrollTop').classList.toggle('show',window.scrollY>400));
+const DEF={title:'הצעת מחיר – פיתוח מערכת מותאמת אישית',client_name:'',matara:'פיתוח מערכת מותאמת אישית ליצירת תכנים עם AI לפי אפיון מאושר מראש, הקמת אתר לניהול למידה ומעקב ביצועים תחת מערכת Yeda. המערכת תאפשר ניהול תהליכי למידה ומעקב אחר התקדמות ההכשרות, כולל רישום, צפייה בתכנים, ומדידה של התקדמות המשתתפים לאורך זמן.',milestones:[{id:'m0',num:'0',title:'חתימה והעברת תשלום ראשון',desc:'חתימת חוזה בין הצדדים והעברת התשלום הראשון, המאשרים התחייבות הצדדים להפעלת הפרויקט.'},{id:'m1',num:'1',title:'פגישת אפיון',desc:'פגישה מקיפה עם נציגי הלקוח לתיאור מלא של דרישות המערכת, היכולות הנדרשות, מבנה ההיררכיות הארגוניות וצרכי המשתמשים.'},{id:'m2',num:'2',title:'אישור אפיון',desc:'הכנת מסמך אפיון מפורט המפרט את כל הדרישות, ההיכולות והתכונות המערכת. אישור מטעם הלקוח על התאמת האפיון לצרכיו.'},{id:'m3',num:'3',title:'הקמת אתר התאחדות ארצית אחד',desc:'ביצוע חיבור טכני של דומיין, הגדרת מבנה תכנים והרשאות, עיצוב והתאמת הפורטל למיתוג ההתאחדות, הכנת תבנית להזנת ההדרכות.'},{id:'m4',num:'4',title:'פיתוח',desc:'פיתוח מערכת יצירת חומרי למידה עם AI בהתאם לאפיון המאושר, והעלאה לאוויר.'}],why_intro:'הפלטפורמה מאפשרת למכללות להקים ולהפעיל מערך קורסים דיגיטליים ופרונטליים, תוך שילוב כלים מתקדמים למעקב אחר התקדמות המשתמשים וביצועיהם. המערכת כוללת דוחות מפורטים עם נתוני צפייה, תוצאות מבחנים וסטטיסטיקות שימוש, ומספקת תמונה מלאה על תהליך הלמידה. כל זאת, תוך שמירה על אבטחת מידע ברמה הגבוהה ותמיכה מלאה בניהול התכנים וליווי שוטף.',why_items:['פתרון מלא לבניית קורסים דיגיטליים','זמינות גבוהה ומענה מהיר לכל צורך','אבטחת מידע ברמה גבוהה','מנהל תיק אישי זמין לכל התייעצות','דוחות מעקב התקדמות בהתאמה אישית','התנהלות בקבוצת Whatsapp ייחודית'],selected_clients:['client1','client2','client3','client4','client5','client6','client7','client8','client9','client10','client11','client12'],costs_subtitle:'מחירון - הקמת מערכת ניהול למידה ופיתוח מערכת יצירת חומרי למידה',costs_rows:[['פיתוח','250 ₪ לשעה'],['מערכת ניהול למידה (שנה ראשונה)','11,988 ₪ (כולל 100GB אחסון ו-200GB תעבורה)'],["10,000 קרדיטים לכלי AI וצ'אטבוטים",'2,310 ₪']],payments:[{num:1,title:'חתימה והעברת תשלום ראשון',desc:'100 שעות פיתוח (25,000 ₪) + 1/3 עלות מערכת ניהול למידה (3,996 ₪)',total:'28,996 ₪'},{num:2,title:'לאחר אישור אפיון',desc:'1/3 עלות מערכת ניהול למידה (3,996 ₪)',total:'3,996 ₪'},{num:3,title:'לאחר הקמת אתר התאחדות ארצית אחד',desc:'1/3 עלות מערכת ניהול למידה (3,996 ₪) + עלות קרדיטים לשימוש ב-AI (2,310 ₪)',total:'6,306 ₪'},{num:4,title:'בסיום הפיתוח',desc:'100 שעות פיתוח לאחר ה-100 שעות הראשונות בהתאם לאפיון המאושר + שעות נוספות במידת הצורך, לפי 250 ₪ לשעה.',total:'ישתנה'}],optional:[{title:'אחסון נוסף עד 1TB',price:'250 ₪ לחודש'},{title:'תעבורה נוספת עד 2TB',price:'250 ₪ לחודש'},{title:'טוקנים נוספים',price:'0.07$ × 3.3 ₪'}],token_packages:[{amount:'10,000 טוקנים',original:'3,600₪',sale:'3,420₪',featured:false},{amount:'20,000 טוקנים',original:'7,200₪',sale:'6,480₪',featured:true},{amount:'40,000 טוקנים',original:'14,400₪',sale:'12,960₪',featured:false}],token_examples:['יצירת 10 סילבוסים = 20-40 טוקנים AI','יצירת תוכן למצגות - 100 שקופיות = 20-25 טוקנים AI','יצירת כתוביות לשעה של וידאו = 15-30 טוקנים AI','יצירת שאלות לשעה של וידאו = 10-15 טוקנים AI','חלוקה לפרקים לשעה של וידאו = 5-10 טוקנים AI','תרגום כתוביות לשעה של וידאו = 80-130 טוקנים AI','יצירת לומדה מקבצים = 300-500 טוקנים AI','3 שאלות לעוזר האישי = 1 טוקן AI'],terms:[{id:'t1',title:'מערכת ניהול למידה',text:'הלקוח יקבל אתרים אישיים המוקמים על גבי פלטפורמת Yeda ומחוברים לדומיינים של הלקוח, בהתאם למבנה ולמספר האתרים שנרכשו. הפלטפורמה כוללת אתרים מלאים, מערכת ניהול למידה (LMS), אפשרות לחיבור מערכת תשלומים, עדכוני גרסה, תמיכה טכנית מלאה, קבוצת ווטסאפ ייעודית והדרכות. בהתאם להסכם, ההתקשרות היא בהתחייבות ללא אפשרות יציאה מוקדמת, והמחיר מפורט בהצעת המחיר. החבילה מאפשרת שימוש ללא הגבלת כמות משתמשים פעילים למשך שלוש שנות פעילות. בתום התקופה, המחיר עשוי להשתנות בהתאם להיקף השימוש בפועל.'},{id:'t2',title:'פלטפורמת AI ולומדות',text:'בנוסף, הלקוח יקבל גישה לפלטפורמה המיועדת לבנייה, עיצוב, הקלטה ואחסון של מצגות, וידאו, לומדות אינטראקטיביות ועוזרי למידה מבוססי AI. העלויות מפורטות בסיכום המחירים בהתאם לנפחי השימוש, וייתכנו חיובים נוספים במקרה של חריגה מהיקפי השימוש הכלולים בתקופת ההתקשרות.'},{id:'t3',title:'הגבלת אחריות',text:'חברת ידע פיתוח סביבות למידה בע"מ ו/או מי מטעמה אינם נושאים כל אחריות בקשר לכל תביעה משפטית או כל תלונה אחרת שהלקוח עלול לקבל בגין עבירה על חוקים ומגבלות הקשורים בדיני אינטרנט, לרבות הנושא נגישות, רישום דטאות, שמירה על פרטיות, חוק הספאם ועוד.'},{id:'t4',title:'קניין רוחני',text:'מובהר כי הקניין הרוחני המלא של המוצרי תוכן באתר וזכויות היוצרים יהיו שייכים ללקוח.'},{id:'t5',title:'סודיות',text:'חברת ידע בע"מ מתחייבת לשמירה על סודיות וזכויות היוצרים - לא לשלוח ולשתף חומרים מתוך הקורסים או / ו דטאות משתמשים או / ו מידע הנחשף כלשהו וחומרים אחרים שאינם נחלת הכלל עם צד שלישי ללא רשותו של הלקוח.'}]};
+function mergeD(def,loaded){const out={};for(const k of Object.keys(def)){const lv=loaded[k];if(Array.isArray(def[k]))out[k]=(Array.isArray(lv)&&lv.length>0)?lv:def[k];else out[k]=(lv!==undefined&&lv!==null&&lv!=='')?lv:def[k];}for(const k of Object.keys(loaded)){if(!(k in out))out[k]=loaded[k];}return out;}
 let DATA={};
-
-(async function(){
-  if(!CONTRACT_ID){showError('קישור לא תקין — חסר מזהה הסכם');return;}
-  try{
-    const r=await fetch(N8N_LOAD,{method:'POST',headers:{'Content-Type':'application/json'},
-      cache:'no-store',body:JSON.stringify({contract_id:CONTRACT_ID})});
-    if(!r.ok)throw new Error('שגיאת שרת '+r.status);
-    const raw=await r.json();
-    // Parse n8n possible wrappers
-    let loaded=null;
-    if(Array.isArray(raw)) loaded=raw[0]?.json||raw[0]||null;
-    else if(raw&&typeof raw==='object'){
-      if(raw.contract_id||raw.matara||raw.title) loaded=raw;
-      else if(raw.json&&(raw.json.contract_id||raw.json.matara)) loaded=raw.json;
-    }
-    loaded=loaded||{};
-    // Token check
-    if(TOKEN&&loaded.token&&loaded.token!==TOKEN){showError('קישור זה פג תוקפו. יש לפנות לנציג Yeda לקבלת קישור עדכני.');return;}
-    // Already signed
-    if(loaded.signed){
-      showSigned(loaded.signed_pdf_url||loaded.pdf_drive_url||'');return;
-    }
-    DATA=mergeD(DEF,loaded);
-    show();
-  }catch(e){
-    // Fallback: show defaults
-    DATA=DEF;
-    show();
-  }
-})();
-
-function show(){
-  document.getElementById('loadingState').style.display='none';
-  document.getElementById('mainContent').style.display='block';
-  renderContract(DATA);
-  const now=new Date();
-  document.getElementById('sigDate').value=pad(now.getDate())+'.'+pad(now.getMonth()+1)+'.'+now.getFullYear();
-  initStars();
-  initSignature();
-}
-
-function showError(msg){
-  document.getElementById('loadingState').style.display='none';
-  document.getElementById('errorState').style.display='flex';
-  document.getElementById('errMsg').innerHTML='<div style="font-size:3rem;margin-bottom:12px">📄</div>'+esc(msg);
-}
-
-function showSigned(pdfUrl){
-  document.getElementById('loadingState').style.display='none';
-  document.getElementById('mainContent').style.display='block';
-  document.getElementById('signSection').style.display='none';
-  document.getElementById('agreementSection').style.display='none';
-  document.getElementById('signedBanner').style.display='block';
-  // Still render the contract content
-  if(DATA&&Object.keys(DATA).length) renderContract(DATA);
-  initStars();
-  if(pdfUrl){const dl=document.getElementById('pdfDownload');dl.href=pdfUrl;dl.style.display='inline-block';}
-}
-
-// ── SUBMIT SIGN ────────────────────────────────────────────────────
-document.getElementById('btnSign').addEventListener('click',async()=>{
-  const name=document.getElementById('sigName').value.trim();
-  const email=document.getElementById('sigEmail').value.trim();
-  const idNum=document.getElementById('sigId').value.trim();
-  const err=document.getElementById('subErr');
-  let ok=true,miss=[];
-  if(!name){document.getElementById('sigName').classList.add('bad');miss.push('שם מלא');ok=false;}
-  else document.getElementById('sigName').classList.remove('bad');
-  if(!email){document.getElementById('sigEmail').classList.add('bad');miss.push('מייל');ok=false;}
-  else document.getElementById('sigEmail').classList.remove('bad');
-  if(!idNum){document.getElementById('sigId').classList.add('bad');miss.push('ת.ז/ח.פ');ok=false;}
-  else document.getElementById('sigId').classList.remove('bad');
-  if(!sigHasContent){document.getElementById('sigWrap').style.border='2px dashed var(--red)';miss.push('חתימה');ok=false;}
-  else document.getElementById('sigWrap').style.border='2px dashed var(--bdr)';
-  if(!ok){err.textContent='נא למלא: '+miss.join(', ');err.style.display='block';return;}
-  err.style.display='none';
-  const btn=document.getElementById('btnSign');
-  btn.disabled=true;btn.textContent='שולח...';
-  try{
-    const r=await fetch(N8N_SIGN,{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        ...DATA,
-        contract_id:CONTRACT_ID,
-        signer_name:name,
-        signer_role:document.getElementById('sigRole').value.trim(),
-        signer_email:email,
-        signer_id:idNum,
-        signer_date:document.getElementById('sigDate').value,
-        signature_base64:document.getElementById('sigCanvas').toDataURL('image/png'),
-        company_name:document.getElementById('agName').value.trim(),
-        company_hp:document.getElementById('agHP').value.trim(),
-        company_address:document.getElementById('agAddr').value.trim(),
-        filled_values:{
-          'שם החברה':document.getElementById('agName').value.trim(),
-          'ח.פ':document.getElementById('agHP').value.trim(),
-          'כתובת':document.getElementById('agAddr').value.trim()
-        },
-        signed_at:new Date().toISOString()
-      })});
-    if(!r.ok)throw new Error('שגיאת שרת '+r.status);
-    const result=await r.json();
-    document.getElementById('signSection').style.display='none';
-    document.getElementById('agreementSection').style.display='none';
-    document.getElementById('signedBanner').style.display='block';
-    if(result.pdf_url){const dl=document.getElementById('pdfDownload');dl.href=result.pdf_url;dl.style.display='inline-block';}
-    document.getElementById('signedBanner').scrollIntoView({behavior:'smooth'});
-  }catch(e){
-    err.textContent='שגיאה: '+e.message;err.style.display='block';
-    btn.disabled=false;btn.textContent='אני מאשר/ת ומסכים/ה לתנאי ההסכם ✍️';
-  }
-});
+(async function(){if(!CONTRACT_ID){showError('קישור לא תקין — חסר מזהה הסכם');return;}try{const r=await fetch(N8N_LOAD,{method:'POST',headers:{'Content-Type':'application/json'},cache:'no-store',body:JSON.stringify({contract_id:CONTRACT_ID})});if(!r.ok)throw new Error('שגיאת שרת '+r.status);const raw=await r.json();let loaded=null;if(Array.isArray(raw))loaded=raw[0]?.json||raw[0]||null;else if(raw&&typeof raw==='object'){if(raw.contract_id||raw.id||raw.matara||raw.title)loaded=raw;else if(raw.json&&(raw.json.contract_id||raw.json.matara))loaded=raw.json;}loaded=loaded||{};if(TOKEN&&loaded.token&&loaded.token!==TOKEN){showError('קישור זה פג תוקפו. יש לפנות לנציג Yeda לקבלת קישור עדכני.');return;}if(loaded.signed){showSigned(loaded.signed_pdf_url||loaded.pdf_drive_url||'');return;}DATA=mergeD(DEF,loaded);show();}catch(e){DATA=DEF;show();}})();
+function show(){document.getElementById('loadingState').style.display='none';document.getElementById('mainContent').style.display='block';renderContract(DATA);const now=new Date();document.getElementById('sigDate').value=pad(now.getDate())+'.'+pad(now.getMonth()+1)+'.'+now.getFullYear();initSignature();}
+function showError(msg){document.getElementById('loadingState').style.display='none';document.getElementById('errorState').style.display='flex';document.getElementById('errMsg').innerHTML='<div style="font-size:3rem;margin-bottom:12px">📄</div>'+esc(msg);}
+function showSigned(pdfUrl){document.getElementById('loadingState').style.display='none';document.getElementById('mainContent').style.display='block';document.getElementById('signSection').style.display='none';document.getElementById('agreementSection').style.display='none';document.getElementById('signedBanner').style.display='block';if(DATA&&Object.keys(DATA).length)renderContract(DATA);if(pdfUrl){const dl=document.getElementById('pdfDownload');dl.href=pdfUrl;dl.style.display='inline-block';}}
+document.getElementById('btnSign').addEventListener('click',async()=>{const name=document.getElementById('sigName').value.trim();const email=document.getElementById('sigEmail').value.trim();const idNum=document.getElementById('sigId').value.trim();const err=document.getElementById('subErr');let ok=true,miss=[];if(!name){document.getElementById('sigName').classList.add('bad');miss.push('שם מלא');ok=false;}else document.getElementById('sigName').classList.remove('bad');if(!email){document.getElementById('sigEmail').classList.add('bad');miss.push('מייל');ok=false;}else document.getElementById('sigEmail').classList.remove('bad');if(!idNum){document.getElementById('sigId').classList.add('bad');miss.push('ת.ז/ח.פ');ok=false;}else document.getElementById('sigId').classList.remove('bad');if(!sigHasContent){document.getElementById('sigWrap').style.border='2px dashed var(--red)';miss.push('חתימה');ok=false;}else document.getElementById('sigWrap').style.border='2px dashed var(--bdr)';if(!ok){err.textContent='נא למלא: '+miss.join(', ');err.style.display='block';return;}err.style.display='none';const btn=document.getElementById('btnSign');btn.disabled=true;btn.textContent='שולח...';try{const r=await fetch(N8N_SIGN,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...DATA,contract_id:CONTRACT_ID,signer_name:name,signer_role:document.getElementById('sigRole').value.trim(),signer_email:email,signer_id:idNum,signer_date:document.getElementById('sigDate').value,signature_base64:document.getElementById('sigCanvas').toDataURL('image/png'),company_name:document.getElementById('agName').value.trim(),company_hp:document.getElementById('agHP').value.trim(),company_address:document.getElementById('agAddr').value.trim(),filled_values:{'שם החברה':document.getElementById('agName').value.trim(),'ח.פ':document.getElementById('agHP').value.trim(),'כתובת':document.getElementById('agAddr').value.trim()},signed_at:new Date().toISOString()})});if(!r.ok)throw new Error('שגיאת שרת '+r.status);const result=await r.json();document.getElementById('signSection').style.display='none';document.getElementById('agreementSection').style.display='none';document.getElementById('signedBanner').style.display='block';if(result.pdf_url){const dl=document.getElementById('pdfDownload');dl.href=result.pdf_url;dl.style.display='inline-block';}document.getElementById('signedBanner').scrollIntoView({behavior:'smooth'});}catch(e){err.textContent='שגיאה: '+e.message;err.style.display='block';btn.disabled=false;btn.textContent='אני מאשר/ת ומסכים/ה לתנאי ההסכם ✍️';}});
 </script>
 </body>
 </html>
