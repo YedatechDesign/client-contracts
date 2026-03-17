@@ -253,12 +253,12 @@ body{font-family:'Heebo','Segoe UI',Arial,sans-serif;background:var(--bg);color:
 
 </div><!-- /container -->
 
-<div class="footer">ידע פיתוח סביבות למידה בע"מ | ח.פ. 516072253 | יגאל אלון 123, תל אביב | <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="7b1814143b021e1f1a171608551214">[email&#160;protected]</a></div>
+<div class="footer">ידע פיתוח סביבות למידה בע"מ | ח.פ. 516072253 | יגאל אלון 123, תל אביב | <a href="mailto:coo@yedalms.io" style="color:inherit">coo@yedalms.io</a></div>
 </div><!-- /mainContent -->
 
 <button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
 const CONTRACT_ID=new URLSearchParams(location.search).get('id')||'';
 const TOKEN=new URLSearchParams(location.search).get('token')||'';
 const N8N_LOAD='https://yedauto.com/webhook/yeda-contract-load';
@@ -558,3 +558,10 @@ document.getElementById('btnSign').addEventListener('click',async()=>{
     if(result.pdf_url){const dl=document.getElementById('pdfDownload');dl.href=result.pdf_url;dl.style.display='inline-block';}
     document.getElementById('signedBanner').scrollIntoView({behavior:'smooth'});
   }catch(e){
+    err.textContent='שגיאה: '+e.message;err.style.display='block';
+    btn.disabled=false;btn.textContent='אני מאשר/ת ומסכים/ה לתנאי ההסכם ✍️';
+  }
+});
+</script>
+</body>
+</html>
