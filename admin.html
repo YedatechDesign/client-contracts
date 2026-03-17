@@ -607,7 +607,7 @@ const r2=await fetch(N8N+'/yeda-contract-load',{
   headers:{'Content-Type':'application/json'},
   body:JSON.stringify({
     password: pw,
-    contract_id: curContract.contract_id
+    contract_id: curContract.id
   })
 });    
     const updated=await r2.json();
