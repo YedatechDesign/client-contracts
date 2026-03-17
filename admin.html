@@ -637,11 +637,13 @@ function initDrag(){
   const panels=document.getElementById('editorPanels');
   if(!panels)return;
   const accs=panels.querySelectorAll('.acc');
+  const noDrag=new Set(['ac-basic','ac-link','ac-matara']);
   let dragEl=null;
   accs.forEach(acc=>{
     acc.setAttribute('draggable','false');
     const handle=acc.querySelector('.drag-handle');
-    if(handle){
+    if(noDrag.has(acc.id)&&handle){handle.style.visibility='hidden';handle.style.cursor='default';}
+    if(handle&&!noDrag.has(acc.id)){
       handle.addEventListener('mousedown',()=>{acc.setAttribute('draggable','true');});
       handle.addEventListener('mouseup',()=>{acc.setAttribute('draggable','false');});
     }
