@@ -124,7 +124,7 @@ body{font-family:'Heebo','Segoe UI',Arial,sans-serif;background:var(--bg);color:
 .footer{text-align:center;padding:32px 24px;color:var(--faint);font-size:12px;border-top:1px solid var(--bdr);margin-top:48px}
 .scroll-top{position:fixed;bottom:24px;left:24px;width:50px;height:50px;background:var(--blue);color:#fff;border:none;border-radius:50%;font-size:24px;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.18);z-index:999;display:none;align-items:center;justify-content:center;transition:all .2s;font-family:inherit}
 .scroll-top.show{display:flex}
-.divider{height:1px;background:linear-gradient(90deg,transparent,var(--bdr),transparent);margin:40px 0}
+.divider{display:none}
 </style>
 </head>
 <body>
@@ -158,6 +158,10 @@ body{font-family:'Heebo','Segoe UI',Arial,sans-serif;background:var(--bg);color:
 
 <div class="container">
 
+  <div class="section" data-sec="matara" id="secMatara" style="display:none">
+    <div style="font-size:15px;line-height:1.9;color:var(--muted);padding:20px 24px;background:linear-gradient(135deg,#f0f4ff,#f8fafc);border-radius:16px;border-right:4px solid #1a56db" id="mataraText"></div>
+  </div>
+
   <div class="section" data-sec="ms">
     <div class="section-title"><span style="display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;background:linear-gradient(135deg,#0d2680,#1a56db);border-radius:10px;margin-left:10px;vertical-align:middle;flex-shrink:0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><path d="M12 12m-10 0a10 10 0 1 0 20 0a10 10 0 1 0-20 0M12 12m-6 0a6 6 0 1 0 12 0a6 6 0 1 0-12 0M12 12m-2 0a2 2 0 1 0 4 0a2 2 0 1 0-4 0"/></svg></span>אבני דרך</div>
     <div class="ms-wrap" id="msWrap"></div>
@@ -174,7 +178,6 @@ body{font-family:'Heebo','Segoe UI',Arial,sans-serif;background:var(--bg);color:
     <div class="cl-grid" id="clGrid"></div>
   </div>
 
-  <div class="divider"></div>
 
   <div class="section" data-sec="costs">
     <div class="section-title"><span style="display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;background:linear-gradient(135deg,#0d2680,#1a56db);border-radius:10px;margin-left:10px;vertical-align:middle;flex-shrink:0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span>עלויות ותנאי תשלום</div>
@@ -195,7 +198,6 @@ body{font-family:'Heebo','Segoe UI',Arial,sans-serif;background:var(--bg);color:
     <div class="tp-examples" id="tpExamples"></div>
   </div>
 
-  <div class="divider"></div>
 
   <div class="section" data-sec="terms">
     <div class="section-title"><span style="display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;background:linear-gradient(135deg,#0d2680,#1a56db);border-radius:10px;margin-left:10px;vertical-align:middle;flex-shrink:0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6M8 13h8M8 17h8"/></svg></span>תנאי ההסכם</div>
@@ -206,7 +208,6 @@ body{font-family:'Heebo','Segoe UI',Arial,sans-serif;background:var(--bg);color:
     <div id="customBlocksList"></div>
   </div>
 
-  <div class="divider"></div>
 
   <div class="agreement" id="agreementSection">
     <h2>הסכם התקשרות</h2>
@@ -320,6 +321,12 @@ function renderMilestones(ms){
 function renderContract(d){
   document.getElementById('heroTitle').textContent=d.title||'הצעת מחיר והסכם התקשרות';
   document.getElementById('heroMatara').textContent=d.matara||'';
+  // Also render matara as a reorderable section
+  const mataraEl=document.getElementById('secMatara');
+  if(mataraEl&&d.matara){
+    document.getElementById('mataraText').textContent=d.matara;
+    mataraEl.style.display='block';
+  }
   document.getElementById('heroClient').textContent=d.client_name?'עבור: '+d.client_name:'';
 
   renderMilestones(d.milestones||[]);
@@ -382,7 +389,8 @@ function renderContract(d){
     const agreement=document.getElementById('agreementSection');
     if(container&&agreement){
       // Map admin section IDs to proposal data-sec values
-      const adminToProposal={matara:'ms',ms:'ms',why:'why',clients:'clients',costs:'costs',opt:'opt',tok:'tok',terms:'terms',custom:'custom',basic:'ms',link:'ms'};
+      const adminToProposal={matara:'matara',ms:'ms',why:'why',clients:'clients',costs:'costs',opt:'opt',tok:'tok',terms:'terms',custom:'custom'};
+      // Skip basic and link - they are admin-only sections
       const seen=new Set();
       secOrder.forEach(secId=>{
         const mapped=adminToProposal[secId]||secId;
