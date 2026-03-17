@@ -25,16 +25,18 @@ body { font-family: 'Heebo', sans-serif; background: var(--bg); color: var(--tex
 @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
 
 /* Hero */
-.hero { position: relative; background: linear-gradient(160deg, #040e3a 0%, #071a5e 25%, #0d2680 50%, #1a56db 80%, #2563eb 100%); color: #fff; padding: 72px 28px 0; text-align: center; overflow: hidden; margin-bottom: 0; }
+.hero { position: relative; background: linear-gradient(160deg, #040e3a 0%, #071a5e 25%, #0d2680 50%, #1a56db 80%, #2563eb 100%); color: #fff; padding: 72px 28px 0; text-align: center; overflow: hidden; margin: 0; }
 .hero::before { content: ''; position: absolute; top: -40%; right: -20%; width: 80%; height: 180%; background: radial-gradient(ellipse, rgba(37,99,235,.2), transparent 70%); pointer-events: none; }
-.hero-inner { position: relative; z-index: 2; max-width: 700px; margin: 0 auto; animation: fadeUp .8s ease-out; }
+.hero-inner { position: relative; z-index: 2; max-width: 700px; margin: 0 auto; animation: fadeUp .8s ease-out;
+  padding-bottom: 10px; }
 .hero .logo-img { height: 60px; filter: brightness(0) invert(1); margin-bottom: 8px; }
 .hero .logo-text { font-size: 2.8rem; font-weight: 900; letter-spacing: -2px; }
 .hero .company-info { font-size: 11.5px; opacity: .45; letter-spacing: .5px; font-weight: 300; }
 .hero h1 { font-size: 28px; font-weight: 800; margin-top: 36px; line-height: 1.5; }
 .hero .matara-text { margin: 20px auto 0; font-size: 15px; line-height: 1.9; opacity: .85; max-width: 620px; font-weight: 300; }
 .hero .client-bar { margin-top: 32px; padding: 16px 32px; background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.15); border-radius: 14px; font-size: 22px; font-weight: 700; backdrop-filter: blur(12px); display: inline-block; }
-.hero-wave { display: block; width: 140%; margin-right: -20%; margin-top: -1px; }
+.hero-wave { display: block; width: 140%; margin-right: -20%; margin-top: -2px;
+  vertical-align: bottom; }
 
 /* Layout */
 .container { max-width: 880px; margin: 0 auto; padding: 0 24px; }
@@ -79,7 +81,7 @@ body { font-family: 'Heebo', sans-serif; background: var(--bg); color: var(--tex
 .cost-tbl { width: 100%; border-collapse: separate; border-spacing: 0; border-radius: var(--radius); overflow: hidden; margin-bottom: 32px; box-shadow: var(--shadow); border: 1px solid var(--bdr); }
 .cost-tbl th { background: linear-gradient(135deg, var(--navy), var(--navy2)); color: #fff; padding: 16px 24px; font-size: 15px; font-weight: 700; text-align: right; }
 .cost-tbl td { padding: 16px 24px; font-size: 14px; background: #fff; border-bottom: 1px solid #f1f5f9; }
-.cost-tbl tr:last-child td { border-bottom: none; }
+.cost-tbl tr:last-child td { border: none; }
 .cost-tbl td:first-child { font-weight: 600; color: var(--navy2); }
 .pay-card { position: relative; padding: 20px 24px; margin-bottom: 14px; background: var(--card); border-radius: var(--radius); box-shadow: 0 2px 8px rgba(0,0,0,.04); border: 1px solid var(--bdr); border-right: 4px solid var(--blue); transition: all .2s; }
 .pay-card:hover { box-shadow: var(--shadow); }
@@ -184,7 +186,7 @@ body { font-family: 'Heebo', sans-serif; background: var(--bg); color: var(--tex
       <div class="matara-text" id="heroMatara"></div>
       <div class="client-bar" id="heroClient"></div>
     </div>
-    <svg class="hero-wave" viewBox="0 0 1440 120" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" style="margin-top:40px;display:block">
+    <svg class="hero-wave" viewBox="0 0 1440 120" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" style="display:block;margin-top:-1px">
       <path d="M0,40 C360,90 720,10 1080,50 C1260,70 1380,30 1440,40 L1440,120 L0,120 Z" fill="#f8fafc"/>
     </svg>
   </div>
