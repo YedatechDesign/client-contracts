@@ -125,6 +125,10 @@ textarea.fi{resize:vertical;min-height:80px}
 .spinner-sm{width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;display:none}
 @keyframes spin{to{transform:rotate(360deg)}}
 .signed-notice{background:#ecfdf5;border:2px solid var(--green);border-radius:10px;padding:14px 18px;margin-bottom:16px;color:var(--green);font-weight:700;font-size:14px}
+/* Drag-and-drop */
+.acc{cursor:grab;transition:opacity .2s,transform .2s}
+.acc.dragging{opacity:.4;transform:scale(.98)}
+.acc.drag-over{border-top:3px solid var(--blue);margin-top:-3px}
 /* Loading */
 .loading{text-align:center;padding:60px;color:var(--muted)}
 .loading-spin{width:40px;height:40px;border:3px solid var(--bdr);border-top-color:var(--blue);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 16px}
@@ -350,6 +354,7 @@ async function openEditor(id){
     curContract.contract_id=curContract.contract_id||curContract.id||id;
     curContract.id=curContract.id||id;
     renderEditor();
+    setTimeout(initDrag,100);
   }catch(e){
     document.getElementById('editorPanels').innerHTML='<div class="empty-state">שגיאה בטעינה</div>';
   }
@@ -379,6 +384,7 @@ const DD={
   token_examples:['יצירת 10 סילבוסים = 20-40 טוקנים AI','יצירת 100 שקופיות = 20-25 טוקנים AI','כתוביות לשעה = 15-30 טוקנים AI','שאלות לשעה = 10-15 טוקנים AI','חלוקה לפרקים = 5-10 טוקנים AI','תרגום כתוביות = 80-130 טוקנים AI','לומדה מקבצים = 300-500 טוקנים AI','3 שאלות לעוזר = 1 טוקן AI'],
   terms:[{id:'t1',title:'מערכת ניהול למידה',text:'הלקוח יקבל אתרים אישיים המוקמים על גבי פלטפורמת Yeda ומחוברים לדומיינים של הלקוח. הפלטפורמה כוללת LMS, עדכוני גרסה, תמיכה טכנית מלאה, קבוצת ווטסאפ ייעודית והדרכות. ההתקשרות ללא אפשרות יציאה מוקדמת. שימוש ללא הגבלת משתמשים למשך 3 שנות פעילות.'},{id:'t2',title:'פלטפורמת AI ולומדות',text:'הלקוח יקבל גישה לפלטפורמה לבנייה, עיצוב, הקלטה ואחסון של מצגות, וידאו, לומדות אינטראקטיביות ועוזרי למידה מבוססי AI.'},{id:'t3',title:'הגבלת אחריות',text:'חברת ידע אינה נושאת אחריות לתביעות הקשורות בדיני אינטרנט, נגישות, פרטיות, ספאם ועוד.'},{id:'t4',title:'קניין רוחני',text:'הקניין הרוחני המלא של מוצרי תוכן באתר שייך ללקוח.'},{id:'t5',title:'סודיות',text:'חברת ידע מתחייבת לא לשתף חומרים, דטאות משתמשים, או מידע אחר עם צד שלישי ללא רשות הלקוח.'}],
   custom_blocks:[],
+  section_order:['basic','link','matara','ms','why','clients','costs','opt','tok','custom','terms'],
   signed:false,versions:[]
 };
 
@@ -536,6 +542,16 @@ function renderEditor(){
       </div>
       ${!signed?`<button class="btn-add" onclick="addTerm()">+ הוסף תנאי</button>`:''}`)}
   `;
+
+  // Reorder sections based on saved order
+  const order=d.section_order||[];
+  if(order.length){
+    const panels=document.getElementById('editorPanels');
+    order.forEach(secId=>{
+      const el=document.getElementById('ac-'+secId);
+      if(el)panels.appendChild(el);
+    });
+  }
 }
 
 function acc(id,icon,title,body,open=false){
@@ -574,7 +590,8 @@ function buildPayload(){
     why_items:getWhy(),selected_clients:getClients(),clients:getFullClients(),
     costs_subtitle:document.getElementById('e-csubt')?.value||curContract.costs_subtitle,
     costs_rows:getCosts(),payments:getPayments(),optional:getOpts(),
-    token_packages:getTokPkgs(),token_examples:getTokEx(),custom_blocks:getCB(),terms:getTerms()
+    token_packages:getTokPkgs(),token_examples:getTokEx(),custom_blocks:getCB(),terms:getTerms(),
+    section_order:getSectionOrder()
   };
 }
 
@@ -610,6 +627,28 @@ function renderCustomBlocks(d,signed){
 function addCB(){const i=document.querySelectorAll('[id^="cb-"]').length;const l=document.getElementById('customList');const el=document.createElement('div');el.className='bl-card';el.id='cb-'+i;el.innerHTML=`<div class="bl-top"><div class="bl-num">✦</div><input class="fi bl-ti" id="cbt-${i}" placeholder="כותרת"><button class="bdel" onclick="this.closest('.bl-card').remove()">×</button></div><textarea class="bl-tx" id="cbc-${i}" rows="4" placeholder="כתוב כאן... שורות שמתחילות ב • יוצגו כנקודות"></textarea>`;l.appendChild(el);}
 function getCB(){return[...document.querySelectorAll('[id^="cb-"]')].filter(e=>e.classList.contains('bl-card')).map(e=>{const i=e.id.slice(3);return{title:document.getElementById('cbt-'+i)?.value||'',content:document.getElementById('cbc-'+i)?.value||''}}).filter(b=>b.title||b.content);}
 function addTerm(){const id='t'+Date.now();const l=document.getElementById('termsList');const i=l.children.length;const el=document.createElement('div');el.className='bl-card';el.id='trm-'+id;el.innerHTML=`<div class="bl-top"><div class="bl-num">${i+1}</div><input class="fi bl-ti" id="trt-${id}" placeholder="כותרת תנאי"><button class="bdel" onclick="document.getElementById('trm-${id}').remove()">×</button></div><textarea class="bl-tx" id="trb-${id}" rows="3" placeholder="טקסט..."></textarea>`;l.appendChild(el);}
+
+
+// ── DRAG AND DROP SECTIONS ───────────────────────────────────
+function initDrag(){
+  const panels=document.getElementById('editorPanels');
+  if(!panels)return;
+  const accs=panels.querySelectorAll('.acc');
+  let dragEl=null;
+  accs.forEach(acc=>{
+    acc.setAttribute('draggable','true');
+    acc.addEventListener('dragstart',e=>{dragEl=acc;acc.classList.add('dragging');e.dataTransfer.effectAllowed='move';});
+    acc.addEventListener('dragend',()=>{dragEl=null;acc.classList.remove('dragging');panels.querySelectorAll('.acc').forEach(a=>a.classList.remove('drag-over'));});
+    acc.addEventListener('dragover',e=>{e.preventDefault();e.dataTransfer.dropEffect='move';if(acc!==dragEl)acc.classList.add('drag-over');});
+    acc.addEventListener('dragleave',()=>acc.classList.remove('drag-over'));
+    acc.addEventListener('drop',e=>{e.preventDefault();acc.classList.remove('drag-over');if(dragEl&&dragEl!==acc){const parent=acc.parentNode;const allAccs=[...parent.querySelectorAll('.acc')];const dragIdx=allAccs.indexOf(dragEl);const dropIdx=allAccs.indexOf(acc);if(dragIdx<dropIdx)acc.after(dragEl);else acc.before(dragEl);}});
+  });
+}
+function getSectionOrder(){
+  const panels=document.getElementById('editorPanels');
+  if(!panels)return[];
+  return[...panels.querySelectorAll('.acc')].map(a=>{const id=a.id;return id?id.replace('ac-',''):null;}).filter(Boolean);
+}
 
 // ── SAVE ──────────────────────────────────────────────────────────
 async function saveContract(){
