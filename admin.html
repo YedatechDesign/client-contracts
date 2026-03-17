@@ -333,21 +333,27 @@ function copyContractLink(id,token){
 }
 
 // ── OPEN EDITOR ───────────────────────────────────────────────────
+let editorContractId=''; // always stores the Supabase UUID we opened
 async function openEditor(id){
+  editorContractId=id; // save so saveVersion always knows the id
   document.getElementById('viewList').style.display='none';
   document.getElementById('viewEditor').style.display='block';
   document.getElementById('editorPanels').innerHTML='<div class="loading"><div class="loading-spin"></div>טוען הסכם...</div>';
   try{
     const r=await fetch(N8N+'/yeda-contract-load',{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-  password: pw,
-  contract_id: id
-})});
+      body:JSON.stringify({password:pw,contract_id:id})});
     const raw=await r.json();
     curContract=mergeDefaults(raw);
+    // ALWAYS ensure contract_id and id are set from what we opened
+    curContract.contract_id=curContract.contract_id||curContract.id||id;
+    curContract.id=curContract.id||id;
     renderEditor();
   }catch(e){
-    document.getElementById('editorPanels').innerHTML='<div class="empty-state">שגיאה בטעינה</div>';
+    // Even on error, set minimal contract so save/version work
+    curContract=mergeDefaults({});
+    curContract.contract_id=id;
+    curContract.id=id;
+    document.getElementById('editorPanels').innerHTML='<div class="empty-state">שגיאה בטעינה — נסה שוב</div>';
   }
 }
 
@@ -551,9 +557,12 @@ function getTokEx(){return[...document.querySelectorAll('[id^="te-"]')].map(e=>e
 function getTerms(){return[...document.querySelectorAll('[id^="trm-"]')].filter(e=>e.classList.contains('bl-card')).map(e=>{const id=e.id.slice(4);return{id,title:document.getElementById('trt-'+id)?.value||'',text:document.getElementById('trb-'+id)?.value||''}});}
 
 function buildPayload(){
+  const cid=curContract.contract_id||curContract.id||editorContractId;
   return{
     ...curContract,
     password:pw,
+    contract_id:cid,
+    id:cid,
     title:document.getElementById('e-title')?.value||curContract.title,
     client_name:document.getElementById('e-cname')?.value||curContract.client_name,
     matara:document.getElementById('e-matara')?.value||curContract.matara,
@@ -595,23 +604,22 @@ async function saveVersion(){
   const btn=document.getElementById('vbtn'),sp=document.getElementById('vsp'),tx=document.getElementById('vtxt'),msg=document.getElementById('saveMsg');
   btn.disabled=true;sp.style.display='inline-block';tx.textContent='יוצר PDF...';
   const merged=mergeDefaults(curContract);
+  const cid=curContract.contract_id||curContract.id||editorContractId;
   const vNum=(merged.versions||[]).length+1;
-  const payload={...merged,password:pw,version_number:vNum};
+  const payload={...merged,password:pw,version_number:vNum,contract_id:cid,id:cid};
   try{
     const r=await fetch(N8N+'/yeda-save-version',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
     if(!r.ok)throw new Error('שגיאה '+r.status);
     const resp=await r.json();
     // Reload contract to get updated versions
-const r2=await fetch(N8N+'/yeda-contract-load',{
-  method:'POST',
-  headers:{'Content-Type':'application/json'},
-  body:JSON.stringify({
-    password: pw,
-    contract_id: curContract.id
-  })
-});    
+    const r2=await fetch(N8N+'/yeda-contract-load',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({password:pw,contract_id:cid})
+    });
     const updated=await r2.json();
     curContract=mergeDefaults(updated);
+    curContract.contract_id=curContract.contract_id||curContract.id||cid;
+    curContract.id=curContract.id||cid;
     // Update version list UI
     const versions=curContract.versions||[];
     const vl=document.getElementById('verList');
@@ -628,10 +636,11 @@ const r2=await fetch(N8N+'/yeda-contract-load',{
 // ── STATUS CHANGE ─────────────────────────────────────────────────
 async function changeStatus(){
   const newStatus=document.getElementById('statusSelect').value;
-  if(!curContract?.contract_id)return;
+  const cid=curContract?.contract_id||curContract?.id||editorContractId;
+  if(!cid)return;
   try{
     await fetch(N8N+'/yeda-status-update',{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({password:pw,contract_id:curContract.contract_id,status:newStatus})});
+      body:JSON.stringify({password:pw,contract_id:cid,status:newStatus})});
     curContract.status=newStatus;
   }catch(e){}
 }
@@ -639,12 +648,12 @@ async function changeStatus(){
 // ── LINK ──────────────────────────────────────────────────────────
 function copyLink(){
   if(!curContract)return;
-  const url=PROP_URL+'?id='+curContract.contract_id+(curContract.token?'&token='+curContract.token:'');
+  const cid=curContract.contract_id||curContract.id||editorContractId;
+  const url=PROP_URL+'?id='+cid+(curContract.token?'&token='+curContract.token:'');
   navigator.clipboard.writeText(url).then(()=>{
     const msg=document.getElementById('saveMsg');
     msg.textContent='✓ קישור הועתק';msg.className='save-msg ok';setTimeout(()=>msg.textContent='',2000);
   }).catch(()=>prompt('העתק:',url));
-  // Status set MANUALLY by admin — no auto-change here
 }
 
 async function refreshToken(){
@@ -652,7 +661,8 @@ async function refreshToken(){
   const newToken=Math.random().toString(36).slice(2,10)+Date.now().toString(36);
   curContract.token=newToken;
   await saveContract();
-  const link=PROP_URL+'?id='+curContract.contract_id+'&token='+newToken;
+  const cid=curContract.contract_id||curContract.id||editorContractId;
+  const link=PROP_URL+'?id='+cid+'&token='+newToken;
   document.getElementById('linkDisp').textContent=link;
 }
 </script>
