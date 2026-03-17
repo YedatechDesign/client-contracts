@@ -105,13 +105,6 @@ textarea.fi{resize:vertical;min-height:80px}
 .cc-item:hover{border-color:var(--blue)}
 .cc-item .cc-desc{font-size:10px;color:var(--muted);font-weight:400;line-height:1.3}
 .cc-item.sel .cc-desc{color:var(--blue)}
-.cc-actions-bar{display:flex;gap:4px;margin-top:4px}
-.cc-actions-bar button{padding:2px 6px;border:1px solid var(--bdr);border-radius:4px;background:#fff;font-size:10px;cursor:pointer;font-family:inherit}
-.cc-actions-bar button:hover{border-color:var(--blue);color:var(--blue)}
-.cc-actions-bar button.cc-del:hover{border-color:var(--red);color:var(--red)}
-.client-form{background:#f8fafc;border:1.5px solid var(--bdr);border-radius:10px;padding:14px;margin-bottom:10px}
-.client-form .frow3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
-@media(max-width:768px){.client-form .frow3{grid-template-columns:1fr}}
 /* Cost/payments */
 .tbl-row{display:grid;grid-template-columns:1fr 1fr 30px;gap:8px;align-items:center;margin-bottom:8px}
 .pay-row{background:#f8fafc;border:1.5px solid var(--bdr);border-radius:10px;padding:12px;margin-bottom:10px}
@@ -340,27 +333,25 @@ function copyContractLink(id,token){
 }
 
 // ── OPEN EDITOR ───────────────────────────────────────────────────
-let editorContractId=''; // always stores the Supabase UUID we opened
+let editorContractId='';
 async function openEditor(id){
-  editorContractId=id; // save so saveVersion always knows the id
+  editorContractId=id;
   document.getElementById('viewList').style.display='none';
   document.getElementById('viewEditor').style.display='block';
   document.getElementById('editorPanels').innerHTML='<div class="loading"><div class="loading-spin"></div>טוען הסכם...</div>';
   try{
     const r=await fetch(N8N+'/yeda-contract-load',{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({password:pw,contract_id:id})});
+      body:JSON.stringify({
+  password: pw,
+  contract_id: id
+})});
     const raw=await r.json();
     curContract=mergeDefaults(raw);
-    // ALWAYS ensure contract_id and id are set from what we opened
     curContract.contract_id=curContract.contract_id||curContract.id||id;
     curContract.id=curContract.id||id;
     renderEditor();
   }catch(e){
-    // Even on error, set minimal contract so save/version work
-    curContract=mergeDefaults({});
-    curContract.contract_id=id;
-    curContract.id=id;
-    document.getElementById('editorPanels').innerHTML='<div class="empty-state">שגיאה בטעינה — נסה שוב</div>';
+    document.getElementById('editorPanels').innerHTML='<div class="empty-state">שגיאה בטעינה</div>';
   }
 }
 
@@ -378,8 +369,8 @@ const DD={
   milestones:[{id:'m0',num:'0',title:'חתימה והעברת תשלום ראשון',desc:'חתימת חוזה בין הצדדים והעברת התשלום הראשון, המאשרים התחייבות הצדדים להפעלת הפרויקט.'},{id:'m1',num:'1',title:'פגישת אפיון',desc:'פגישה מקיפה עם נציגי הלקוח לתיאור מלא של דרישות המערכת, היכולות הנדרשות, מבנה ההיררכיות הארגוניות וצרכי המשתמשים.'},{id:'m2',num:'2',title:'אישור אפיון',desc:'הכנת מסמך אפיון מפורט המפרט את כל הדרישות, ההיכולות והתכונות. אישור מטעם הלקוח על התאמת האפיון לצרכיו.'},{id:'m3',num:'3',title:'הקמת אתר',desc:'ביצוע חיבור טכני של דומיין, הגדרת מבנה תכנים והרשאות, עיצוב והתאמת הפורטל למיתוג.'},{id:'m4',num:'4',title:'פיתוח',desc:'פיתוח מערכת יצירת חומרי למידה עם AI בהתאם לאפיון המאושר, והעלאה לאוויר.'}],
   why_intro:'הפלטפורמה מאפשרת למכללות להקים ולהפעיל מערך קורסים דיגיטליים ופרונטליים, תוך שילוב כלים מתקדמים למעקב אחר התקדמות המשתמשים וביצועיהם. המערכת כוללת דוחות מפורטים עם נתוני צפייה, תוצאות מבחנים וסטטיסטיקות שימוש, ומספקת תמונה מלאה על תהליך הלמידה. כל זאת, תוך שמירה על אבטחת מידע ברמה הגבוהה ותמיכה מלאה בניהול התכנים וליווי שוטף.',
   why_items:['פתרון מלא לבניית קורסים דיגיטליים','זמינות גבוהה ומענה מהיר לכל צורך','אבטחת מידע ברמה גבוהה','מנהל תיק אישי זמין לכל התייעצות','דוחות מעקב התקדמות בהתאמה אישית','התנהלות בקבוצת Whatsapp ייחודית'],
-  selected_clients:['client1','client2','client3','client4','client5','client6','client7','client8','client9','client10','client11','client12'],
   clients:ALL_CLIENTS.map(c=>({...c,logo:LOGOS+c.id+'.png',selected:true})),
+  selected_clients:['client1','client2','client3','client4','client5','client6','client7','client8','client9','client10','client11','client12'],
   costs_subtitle:'מחירון — הקמת מערכת ניהול למידה ופיתוח מערכת יצירת חומרי למידה',
   costs_rows:[['פיתוח','250 ₪ לשעה'],['מערכת ניהול למידה (שנה ראשונה)','11,988 ₪ (כולל 100GB אחסון ו-200GB תעבורה)'],["10,000 קרדיטים לכלי AI וצ'אטבוטים",'2,310 ₪']],
   payments:[{num:1,title:'חתימה והעברת תשלום ראשון',desc:'100 שעות פיתוח (25,000 ₪) + 1/3 עלות מערכת ניהול למידה (3,996 ₪)',total:'28,996 ₪'},{num:2,title:'לאחר אישור אפיון',desc:'1/3 עלות מערכת ניהול למידה (3,996 ₪)',total:'3,996 ₪'},{num:3,title:'לאחר הקמת האתר',desc:'1/3 עלות מערכת ניהול למידה (3,996 ₪) + עלות קרדיטים (2,310 ₪)',total:'6,306 ₪'},{num:4,title:'בסיום הפיתוח',desc:'100 שעות פיתוח + שעות נוספות לפי 250 ₪ לשעה.',total:'ישתנה'}],
@@ -428,15 +419,15 @@ function renderEditor(){
         <div><div class="fl">שם הלקוח</div><input class="fi" id="e-cname" value="${h(d.client_name)}" ${signed?'disabled':''}></div>
       </div>`,true)}
 
-    ${acc('link','🔗','קישור וגרסאות',`
+    ${acc('link','🔗','קישור ולוג גרסאות',`
       <div class="fl">קישור ייחודי ללקוח</div>
       <div class="link-display" id="linkDisp">${link}</div>
       <div style="display:flex;gap:8px;margin-bottom:16px">
         <button class="btn-sm" onclick="copyLink()">📋 העתק</button>
+        ${!signed?`<button class="btn-sm" onclick="refreshToken()">🔄 חדש קישור</button>`:''}
       </div>
-      <div class="fl" style="margin-bottom:8px">גרסאות שנשמרו</div>
-      <div class="ver-list" id="verList">${verItems}</div>
-`,true)}
+      <div class="fl" style="margin-bottom:8px">היסטוריית גרסאות</div>
+      <div class="ver-list" id="verList">${verItems}</div>`,true)}
 
     ${acc('matara','🎯','מטרה',`
       <div class="fl">טקסט מטרה</div>
@@ -552,24 +543,8 @@ function acc(id,icon,title,body,open=false){
 // ── GETTERS ───────────────────────────────────────────────────────
 function getMs(){return [...document.querySelectorAll('[id^="ms-"]')].filter(e=>e.classList.contains('bl-card')).map(el=>{const id=el.id.slice(3);return{id,num:document.getElementById('mst-'+id)?[...document.getElementById('msList').children].indexOf(el)+'':id,title:document.getElementById('mst-'+id)?.value||'',desc:document.getElementById('msd-'+id)?.value||''}});}
 function getWhy(){return[...document.querySelectorAll('[id^="wi-"]')].map(e=>e.value).filter(Boolean);}
-function getClients(){
-  // Build selected_clients for backward compat
-  return [...document.querySelectorAll('.cc-item.sel')].map(el=>el.dataset.clientId).filter(Boolean);
-}
-function getFullClients(){
-  // Get full client objects from editor
-  return [...document.querySelectorAll('[id^="clcard-"]')].map(el=>{
-    const cid=el.id.slice(7);
-    return{
-      id:cid,
-      name:document.getElementById('cln-'+cid)?.value||'',
-      desc:document.getElementById('cld-'+cid)?.value||'',
-      url:document.getElementById('clu-'+cid)?.value||'',
-      logo:document.getElementById('cll-'+cid)?.value||'',
-      selected:el.classList.contains('sel')
-    };
-  }).filter(c=>c.name);
-}
+function getClients(){return[...document.querySelectorAll('.cc-item.sel')].map(el=>el.dataset.clientId).filter(Boolean);}
+function getFullClients(){return[...document.querySelectorAll('[id^="clcard-"]')].map(el=>{const cid=el.id.slice(7);return{id:cid,name:document.getElementById('cln-'+cid)?.value||'',desc:document.getElementById('cld-'+cid)?.value||'',url:document.getElementById('clu-'+cid)?.value||'',logo:document.getElementById('cll-'+cid)?.value||'',selected:el.classList.contains('sel')};}).filter(c=>c.name);}
 function getCosts(){return[...document.querySelectorAll('[id^="cr-"]')].filter(e=>e.id.endsWith('-0')).map(e=>{const i=e.id.split('-')[1];return[document.getElementById('cr-'+i+'-0')?.value||'',document.getElementById('cr-'+i+'-1')?.value||'']});}
 function getPayments(){return[...document.querySelectorAll('[id^="pay-"]')].filter(e=>e.classList.contains('pay-row')).map((e,i)=>{const idx=e.id.split('-')[1];return{num:i+1,title:document.getElementById('pt-'+idx)?.value||'',desc:document.getElementById('pd-'+idx)?.value||'',total:document.getElementById('pp-'+idx)?.value||''}});}
 function getOpts(){return[...document.querySelectorAll('[id^="op-"]')].filter(e=>e.id.endsWith('-t')).map(e=>{const i=e.id.split('-')[1];return{title:document.getElementById('op-'+i+'-t')?.value||'',price:document.getElementById('op-'+i+'-p')?.value||''}});}
@@ -600,29 +575,19 @@ function addMs(){const id='m'+Date.now();const l=document.getElementById('msList
 function addWhy(){const i=document.querySelectorAll('[id^="wi-"]').length;const l=document.getElementById('whyList');const el=document.createElement('div');el.className='why-row';el.innerHTML=`<input class="fi" id="wi-${i}" placeholder="יתרון"><button class="bdel" onclick="this.parentElement.remove()">×</button>`;l.appendChild(el);}
 function tglClient(cid){document.getElementById('clcard-'+cid)?.classList.toggle('sel');}
 
-// ── CLIENT CRUD ──────────────────────────────────────────────
 function getClientsList(d, signed){
-  // Build clients array: from d.clients or from ALL_CLIENTS + selected_clients
   let clients;
-  if(Array.isArray(d.clients)&&d.clients.length){
-    clients=d.clients;
-  } else {
-    clients=ALL_CLIENTS.map(c=>({
-      ...c,
-      logo:LOGOS+c.id+'.png',
-      selected:(d.selected_clients||[]).includes(c.id)
-    }));
-  }
+  if(Array.isArray(d.clients)&&d.clients.length) clients=d.clients;
+  else clients=ALL_CLIENTS.map(c=>({...c,logo:LOGOS+c.id+'.png',selected:(d.selected_clients||[]).includes(c.id)}));
   if(!clients.length) return '<div style="color:var(--muted);font-size:13px">אין לקוחות</div>';
   return '<div class="cl-sel-grid">'+clients.map(c=>{
     const cid=c.id||('cl'+Date.now()+Math.random().toString(36).slice(2,6));
     return `<div class="cc-item${c.selected!==false?' sel':''}" id="clcard-${cid}" data-client-id="${cid}" onclick="tglClient('${cid}')">
       <img src="${h(c.logo||LOGOS+cid+'.png')}" alt="${h(c.name)}" onerror="this.style.display='none'" style="width:70px;height:40px;object-fit:contain">
-      <div>${h(c.name)}</div>
-      <div class="cc-desc">${h(c.desc)}</div>
-      ${!signed?`<div class="cc-actions-bar" onclick="event.stopPropagation()">
-        <button onclick="editClientInline('${cid}')">✏</button>
-        <button class="cc-del" onclick="deleteClient('${cid}')">×</button>
+      <div>${h(c.name)}</div><div class="cc-desc">${h(c.desc)}</div>
+      ${!signed?`<div style="display:flex;gap:4px;margin-top:4px" onclick="event.stopPropagation()">
+        <button style="padding:2px 6px;border:1px solid var(--bdr);border-radius:4px;background:#fff;font-size:10px;cursor:pointer;font-family:inherit" onclick="editClientInline('${cid}')">✏</button>
+        <button style="padding:2px 6px;border:1px solid var(--bdr);border-radius:4px;background:#fff;font-size:10px;cursor:pointer;font-family:inherit;color:var(--red)" onclick="deleteClient('${cid}')">×</button>
       </div>`:''}
       <input type="hidden" id="cln-${cid}" value="${h(c.name)}">
       <input type="hidden" id="cld-${cid}" value="${h(c.desc)}">
@@ -631,99 +596,30 @@ function getClientsList(d, signed){
     </div>`;
   }).join('')+'</div>';
 }
-
 function addClient(){
   const cid='cl'+Date.now();
-  const list=document.querySelector('#clientsList .cl-sel-grid');
-  if(!list){
-    document.getElementById('clientsList').innerHTML='<div class="cl-sel-grid"></div>';
-  }
-  const grid=document.querySelector('#clientsList .cl-sel-grid');
-  const el=document.createElement('div');
-  el.className='cc-item sel';
-  el.id='clcard-'+cid;
-  el.dataset.clientId=cid;
+  let grid=document.querySelector('#clientsList .cl-sel-grid');
+  if(!grid){document.getElementById('clientsList').innerHTML='<div class="cl-sel-grid"></div>';grid=document.querySelector('#clientsList .cl-sel-grid');}
+  const el=document.createElement('div');el.className='cc-item sel';el.id='clcard-'+cid;el.dataset.clientId=cid;
   el.onclick=function(){tglClient(cid)};
-  el.innerHTML=`
-    <div style="font-weight:700;color:var(--blue);font-size:12px">לקוח חדש</div>
-    <div class="cc-actions-bar" onclick="event.stopPropagation()">
-      <button onclick="editClientInline('${cid}')">✏</button>
-      <button class="cc-del" onclick="deleteClient('${cid}')">×</button>
-    </div>
-    <input type="hidden" id="cln-${cid}" value="">
-    <input type="hidden" id="cld-${cid}" value="">
-    <input type="hidden" id="clu-${cid}" value="">
-    <input type="hidden" id="cll-${cid}" value="">`;
-  grid.appendChild(el);
-  editClientInline(cid);
+  el.innerHTML='<div style="font-weight:700;color:var(--blue)">חדש</div><input type="hidden" id="cln-'+cid+'" value=""><input type="hidden" id="cld-'+cid+'" value=""><input type="hidden" id="clu-'+cid+'" value=""><input type="hidden" id="cll-'+cid+'" value="">';
+  grid.appendChild(el);editClientInline(cid);
 }
-
 function editClientInline(cid){
-  const card=document.getElementById('clcard-'+cid);
-  if(!card)return;
-  const name=document.getElementById('cln-'+cid)?.value||'';
-  const desc=document.getElementById('cld-'+cid)?.value||'';
-  const url=document.getElementById('clu-'+cid)?.value||'';
-  const logo=document.getElementById('cll-'+cid)?.value||'';
-  const isSel=card.classList.contains('sel');
-  card.onclick=null;
-  card.innerHTML=`
-    <div class="client-form" onclick="event.stopPropagation()">
-      <div class="fl">שם</div>
-      <input class="fi" id="clne-${cid}" value="${h(name)}" placeholder="שם הלקוח">
-      <div class="fl">תיאור</div>
-      <input class="fi" id="clde-${cid}" value="${h(desc)}" placeholder="תיאור קצר">
-      <div class="frow">
-        <div><div class="fl">קישור</div><input class="fi" id="clue-${cid}" value="${h(url)}" placeholder="https://..."></div>
-        <div><div class="fl">לוגו (שם קובץ או URL)</div><input class="fi" id="clle-${cid}" value="${h(logo)}" placeholder="${LOGOS}clientN.png"></div>
-      </div>
-      <div style="display:flex;gap:8px;margin-top:10px">
-        <button class="btn-sm primary" onclick="saveClientEdit('${cid}',${isSel})">✓ שמור</button>
-        <button class="btn-sm" onclick="cancelClientEdit('${cid}')">ביטול</button>
-      </div>
-    </div>`;
+  const card=document.getElementById('clcard-'+cid);if(!card)return;
+  const nm=document.getElementById('cln-'+cid)?.value||'',ds=document.getElementById('cld-'+cid)?.value||'',ur=document.getElementById('clu-'+cid)?.value||'',lg=document.getElementById('cll-'+cid)?.value||'';
+  const wasSel=card.classList.contains('sel');card.onclick=null;
+  card.innerHTML=`<div onclick="event.stopPropagation()" style="width:100%"><input class="fi" id="clne-${cid}" value="${h(nm)}" placeholder="שם" style="margin-bottom:4px"><input class="fi" id="clde-${cid}" value="${h(ds)}" placeholder="תיאור" style="margin-bottom:4px"><input class="fi" id="clue-${cid}" value="${h(ur)}" placeholder="URL" style="margin-bottom:4px"><input class="fi" id="clle-${cid}" value="${h(lg)}" placeholder="לוגו URL" style="margin-bottom:6px"><div style="display:flex;gap:6px"><button class="btn-sm primary" onclick="saveClientEdit('${cid}',${wasSel})">✓</button><button class="btn-sm" onclick="cancelClientEdit('${cid}')">ביטול</button></div></div>`;
 }
-
 function saveClientEdit(cid,wasSel){
-  const name=document.getElementById('clne-'+cid)?.value||'';
-  const desc=document.getElementById('clde-'+cid)?.value||'';
-  const url=document.getElementById('clue-'+cid)?.value||'';
-  const logo=document.getElementById('clle-'+cid)?.value||'';
-  const card=document.getElementById('clcard-'+cid);
-  if(!card)return;
-  const logoUrl=logo||LOGOS+cid+'.png';
-  card.className='cc-item'+(wasSel?' sel':'');
-  card.dataset.clientId=cid;
-  card.onclick=function(){tglClient(cid)};
-  card.innerHTML=`
-    <img src="${h(logoUrl)}" alt="${h(name)}" onerror="this.style.display='none'" style="width:70px;height:40px;object-fit:contain">
-    <div>${h(name||'ללא שם')}</div>
-    <div class="cc-desc">${h(desc)}</div>
-    <div class="cc-actions-bar" onclick="event.stopPropagation()">
-      <button onclick="editClientInline('${cid}')">✏</button>
-      <button class="cc-del" onclick="deleteClient('${cid}')">×</button>
-    </div>
-    <input type="hidden" id="cln-${cid}" value="${h(name)}">
-    <input type="hidden" id="cld-${cid}" value="${h(desc)}">
-    <input type="hidden" id="clu-${cid}" value="${h(url)}">
-    <input type="hidden" id="cll-${cid}" value="${h(logo)}">`;
+  const nm=document.getElementById('clne-'+cid)?.value||'',ds=document.getElementById('clde-'+cid)?.value||'',ur=document.getElementById('clue-'+cid)?.value||'',lg=document.getElementById('clle-'+cid)?.value||'';
+  const card=document.getElementById('clcard-'+cid);if(!card)return;
+  const logoUrl=lg||LOGOS+cid+'.png';
+  card.className='cc-item'+(wasSel?' sel':'');card.dataset.clientId=cid;card.onclick=function(){tglClient(cid)};
+  card.innerHTML=`<img src="${h(logoUrl)}" alt="${h(nm)}" onerror="this.style.display='none'" style="width:70px;height:40px;object-fit:contain"><div>${h(nm||'ללא שם')}</div><div class="cc-desc">${h(ds)}</div><div style="display:flex;gap:4px;margin-top:4px" onclick="event.stopPropagation()"><button style="padding:2px 6px;border:1px solid var(--bdr);border-radius:4px;background:#fff;font-size:10px;cursor:pointer;font-family:inherit" onclick="editClientInline('${cid}')">✏</button><button style="padding:2px 6px;border:1px solid var(--bdr);border-radius:4px;background:#fff;font-size:10px;cursor:pointer;font-family:inherit;color:var(--red)" onclick="deleteClient('${cid}')">×</button></div><input type="hidden" id="cln-${cid}" value="${h(nm)}"><input type="hidden" id="cld-${cid}" value="${h(ds)}"><input type="hidden" id="clu-${cid}" value="${h(ur)}"><input type="hidden" id="cll-${cid}" value="${h(lg)}">`;
 }
-
-function cancelClientEdit(cid){
-  // Re-render from hidden fields
-  const name=document.getElementById('cln-'+cid)?.value||'';
-  if(!name){
-    // New client with no data — just remove
-    document.getElementById('clcard-'+cid)?.remove();
-    return;
-  }
-  saveClientEdit(cid, document.getElementById('clcard-'+cid)?.classList.contains('sel'));
-}
-
-function deleteClient(cid){
-  if(!confirm('להסיר לקוח זה?'))return;
-  document.getElementById('clcard-'+cid)?.remove();
-}
+function cancelClientEdit(cid){const nm=document.getElementById('cln-'+cid)?.value||'';if(!nm){document.getElementById('clcard-'+cid)?.remove();return;}saveClientEdit(cid,document.getElementById('clcard-'+cid)?.classList.contains('sel'));}
+function deleteClient(cid){if(!confirm('להסיר?'))return;document.getElementById('clcard-'+cid)?.remove();}
 function addCostRow(){const i=[...document.querySelectorAll('[id^="cr-"]')].filter(e=>e.id.endsWith('-0')).length;const l=document.getElementById('costsList');const el=document.createElement('div');el.className='tbl-row';el.innerHTML=`<input class="fi" id="cr-${i}-0" placeholder="פריט"><input class="fi" id="cr-${i}-1" placeholder="עלות"><button class="bdel" onclick="this.closest('.tbl-row').remove()">×</button>`;l.appendChild(el);}
 function addPay(){const i=document.querySelectorAll('.pay-row').length;const l=document.getElementById('paysList');const el=document.createElement('div');el.className='pay-row';el.id='pay-'+i;el.innerHTML=`<div class="pay-rh">תשלום ${i+1}<button class="bdel" onclick="document.getElementById('pay-${i}').remove()">×</button></div><div class="frow"><div><div class="fl">כותרת</div><input class="fi" id="pt-${i}" placeholder="כותרת"></div><div><div class="fl">סה"כ</div><input class="fi" id="pp-${i}" placeholder="סכום"></div></div><div class="fl">תיאור</div><textarea class="fi" id="pd-${i}" rows="2"></textarea>`;l.appendChild(el);}
 function addOpt(){const i=[...document.querySelectorAll('[id^="op-"]')].filter(e=>e.id.endsWith('-t')).length;const l=document.getElementById('optList');const el=document.createElement('div');el.className='tbl-row';el.innerHTML=`<input class="fi" id="op-${i}-t" placeholder="שירות"><input class="fi" id="op-${i}-p" placeholder="מחיר"><button class="bdel" onclick="this.closest('.tbl-row').remove()">×</button>`;l.appendChild(el);}
@@ -758,14 +654,13 @@ async function saveVersion(){
     if(!r.ok)throw new Error('שגיאה '+r.status);
     const resp=await r.json();
     // Reload contract to get updated versions
-    const r2=await fetch(N8N+'/yeda-contract-load',{
-      method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({password:pw,contract_id:cid})
-    });
+const r2=await fetch(N8N+'/yeda-contract-load',{
+  method:'POST',
+  headers:{'Content-Type':'application/json'},
+  body:JSON.stringify({password:pw,contract_id:cid})
+});    
     const updated=await r2.json();
     curContract=mergeDefaults(updated);
-    curContract.contract_id=curContract.contract_id||curContract.id||cid;
-    curContract.id=curContract.id||cid;
     // Update version list UI
     const versions=curContract.versions||[];
     const vl=document.getElementById('verList');
@@ -795,11 +690,12 @@ async function changeStatus(){
 function copyLink(){
   if(!curContract)return;
   const cid=curContract.contract_id||curContract.id||editorContractId;
-  const url=PROP_URL+'?id='+cid+(curContract.token?'&token='+curContract.token:'');
+  const url=PROP_URL+'?id='+cid+(curContract.token?'&token='+cid:'');
   navigator.clipboard.writeText(url).then(()=>{
     const msg=document.getElementById('saveMsg');
     msg.textContent='✓ קישור הועתק';msg.className='save-msg ok';setTimeout(()=>msg.textContent='',2000);
   }).catch(()=>prompt('העתק:',url));
+  // Status set MANUALLY by admin — no auto-change here
 }
 
 async function refreshToken(){
