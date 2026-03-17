@@ -305,7 +305,7 @@ async function createNew(){
   try{
     const r=await fetch(N8N+'/yeda-contract-create',{method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({password:pw,title:'הצעת מחיר חדשה',client_name:''})});
+      body:JSON.stringify({password:pw})});
     const data=await r.json();
     if(data.id){
       await loadList();
