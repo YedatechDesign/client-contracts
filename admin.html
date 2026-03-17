@@ -521,18 +521,8 @@ function renderEditor(){
       ${!signed?`<button class="btn-add" onclick="addTokEx()">+ הוסף דוגמה</button>`:''}`)}
 
     ${acc('custom','📝','בלוקים נוספים',`
-      <div id="customList">${(d.custom_blocks||[]).map((b,i)=>\`
-        <div class="bl-card" id="cb-\${i}">
-          <div class="bl-top">
-            <div class="bl-num">✦</div>
-            <input class="fi bl-ti" id="cbt-\${i}" value="\${h(b.title)}" placeholder="כותרת" \${signed?'disabled':''}>
-            \${!signed?\`<button class="bdel" onclick="this.closest('.bl-card').remove()">×</button>\`:''}
-          </div>
-          <textarea class="bl-tx" id="cbc-\${i}" rows="4" \${signed?'disabled':''}>\${h(b.content)}</textarea>
-        </div>\`).join('')}
-      </div>
-      \${!signed?\`<button class="btn-add" onclick="addCB()">+ הוסף בלוק</button>\`:''}`)}
-
+      <div id="customList">${renderCustomBlocks(d,signed)}</div>
+      ${!signed?'<button class="btn-add" onclick="addCB()">+ הוסף בלוק</button>':''}`)}
     ${acc('terms','📜','תנאי ההסכם',`
       <div id="termsList">${d.terms.map((t,i)=>`
         <div class="bl-card" id="trm-${t.id}">
@@ -608,6 +598,15 @@ function addCostRow(){const i=[...document.querySelectorAll('[id^="cr-"]')].filt
 function addPay(){const i=document.querySelectorAll('.pay-row').length;const l=document.getElementById('paysList');const el=document.createElement('div');el.className='pay-row';el.id='pay-'+i;el.innerHTML=`<div class="pay-rh">תשלום ${i+1}<button class="bdel" onclick="document.getElementById('pay-${i}').remove()">×</button></div><div class="frow"><div><div class="fl">כותרת</div><input class="fi" id="pt-${i}" placeholder="כותרת"></div><div><div class="fl">סה"כ</div><input class="fi" id="pp-${i}" placeholder="סכום"></div></div><div class="fl">תיאור</div><textarea class="fi" id="pd-${i}" rows="2"></textarea>`;l.appendChild(el);}
 function addOpt(){const i=[...document.querySelectorAll('[id^="op-"]')].filter(e=>e.id.endsWith('-t')).length;const l=document.getElementById('optList');const el=document.createElement('div');el.className='tbl-row';el.innerHTML=`<input class="fi" id="op-${i}-t" placeholder="שירות"><input class="fi" id="op-${i}-p" placeholder="מחיר"><button class="bdel" onclick="this.closest('.tbl-row').remove()">×</button>`;l.appendChild(el);}
 function addTokEx(){const i=document.querySelectorAll('[id^="te-"]').length;const l=document.getElementById('tokExList');const el=document.createElement('div');el.className='why-row';el.innerHTML=`<input class="fi" id="te-${i}" placeholder="דוגמה"><button class="bdel" onclick="this.parentElement.remove()">×</button>`;l.appendChild(el);}
+function renderCustomBlocks(d,signed){
+  const blocks=d.custom_blocks||[];
+  if(!blocks.length) return '';
+  return blocks.map(function(b,i){
+    var del=signed?'':'<button class="bdel" onclick="this.closest(\'.bl-card\').remove()">×</button>';
+    var dis=signed?'disabled':'';
+    return '<div class="bl-card" id="cb-'+i+'"><div class="bl-top"><div class="bl-num">✦</div><input class="fi bl-ti" id="cbt-'+i+'" value="'+h(b.title)+'" placeholder="כותרת" '+dis+'>'+del+'</div><textarea class="bl-tx" id="cbc-'+i+'" rows="4" '+dis+'>'+h(b.content)+'</textarea></div>';
+  }).join('');
+}
 function addCB(){const i=document.querySelectorAll('[id^="cb-"]').length;const l=document.getElementById('customList');const el=document.createElement('div');el.className='bl-card';el.id='cb-'+i;el.innerHTML=`<div class="bl-top"><div class="bl-num">✦</div><input class="fi bl-ti" id="cbt-${i}" placeholder="כותרת"><button class="bdel" onclick="this.closest('.bl-card').remove()">×</button></div><textarea class="bl-tx" id="cbc-${i}" rows="4" placeholder="כתוב כאן... שורות שמתחילות ב • יוצגו כנקודות"></textarea>`;l.appendChild(el);}
 function getCB(){return[...document.querySelectorAll('[id^="cb-"]')].filter(e=>e.classList.contains('bl-card')).map(e=>{const i=e.id.slice(3);return{title:document.getElementById('cbt-'+i)?.value||'',content:document.getElementById('cbc-'+i)?.value||''}}).filter(b=>b.title||b.content);}
 function addTerm(){const id='t'+Date.now();const l=document.getElementById('termsList');const i=l.children.length;const el=document.createElement('div');el.className='bl-card';el.id='trm-'+id;el.innerHTML=`<div class="bl-top"><div class="bl-num">${i+1}</div><input class="fi bl-ti" id="trt-${id}" placeholder="כותרת תנאי"><button class="bdel" onclick="document.getElementById('trm-${id}').remove()">×</button></div><textarea class="bl-tx" id="trb-${id}" rows="3" placeholder="טקסט..."></textarea>`;l.appendChild(el);}
