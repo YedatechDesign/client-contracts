@@ -378,6 +378,7 @@ const DD={
   token_packages:[{amount:'10,000 טוקנים',original:'3,600₪',sale:'3,420₪',featured:false},{amount:'20,000 טוקנים',original:'7,200₪',sale:'6,480₪',featured:true},{amount:'40,000 טוקנים',original:'14,400₪',sale:'12,960₪',featured:false}],
   token_examples:['יצירת 10 סילבוסים = 20-40 טוקנים AI','יצירת 100 שקופיות = 20-25 טוקנים AI','כתוביות לשעה = 15-30 טוקנים AI','שאלות לשעה = 10-15 טוקנים AI','חלוקה לפרקים = 5-10 טוקנים AI','תרגום כתוביות = 80-130 טוקנים AI','לומדה מקבצים = 300-500 טוקנים AI','3 שאלות לעוזר = 1 טוקן AI'],
   terms:[{id:'t1',title:'מערכת ניהול למידה',text:'הלקוח יקבל אתרים אישיים המוקמים על גבי פלטפורמת Yeda ומחוברים לדומיינים של הלקוח. הפלטפורמה כוללת LMS, עדכוני גרסה, תמיכה טכנית מלאה, קבוצת ווטסאפ ייעודית והדרכות. ההתקשרות ללא אפשרות יציאה מוקדמת. שימוש ללא הגבלת משתמשים למשך 3 שנות פעילות.'},{id:'t2',title:'פלטפורמת AI ולומדות',text:'הלקוח יקבל גישה לפלטפורמה לבנייה, עיצוב, הקלטה ואחסון של מצגות, וידאו, לומדות אינטראקטיביות ועוזרי למידה מבוססי AI.'},{id:'t3',title:'הגבלת אחריות',text:'חברת ידע אינה נושאת אחריות לתביעות הקשורות בדיני אינטרנט, נגישות, פרטיות, ספאם ועוד.'},{id:'t4',title:'קניין רוחני',text:'הקניין הרוחני המלא של מוצרי תוכן באתר שייך ללקוח.'},{id:'t5',title:'סודיות',text:'חברת ידע מתחייבת לא לשתף חומרים, דטאות משתמשים, או מידע אחר עם צד שלישי ללא רשות הלקוח.'}],
+  custom_blocks:[],
   signed:false,versions:[]
 };
 
@@ -407,7 +408,9 @@ function renderEditor(){
   const verItems=versions.length?versions.map(v=>`
     <div class="ver-item">
       <div><div class="ver-name">${h(v.name)}</div><div class="ver-date">${h(v.date)}</div></div>
-      ${v.url?`<button class="btn-sm" onclick="window.open('${v.url}','_blank')">⬇ הורד</button>`:''}
+      ${v.url?`<a href="${v.url}" target="_blank" style="color:var(--blue);font-size:12px;text-decoration:none;display:flex;align-items:center;gap:4px">📄 פתח ב-Drive ↗</a>`:''}
+
+
     </div>`).join(''):'<div style="color:var(--muted);font-size:13px">אין גרסאות</div>';
 
   document.getElementById('editorPanels').innerHTML=`
@@ -517,6 +520,19 @@ function renderEditor(){
       </div>
       ${!signed?`<button class="btn-add" onclick="addTokEx()">+ הוסף דוגמה</button>`:''}`)}
 
+    ${acc('custom','📝','בלוקים נוספים',`
+      <div id="customList">${(d.custom_blocks||[]).map((b,i)=>\`
+        <div class="bl-card" id="cb-\${i}">
+          <div class="bl-top">
+            <div class="bl-num">✦</div>
+            <input class="fi bl-ti" id="cbt-\${i}" value="\${h(b.title)}" placeholder="כותרת" \${signed?'disabled':''}>
+            \${!signed?\`<button class="bdel" onclick="this.closest('.bl-card').remove()">×</button>\`:''}
+          </div>
+          <textarea class="bl-tx" id="cbc-\${i}" rows="4" \${signed?'disabled':''}>\${h(b.content)}</textarea>
+        </div>\`).join('')}
+      </div>
+      \${!signed?\`<button class="btn-add" onclick="addCB()">+ הוסף בלוק</button>\`:''}`)}
+
     ${acc('terms','📜','תנאי ההסכם',`
       <div id="termsList">${d.terms.map((t,i)=>`
         <div class="bl-card" id="trm-${t.id}">
@@ -568,7 +584,7 @@ function buildPayload(){
     why_items:getWhy(),selected_clients:getClients(),clients:getFullClients(),
     costs_subtitle:document.getElementById('e-csubt')?.value||curContract.costs_subtitle,
     costs_rows:getCosts(),payments:getPayments(),optional:getOpts(),
-    token_packages:getTokPkgs(),token_examples:getTokEx(),terms:getTerms()
+    token_packages:getTokPkgs(),token_examples:getTokEx(),custom_blocks:getCB(),terms:getTerms()
   };
 }
 
@@ -592,6 +608,8 @@ function addCostRow(){const i=[...document.querySelectorAll('[id^="cr-"]')].filt
 function addPay(){const i=document.querySelectorAll('.pay-row').length;const l=document.getElementById('paysList');const el=document.createElement('div');el.className='pay-row';el.id='pay-'+i;el.innerHTML=`<div class="pay-rh">תשלום ${i+1}<button class="bdel" onclick="document.getElementById('pay-${i}').remove()">×</button></div><div class="frow"><div><div class="fl">כותרת</div><input class="fi" id="pt-${i}" placeholder="כותרת"></div><div><div class="fl">סה"כ</div><input class="fi" id="pp-${i}" placeholder="סכום"></div></div><div class="fl">תיאור</div><textarea class="fi" id="pd-${i}" rows="2"></textarea>`;l.appendChild(el);}
 function addOpt(){const i=[...document.querySelectorAll('[id^="op-"]')].filter(e=>e.id.endsWith('-t')).length;const l=document.getElementById('optList');const el=document.createElement('div');el.className='tbl-row';el.innerHTML=`<input class="fi" id="op-${i}-t" placeholder="שירות"><input class="fi" id="op-${i}-p" placeholder="מחיר"><button class="bdel" onclick="this.closest('.tbl-row').remove()">×</button>`;l.appendChild(el);}
 function addTokEx(){const i=document.querySelectorAll('[id^="te-"]').length;const l=document.getElementById('tokExList');const el=document.createElement('div');el.className='why-row';el.innerHTML=`<input class="fi" id="te-${i}" placeholder="דוגמה"><button class="bdel" onclick="this.parentElement.remove()">×</button>`;l.appendChild(el);}
+function addCB(){const i=document.querySelectorAll('[id^="cb-"]').length;const l=document.getElementById('customList');const el=document.createElement('div');el.className='bl-card';el.id='cb-'+i;el.innerHTML=`<div class="bl-top"><div class="bl-num">✦</div><input class="fi bl-ti" id="cbt-${i}" placeholder="כותרת"><button class="bdel" onclick="this.closest('.bl-card').remove()">×</button></div><textarea class="bl-tx" id="cbc-${i}" rows="4" placeholder="כתוב כאן... שורות שמתחילות ב • יוצגו כנקודות"></textarea>`;l.appendChild(el);}
+function getCB(){return[...document.querySelectorAll('[id^="cb-"]')].filter(e=>e.classList.contains('bl-card')).map(e=>{const i=e.id.slice(3);return{title:document.getElementById('cbt-'+i)?.value||'',content:document.getElementById('cbc-'+i)?.value||''}}).filter(b=>b.title||b.content);}
 function addTerm(){const id='t'+Date.now();const l=document.getElementById('termsList');const i=l.children.length;const el=document.createElement('div');el.className='bl-card';el.id='trm-'+id;el.innerHTML=`<div class="bl-top"><div class="bl-num">${i+1}</div><input class="fi bl-ti" id="trt-${id}" placeholder="כותרת תנאי"><button class="bdel" onclick="document.getElementById('trm-${id}').remove()">×</button></div><textarea class="bl-tx" id="trb-${id}" rows="3" placeholder="טקסט..."></textarea>`;l.appendChild(el);}
 
 // ── SAVE ──────────────────────────────────────────────────────────
@@ -612,13 +630,19 @@ async function saveContract(){
 // ── SAVE VERSION ──────────────────────────────────────────────────
 async function saveVersion(){
   const btn=document.getElementById('vbtn'),sp=document.getElementById('vsp'),tx=document.getElementById('vtxt'),msg=document.getElementById('saveMsg');
-  btn.disabled=true;sp.style.display='inline-block';tx.textContent='יוצר PDF...';
-  const merged=mergeDefaults(curContract);
-  const cid=curContract.contract_id||curContract.id||editorContractId;
-  const vNum=(merged.versions||[]).length+1;
-  const payload={...merged,password:pw,version_number:vNum,contract_id:cid,id:cid};
+  btn.disabled=true;sp.style.display='inline-block';tx.textContent='שומר ויוצר PDF...';
+  // Step 1: Save draft first (same as Save button)
+  const payload=buildPayload();
   try{
-    const r=await fetch(N8N+'/yeda-save-version',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    await fetch(N8N+'/yeda-contract-save',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+  }catch(e){}
+  curContract=payload;
+  // Step 2: Send to Save Version flow
+  const cid=payload.contract_id||payload.id||editorContractId;
+  const vNum=(payload.versions||[]).length+1;
+  const versionPayload={...payload,password:pw,version_number:vNum,contract_id:cid,id:cid};
+  try{
+    const r=await fetch(N8N+'/yeda-save-version',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(versionPayload)});
     if(!r.ok)throw new Error('שגיאה '+r.status);
     const resp=await r.json();
     // Reload contract to get updated versions
@@ -635,7 +659,9 @@ const r2=await fetch(N8N+'/yeda-contract-load',{
     if(vl) vl.innerHTML=versions.length?versions.map(v=>`
       <div class="ver-item">
         <div><div class="ver-name">${h(v.name)}</div><div class="ver-date">${h(v.date)}</div></div>
-        ${v.url?`<button class="btn-sm" onclick="window.open('${v.url}','_blank')">⬇ הורד</button>`:''}
+        ${v.url?`<a href="${v.url}" target="_blank" style="color:var(--blue);font-size:12px;text-decoration:none;display:flex;align-items:center;gap:4px">📄 פתח ב-Drive ↗</a>`:''}
+
+
       </div>`).join(''):'<div style="color:var(--muted);font-size:13px">אין גרסאות</div>';
     msg.textContent='✓ גרסה נשמרה';msg.className='save-msg ok';setTimeout(()=>msg.textContent='',3000);
   }catch(e){msg.textContent='שגיאה: '+e.message;msg.className='save-msg err';}
