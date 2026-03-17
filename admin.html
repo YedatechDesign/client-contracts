@@ -191,7 +191,7 @@ textarea.fi{resize:vertical;min-height:80px}
       </div>
       <div class="editor-actions">
         <button class="btn-sm" onclick="copyLink()">🔗 העתק קישור</button>
-
+        <button class="btn-sm" onclick="saveVersion()" id="vbtn"><span class="spinner-sm" id="vsp"></span><span id="vtxt">📄 שמור גרסה</span></button>
         <button class="btn-sm primary" onclick="saveContract()" id="sbtn"><span class="spinner-sm" id="ssp"></span><span id="stxt">💾 שמור</span></button>
       </div>
     </div>
@@ -411,7 +411,12 @@ function renderEditor(){
   const signed=d.signed===true;
   const link=PROP_URL+'?id='+d.contract_id+(d.token?'&token='+d.token:'');
 
-
+  const versions=d.versions||[];
+  const verItems=versions.length?versions.map(v=>`
+    <div class="ver-item">
+      <div><div class="ver-name">${h(v.name)}</div><div class="ver-date">${h(v.date)}</div></div>
+      ${v.url?`<button class="btn-sm" onclick="window.open('${v.url}','_blank')">⬇ הורד</button>`:''}
+    </div>`).join(''):'<div style="color:var(--muted);font-size:13px">אין גרסאות</div>';
 
   document.getElementById('editorPanels').innerHTML=`
     ${signed?`<div class="signed-notice">✓ הסכם זה נחתם על ידי ${h(d.signer_name||'')} בתאריך ${h(d.signer_date||'')}
@@ -423,13 +428,14 @@ function renderEditor(){
         <div><div class="fl">שם הלקוח</div><input class="fi" id="e-cname" value="${h(d.client_name)}" ${signed?'disabled':''}></div>
       </div>`,true)}
 
-    ${acc('link','🔗','קישור ללקוח',`
+    ${acc('link','🔗','קישור וגרסאות',`
       <div class="fl">קישור ייחודי ללקוח</div>
       <div class="link-display" id="linkDisp">${link}</div>
       <div style="display:flex;gap:8px;margin-bottom:16px">
         <button class="btn-sm" onclick="copyLink()">📋 העתק</button>
-
       </div>
+      <div class="fl" style="margin-bottom:8px">גרסאות שנשמרו</div>
+      <div class="ver-list" id="verList">${verItems}</div>
 `,true)}
 
     ${acc('matara','🎯','מטרה',`
