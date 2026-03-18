@@ -339,7 +339,7 @@ function renderContract(d){
   document.getElementById('costsTbody').innerHTML=(d.costs_rows||[]).map(r=>`<tr><td>${esc(r[0])}</td><td>${esc(r[1])}</td></tr>`).join('');
   document.getElementById('paysContainer').innerHTML=(d.payments||[]).map(p=>`
     <div class="pay-card">
-      <div class="pay-title">תשלום ${p.num} - ${esc(p.title)}:</div>
+      <div class="pay-title">${esc(p.label || "תשלום " + p.num)} - ${esc(p.title)}:</div>
       <div class="pay-desc">${esc(p.desc)}</div>
       <div class="pay-total">סה"כ: ${esc(p.total)}</div>
     </div>`).join('');
