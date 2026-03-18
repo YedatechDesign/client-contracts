@@ -482,9 +482,8 @@ function renderEditor(){
       </div>
       ${!signed?`<button class="btn-add" onclick="addWhy()">+ הוסף</button>`:''}`)}
 
-    ${acc('clients','🏢','עובדים עם Yeda',`
-      <div id="clientsList">${getClientsList(d, signed)}</div>
-      ${!signed?'<button class="btn-add" onclick="addClient()">+ הוסף לקוח</button>':''}`)}
+    ${acc('clients','🏢','לקוחות לדוגמא',`
+      <div id="clientsList">${renderClientToggles(d)}</div>`)}
 
 
     ${acc('costs','💰','עלויות ותנאי תשלום',`
@@ -612,7 +611,7 @@ function buildPayload(){
 // ── ADD ITEMS ─────────────────────────────────────────────────────
 function addMs(){const id='m'+Date.now();const l=document.getElementById('msList');const i=l.children.length;const el=document.createElement('div');el.className='bl-card';el.id='ms-'+id;el.innerHTML=`<div class="bl-top"><div class="bl-num">${i}</div><input class="fi bl-ti" id="mst-${id}" placeholder="כותרת"><button class="bdel" onclick="document.getElementById('ms-${id}').remove()">×</button></div><textarea class="bl-tx" id="msd-${id}" rows="2" placeholder="תיאור"></textarea>`;l.appendChild(el);}
 function addWhy(){const i=document.querySelectorAll('[id^="wi-"]').length;const l=document.getElementById('whyList');const el=document.createElement('div');el.className='why-row';el.innerHTML=`<input class="fi" id="wi-${i}" placeholder="יתרון"><button class="bdel" onclick="this.parentElement.remove()">×</button>`;l.appendChild(el);}
-function tglClient(cid){document.getElementById('clcard-'+cid)?.classList.toggle('sel');}
+function tglClient(cid){document.getElementById('cc-'+cid)?.classList.toggle('sel');}
 
 
 
@@ -627,7 +626,7 @@ function renderCustomBlocks(d,signed){
   const blocks=d.custom_blocks||[];
   if(!blocks.length) return '';
   return blocks.map(function(b,i){
-    var del=signed?'':'<button class="bdel" onclick="this.closest(\'.bl-card\').remove()">×</button>';
+    var del=signed?'':'<button class="bdel" onclick="this.closest(&quot;.bl-card&quot;).remove()">×</button>';
     var dis=signed?'disabled':'';
     return '<div class="bl-card" id="cb-'+i+'"><div class="bl-top"><div class="bl-num">✦</div><input class="fi bl-ti" id="cbt-'+i+'" value="'+h(b.title)+'" placeholder="כותרת" '+dis+'>'+del+'</div><textarea class="bl-tx" id="cbc-'+i+'" rows="4" '+dis+'>'+h(b.content)+'</textarea></div>';
   }).join('');
