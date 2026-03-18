@@ -302,7 +302,7 @@ function renderList(){
       </div>
       <div class="cc-actions">
         <button class="btn-sm primary" onclick="openEditor('${c.id}')">✏ ערוך</button>
-        <button class="btn-sm" onclick="copyContractLink('${c.id}','${c.slug||c.short_id||''}')">🔗 העתק קישור</button>
+        <button class="btn-sm" onclick="copyContractLink('${c.id}','${c.slug||''}')">🔗 העתק קישור</button>
         ${c.signed_pdf_url?`<button class="btn-sm" onclick="window.open('${c.signed_pdf_url}','_blank')">📄 PDF חתום</button>`:''}
         <button class="btn-sm danger" onclick="deleteContract('${c.id}')">🗑 מחק</button>
       </div>
@@ -346,8 +346,8 @@ async function deleteContract(id){
   }catch(e){alert('שגיאה במחיקה');}
 }
 
-function copyContractLink(id,shortId){
-  const url=PROP_URL+'?id='+(shortId||id);
+function copyContractLink(id,slug){
+  const url=PROP_URL+'?id='+(slug||id);
   navigator.clipboard.writeText(url).then(()=>alert('הקישור הועתק!')).catch(()=>prompt('העתק:',url));
 }
 
@@ -425,6 +425,7 @@ function renderEditor(){
   const cid=d.contract_id||d.id||editorContractId;
   const slug=d.slug||cid;
   const link=PROP_URL+'?id='+slug;
+  const displayLink=d.slug?link:PROP_URL+'?id='+cid+' (הגדר מזהה קצר)';
 
   const versions=d.versions||[];
   const verItems=versions.length?versions.map(v=>`
@@ -451,6 +452,7 @@ function renderEditor(){
     ${acc('link','🔗','קישור ולוג גרסאות',`
       <div class="fl">קישור ייחודי ללקוח</div>
       <div class="link-display" id="linkDisp">${link}</div>
+      ${!d.slug?'<div style="font-size:11px;color:var(--muted);margin-top:4px">💡 הגדר מזהה קצר בפרטי ההצעה כדי ליצור קישור נקי</div>':''}
       <div style="display:flex;gap:8px;margin-bottom:16px">
         <button class="btn-sm" onclick="copyLink()">📋 העתק</button>
 
@@ -840,7 +842,8 @@ async function changeStatus(){
 function copyLink(){
   if(!curContract)return;
   const cid=curContract.contract_id||curContract.id||editorContractId;
-  const url=PROP_URL+'?id='+cid;
+  const slug=curContract.slug||document.getElementById('e-slug')?.value||cid;
+  const url=PROP_URL+'?id='+slug;
   navigator.clipboard.writeText(url).then(()=>{
     const msg=document.getElementById('saveMsg');
     msg.textContent='✓ קישור הועתק';msg.className='save-msg ok';setTimeout(()=>msg.textContent='',2000);
