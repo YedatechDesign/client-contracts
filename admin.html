@@ -203,6 +203,7 @@ textarea.fi{resize:vertical;min-height:80px}
       <div class="editor-actions">
         <button class="btn-sm" onclick="copyLink()">🔗 העתק קישור</button>
         <button class="btn-sm" onclick="saveVersion()" id="vbtn"><span class="spinner-sm" id="vsp"></span><span id="vtxt">📄 שמור גרסה</span></button>
+        <button class="btn-sm" onclick="previewContract()">👁 תצוגה מקדימה</button>
         <button class="btn-sm primary" onclick="saveContract()" id="sbtn"><span class="spinner-sm" id="ssp"></span><span id="stxt">💾 שמור</span></button>
       </div>
     </div>
@@ -301,7 +302,7 @@ function renderList(){
       </div>
       <div class="cc-actions">
         <button class="btn-sm primary" onclick="openEditor('${c.id}')">✏ ערוך</button>
-        <button class="btn-sm" onclick="copyContractLink('${c.id}','${c.token||''}')">🔗 העתק קישור</button>
+        <button class="btn-sm" onclick="copyContractLink('${c.id}','${c.slug||c.short_id||''}')">🔗 העתק קישור</button>
         ${c.signed_pdf_url?`<button class="btn-sm" onclick="window.open('${c.signed_pdf_url}','_blank')">📄 PDF חתום</button>`:''}
         <button class="btn-sm danger" onclick="deleteContract('${c.id}')">🗑 מחק</button>
       </div>
@@ -345,8 +346,8 @@ async function deleteContract(id){
   }catch(e){alert('שגיאה במחיקה');}
 }
 
-function copyContractLink(id,token){
-  const url=PROP_URL+'?id='+id+(token?'&token='+token:'');
+function copyContractLink(id,shortId){
+  const url=PROP_URL+'?id='+(shortId||id);
   navigator.clipboard.writeText(url).then(()=>alert('הקישור הועתק!')).catch(()=>prompt('העתק:',url));
 }
 
@@ -422,7 +423,8 @@ function renderEditor(){
 
   const signed=d.signed===true;
   const cid=d.contract_id||d.id||editorContractId;
-  const link=PROP_URL+'?id='+cid;
+  const slug=d.slug||cid;
+  const link=PROP_URL+'?id='+slug;
 
   const versions=d.versions||[];
   const verItems=versions.length?versions.map(v=>`
@@ -441,7 +443,10 @@ function renderEditor(){
       <div class="frow">
         <div><div class="fl">כותרת ההצעה</div><input class="fi" id="e-title" value="${h(d.title)}" ${signed?'disabled':''}></div>
         <div><div class="fl">שם הלקוח</div><input class="fi" id="e-cname" value="${h(d.client_name)}" ${signed?'disabled':''}></div>
-      </div>`,true)}
+      </div>
+      <div class="fl">מזהה קצר לקישור (אנגלית בלבד)</div>
+      <input class="fi" id="e-slug" value="${h(d.slug||'')}" placeholder="לדוגמה: acme-corp" ${signed?'disabled':''}>
+      <div style="font-size:11px;color:var(--muted);margin-top:4px">הקישור יהיה: ${PROP_URL}?id=<span id="slugPreview">${d.slug||d.contract_id||''}</span></div>`,true)}
 
     ${acc('link','🔗','קישור ולוג גרסאות',`
       <div class="fl">קישור ייחודי ללקוח</div>
@@ -598,6 +603,7 @@ function buildPayload(){
     id:cid,
     title:document.getElementById('e-title')?.value||curContract.title,
     client_name:document.getElementById('e-cname')?.value||curContract.client_name,
+    slug:document.getElementById('e-slug')?.value||curContract.slug||'',
     matara:document.getElementById('e-matara')?.value||curContract.matara,
     milestones:getMs(),why_intro:document.getElementById('e-whyintro')?.value||curContract.why_intro,
     why_items:getWhy(),selected_clients:getClients(),clients:getFullClients(),
@@ -752,6 +758,16 @@ async function savePopupClients() {
   }
 }
 
+
+async function previewContract(){
+  // Save draft first, then open preview
+  const payload=buildPayload();
+  try{
+    await fetch(N8N+'/yeda-contract-save',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+  }catch(e){}
+  const slug=payload.slug||payload.contract_id||payload.id||editorContractId;
+  window.open(PROP_URL+'?id='+slug+'&preview=1','_blank');
+}
 // ── SAVE ──────────────────────────────────────────────────────────
 async function saveContract(){
   const btn=document.getElementById('sbtn'),sp=document.getElementById('ssp'),tx=document.getElementById('stxt'),msg=document.getElementById('saveMsg');
@@ -840,6 +856,8 @@ async function refreshToken(){
   const link=PROP_URL+'?id='+curContract.contract_id+'&token='+newToken;
   document.getElementById('linkDisp').textContent=link;
 }
+
+document.addEventListener('input',function(e){if(e.target.id==='e-slug'){var p=document.getElementById('slugPreview');if(p)p.textContent=e.target.value||curContract?.contract_id||'';}});
 </script>
 
 <!-- Client Management Popup -->
