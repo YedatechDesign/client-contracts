@@ -682,10 +682,18 @@ async function loadCentralClients() {
 
 function renderClientToggles(d) {
   const sel = d.selected_clients || centralClients.map(c=>c.id);
-  return '<div class="cl-sel-grid">' + centralClients.map(c => {
+  let html = '<div class="cl-sel-grid">';
+  centralClients.forEach(c => {
     const isSel = sel.includes(c.id);
-    return '<div class="cc-item' + (isSel ? ' sel' : '') + '" id="cc-' + c.id + '" onclick="tglClient(\''+c.id+'\')"><img src="' + h(c.logo || LOGOS+c.id+'.png') + '" alt="'+h(c.name)+'" onerror="this.style.display=\'none\'" style="width:70px;height:40px;object-fit:contain"><div>'+h(c.name)+'</div><div class="cc-desc">'+h(c.desc||'')+'</div></div>';
-  }).join('') + '</div>';
+    const cls = isSel ? "cc-item sel" : "cc-item";
+    html += '<div class="' + cls + '" id="cc-' + c.id + '" onclick="tglClient(&#39;' + c.id + '&#39;)">';
+    html += '<img src="' + h(c.logo || LOGOS+c.id+".png") + '" alt="' + h(c.name) + '" onerror="this.style.display=&#39;none&#39;" style="width:70px;height:40px;object-fit:contain">';
+    html += '<div>' + h(c.name) + '</div>';
+    html += '<div class="cc-desc">' + h(c.desc||"") + '</div>';
+    html += '</div>';
+  });
+  html += '</div>';
+  return html;
 }
 
 function openClientPopup() {
