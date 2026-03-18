@@ -330,7 +330,8 @@ function renderContract(d){
   else{const sel=d.selected_clients||[];clientsToShow=ALL_CLIENTS.filter(c=>sel.includes(c.id));}
   if(clientsToShow.length){
     document.getElementById('clGrid').innerHTML=clientsToShow.map(c=>{
-      const logo=c.logo||(LOGOS+c.id+'.png');
+      const logoRaw=c.logo||(c.id+'.png');
+      const logo=logoRaw.startsWith('http')?logoRaw:LOGOS+logoRaw;
       return`<a class="cl-card" href="${c.url||'#'}" target="_blank" rel="noopener"><img src="${esc(logo)}" onerror="this.style.display='none'" alt="${esc(c.name)}"><div class="cl-name">${esc(c.name)}</div><div class="cl-desc">${esc(c.desc)}</div></a>`;}).join('');
   } else {document.getElementById('secClients').style.display='none';}
 
