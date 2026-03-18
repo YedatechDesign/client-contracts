@@ -511,20 +511,27 @@ let DATA={};
     if(loaded.signed||loaded.status==='signed'){
       showSigned(loaded.signed_pdf_url||loaded.pdf_drive_url||'');return;
     }
-    // Client view: ONLY use published_data (from Save Version button)
-    // If no published version exists, show defaults
-    let contractContent=null;
-    if(loaded.published_data){
-      const pd=typeof loaded.published_data==='string'?JSON.parse(loaded.published_data):loaded.published_data;
-      if(pd&&Object.keys(pd).length>2)contractContent=pd;
+    // Preview mode (?preview=1) reads draft_data
+    // Client view reads published_data
+    const isPreview = new URLSearchParams(location.search).get('preview') === '1';
+    let contractContent = null;
+
+    if (isPreview && loaded.draft_data) {
+      // Preview: show latest draft (from שמור button)
+      const dd = typeof loaded.draft_data === 'string' ? JSON.parse(loaded.draft_data) : loaded.draft_data;
+      if (dd && Object.keys(dd).length > 2) contractContent = dd;
+    } else if (!isPreview && loaded.published_data) {
+      // Client: show published version (from שמור גרסה button)
+      const pd = typeof loaded.published_data === 'string' ? JSON.parse(loaded.published_data) : loaded.published_data;
+      if (pd && Object.keys(pd).length > 2) contractContent = pd;
     }
-    if(contractContent){
-      DATA=mergeD(DEF,contractContent);
+
+    if (contractContent) {
+      DATA = mergeD(DEF, contractContent);
     } else {
-      // No published version yet — show defaults with title/client from meta
-      DATA=Object.assign({},DEF);
-      if(loaded.title)DATA.title=loaded.title;
-      if(loaded.client_name)DATA.client_name=loaded.client_name;
+      DATA = Object.assign({}, DEF);
+      if (loaded.title) DATA.title = loaded.title;
+      if (loaded.client_name) DATA.client_name = loaded.client_name;
     }
     show();
   }catch(e){
