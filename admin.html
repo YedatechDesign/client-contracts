@@ -243,7 +243,7 @@ function doLogin(){
   sessionStorage.setItem('ypw',pw);
   document.getElementById('loginWrap').style.display='none';
   document.getElementById('app').style.display='block';
-  loadCentralClients().then(() => loadList());
+  loadList(); loadCentralClients();
 }
 function doLogout(){
   sessionStorage.removeItem('ypw');
@@ -255,7 +255,7 @@ function doLogout(){
     pw=saved;
     document.getElementById('loginWrap').style.display='none';
     document.getElementById('app').style.display='block';
-    loadCentralClients().then(() => loadList());
+    loadList(); loadCentralClients();
   }
 })();
 
@@ -326,7 +326,7 @@ async function createNew(){
       body:JSON.stringify({password:pw})});
     const data=await r.json();
     if(data.id){
-      await loadCentralClients().then(() => loadList());
+      await loadList(); loadCentralClients();
       openEditor(data.id);
     } else {
       alert('שגיאה ביצירת הסכם: '+JSON.stringify(data));
@@ -341,7 +341,7 @@ async function deleteContract(id){
   try{
     await fetch(N8N+'/yeda-contract-delete',{method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({password:pw,contract_id:id,drive_file_id:c?.slot_drive_file_id||''})});
-    loadCentralClients().then(() => loadList());
+    loadList(); loadCentralClients();
   }catch(e){alert('שגיאה במחיקה');}
 }
 
@@ -378,7 +378,7 @@ function backToList(){
   document.getElementById('viewEditor').style.display='none';
   document.getElementById('viewList').style.display='block';
   curContract=null;
-  loadCentralClients().then(() => loadList());
+  loadList(); loadCentralClients();
 }
 
 // ── DEFAULTS ──────────────────────────────────────────────────────
@@ -667,17 +667,16 @@ function getSectionOrder(){
 
 
 // ── CLIENT MANAGEMENT POPUP ──────────────────────────────────
-let centralClients = [];
+let centralClients = ALL_CLIENTS.map(c=>({...c,logo:LOGOS+c.id+'.png'}));
 
 async function loadCentralClients() {
   try {
     const r = await fetch(N8N+'/yeda-clients-load', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:pw})});
-    const data = await r.json();
-    if (Array.isArray(data.clients) && data.clients.length) centralClients = data.clients;
-    else centralClients = ALL_CLIENTS.map(c=>({...c,logo:LOGOS+c.id+'.png'}));
-  } catch(e) {
-    centralClients = ALL_CLIENTS.map(c=>({...c,logo:LOGOS+c.id+'.png'}));
-  }
+    if (r.ok) {
+      const data = await r.json();
+      if (Array.isArray(data.clients) && data.clients.length) centralClients = data.clients;
+    }
+  } catch(e) { /* silent - use ALL_CLIENTS default */ }
 }
 
 function renderClientToggles(d) {
