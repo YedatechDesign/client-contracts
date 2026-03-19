@@ -1,1 +1,182 @@
+<!DOCTYPE html>
 
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<title>Yeda — עיצוב חדש (Preview)</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#071a5e;--blue:#1a56db;--blue-light:#2563eb;--green:#059669;--glass:rgba(255,255,255,.08);--glass-border:rgba(255,255,255,.12)}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{overflow-x:hidden;margin:0}
+body{font-family:'Heebo',sans-serif;background:linear-gradient(160deg,#020820 0%,#071a5e 20%,#0d2680 45%,#1a56db 75%,#2563eb 100%);background-attachment:fixed;color:#e8edf5;min-height:100vh;line-height:1.7}
+::selection{background:rgba(59,130,246,.4);color:#fff}
+#starsCanvas{position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:0}
+.demo-banner{position:fixed;top:0;left:0;right:0;z-index:9999;background:linear-gradient(90deg,#f59e0b,#d97706);color:#fff;text-align:center;padding:8px;font-size:13px;font-weight:700}
+.hero{position:relative;padding:72px 28px 48px;text-align:center;z-index:1}
+.hero-inner{position:relative;z-index:2;max-width:720px;margin:0 auto}
+.hero .logo-img{height:64px;filter:brightness(0) invert(1);margin-bottom:12px;transition:transform .4s}
+.hero .logo-img:hover{transform:scale(1.05)}
+.hero .company-info{font-size:12px;opacity:.45;margin-top:4px;letter-spacing:.3px}
+.hero h1{font-size:28px;font-weight:800;margin-top:28px;line-height:1.5;color:#fff}
+.hero .matara-text{margin:18px auto 0;font-size:15px;line-height:1.85;opacity:.85;max-width:640px;font-weight:300}
+.hero .client-bar{margin-top:28px;padding:14px 24px;background:var(--glass);border:1px solid var(--glass-border);border-radius:14px;font-size:20px;font-weight:700;backdrop-filter:blur(12px);display:inline-block;transition:all .3s}
+.hero .client-bar:hover{background:rgba(255,255,255,.15);transform:translateY(-2px)}
+.container{max-width:860px;margin:0 auto;padding:0 24px;position:relative;z-index:1}
+.section{margin:44px 0;opacity:0;transform:translateY(40px);transition:opacity .7s ease,transform .7s ease}
+.section.visible{opacity:1;transform:translateY(0)}
+.section-title{font-size:24px;font-weight:800;color:#fff;margin-bottom:20px;display:inline-flex;align-items:center;gap:10px}
+.sec-badge{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:12px;flex-shrink:0;transition:all .3s}
+.section:hover .sec-badge{background:rgba(59,130,246,.4);border-color:rgba(59,130,246,.6);box-shadow:0 0 20px rgba(59,130,246,.3)}
+.ms-wrap{position:relative;padding:24px 0}
+.ms-line{position:absolute;left:50%;top:0;bottom:0;width:3px;background:linear-gradient(to bottom,rgba(96,165,250,.6),rgba(96,165,250,.2),rgba(96,165,250,.6));transform:translateX(-50%);border-radius:2px}
+.ms-item{display:flex;align-items:flex-start;margin-bottom:44px;position:relative;width:100%;opacity:0;transform:translateY(30px);transition:all .6s ease}
+.ms-item.visible{opacity:1;transform:translateY(0)}
+.ms-card{width:calc(50% - 54px);background:rgba(255,255,255,.95);border-radius:14px;padding:20px 24px;box-shadow:0 4px 20px rgba(0,0,0,.08);transition:all .3s}
+.ms-card:hover{transform:translateY(-3px);box-shadow:0 8px 32px rgba(0,0,0,.15)}
+.ms-card-title{font-weight:700;color:#071a5e;font-size:16px;margin-bottom:6px}
+.ms-card-desc{font-size:14px;color:#374151;line-height:1.7}
+.ms-center{width:108px;display:flex;justify-content:center;flex-shrink:0;padding-top:16px}
+.ms-num{width:44px;height:44px;background:linear-gradient(135deg,#1a56db,#60a5fa);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:17px;z-index:2;box-shadow:0 4px 16px rgba(26,86,219,.4);border:2px solid rgba(255,255,255,.3)}
+.ms-spacer{width:calc(50% - 54px)}
+@media(max-width:640px){.ms-line{left:auto;right:28px;transform:none}.ms-item{flex-direction:row!important}.ms-center{width:56px;order:-1}.ms-card{width:calc(100% - 68px)}.ms-spacer{display:none}}
+.why-intro{font-size:15px;line-height:1.8;color:rgba(255,255,255,.75);margin-bottom:20px;padding:20px 24px;background:rgba(255,255,255,.06);border-radius:14px;border-right:4px solid rgba(96,165,250,.5)}
+.why-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+@media(max-width:640px){.why-grid{grid-template-columns:1fr}}
+.why-item{display:flex;align-items:center;gap:10px;font-size:14.5px;font-weight:500;padding:10px 16px;border-radius:10px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);transition:all .3s}
+.why-item:hover{background:rgba(255,255,255,.12);border-color:rgba(96,165,250,.3);transform:translateX(-4px)}
+.why-check{color:#60a5fa;font-size:20px;flex-shrink:0;transition:transform .3s}
+.why-item:hover .why-check{transform:scale(1.3)}
+.cl-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+@media(max-width:768px){.cl-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:480px){.cl-grid{grid-template-columns:1fr}}
+.cl-card{background:#ffffff;border:2px solid #d1d5db;border-radius:16px;padding:20px 14px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px;text-decoration:none;color:inherit;transition:all .35s;position:relative;overflow:hidden}
+.cl-card::before{content:'';position:absolute;inset:-2px;border-radius:18px;background:linear-gradient(135deg,#1a56db,#60a5fa,#1a56db);z-index:-1;opacity:0;transition:opacity .35s}
+.cl-card:hover::before{opacity:1}
+.cl-card:hover{transform:translateY(-4px);box-shadow:0 12px 36px rgba(26,86,219,.2)}
+.cl-card img{width:100px;height:60px;object-fit:contain;transition:transform .35s}
+.cl-card:hover img{transform:scale(1.08)}
+.cl-card .cl-name{font-size:13px;font-weight:700;color:#1f2937}
+.cl-card .cl-desc{font-size:11px;color:#6b7280;line-height:1.4}
+.glass-card{background:rgba(255,255,255,.95);border-radius:18px;padding:28px;box-shadow:0 8px 32px rgba(0,0,0,.12);transition:transform .35s,box-shadow .35s}
+.glass-card:hover{transform:translateY(-4px);box-shadow:0 16px 48px rgba(0,0,0,.2)}
+.cost-tbl{width:100%;border-collapse:separate;border-spacing:0;border-radius:16px;overflow:hidden;margin-bottom:28px;box-shadow:0 4px 24px rgba(0,0,0,.15)}
+.cost-tbl th{background:rgba(255,255,255,.12);color:#fff;padding:16px 22px;font-size:16px;font-weight:700;text-align:right;backdrop-filter:blur(8px)}
+.cost-tbl td{padding:16px 22px;font-size:14px;background:rgba(255,255,255,.95);border-bottom:1px solid rgba(0,0,0,.04)}
+.cost-tbl tr:last-child td{border-bottom:none}
+.cost-tbl td:first-child{font-weight:600;color:#071a5e}
+.cost-tbl tr:hover td{background:#eff6ff}
+.pay-card{border-right:4px solid #60a5fa;padding:18px 24px;margin-bottom:14px;background:rgba(255,255,255,.95);border-radius:0 16px 16px 0;box-shadow:0 2px 12px rgba(0,0,0,.06);transition:all .3s}
+.pay-card:hover{transform:translateX(-4px);box-shadow:0 6px 24px rgba(0,0,0,.1);border-right-width:6px;border-right-color:#1a56db}
+.pay-title{font-weight:700;font-size:15px;color:#071a5e}
+.pay-desc{font-size:13.5px;color:#374151;margin-top:4px}
+.pay-total{font-weight:800;color:#1a56db;margin-top:6px;font-size:16px}
+.note-vat{font-weight:800;color:#fff;margin:14px 0;font-size:16px;text-align:center;padding:12px;background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.3);border-radius:12px}
+.opt-box{background:rgba(255,255,255,.06);border-radius:14px;padding:22px 24px;border:1px solid rgba(255,255,255,.1)}
+.opt-item{margin-bottom:8px;font-size:14.5px;color:#e8edf5}
+.opt-item strong{color:#93c5fd}
+.tp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media(max-width:640px){.tp-grid{grid-template-columns:1fr}}
+.tp-card{background:rgba(255,255,255,.95);border:2px solid rgba(255,255,255,.12);border-radius:16px;padding:24px;text-align:center;transition:all .3s}
+.tp-card:hover{transform:translateY(-3px);box-shadow:0 8px 32px rgba(0,0,0,.12)}
+.tp-card.featured{border-color:rgba(96,165,250,.5);transform:scale(1.04);box-shadow:0 8px 32px rgba(26,86,219,.15);animation:pulse 3s ease-in-out infinite;position:relative}
+@keyframes pulse{0%,100%{box-shadow:0 8px 32px rgba(26,86,219,.15)}50%{box-shadow:0 8px 40px rgba(26,86,219,.3)}}
+.tp-card.featured::before{content:'מומלץ';position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#1a56db,#60a5fa);color:#fff;padding:4px 18px;border-radius:20px;font-size:11px;font-weight:700}
+.tp-amount{font-size:20px;font-weight:800;color:#071a5e}
+.tp-prices{margin-top:12px;font-size:17px}
+.tp-orig{text-decoration:line-through;color:#9ca3af;margin-left:8px}
+.tp-sale{font-weight:800;color:#1a56db}
+.tp-examples{margin-top:24px;font-size:13.5px;color:rgba(255,255,255,.7);line-height:2.1;padding:20px 24px;background:rgba(255,255,255,.05);border-radius:14px;border:1px solid rgba(255,255,255,.08)}
+.tp-bullet{color:#60a5fa;margin-left:6px}
+.term-item{margin-bottom:14px;font-size:14px;line-height:1.8;color:rgba(255,255,255,.8);padding:14px 18px;background:rgba(255,255,255,.05);border-radius:12px;border:1px solid rgba(255,255,255,.08);transition:all .3s}
+.term-item:hover{background:rgba(255,255,255,.08);border-color:rgba(96,165,250,.2)}
+.term-bullet{color:#60a5fa;font-weight:700;margin-left:6px}
+.agreement{background:rgba(255,255,255,.95);border-radius:20px;padding:36px 32px;margin:48px 0;box-shadow:0 8px 40px rgba(0,0,0,.15)}
+.agreement h2{font-size:26px;font-weight:800;color:#071a5e;margin-bottom:24px;text-align:center}
+.ag-line{border-bottom:1.5px solid #e5e7eb;padding:10px 0;margin:6px 0;font-size:15px;color:#1f2937}
+.ag-input{border:none;border-bottom:2px solid #1a56db;background:transparent;font-size:15px;font-family:inherit;padding:4px 10px;min-width:80px;outline:none;color:#071a5e;font-weight:600;direction:rtl;display:inline-block}
+.ag-input::placeholder{color:#9ca3af}
+.sign-section{background:rgba(255,255,255,.95);border-radius:20px;padding:32px;margin:48px 0;box-shadow:0 8px 40px rgba(0,0,0,.15)}
+.sign-section h2{font-size:22px;font-weight:800;color:#071a5e;margin-bottom:24px;text-align:center}
+.sign-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:640px){.sign-row{grid-template-columns:1fr}}
+.sign-section label{display:block;font-size:13px;font-weight:600;color:#6b7280;margin-bottom:5px;margin-top:14px}
+.sign-section input{width:100%;padding:12px 16px;border:1.5px solid #e5e7eb;border-radius:12px;font-size:15px;font-family:inherit;outline:none;direction:rtl}
+.sign-section input:focus{border-color:#1a56db;box-shadow:0 0 0 3px rgba(26,86,219,.1)}
+.sig-wrap{border:2px dashed #d1d5db;border-radius:16px;margin-top:18px;position:relative;min-height:180px;background:#fff;cursor:crosshair}
+.sig-placeholder{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#9ca3af;font-size:15px;pointer-events:none}
+.decl{font-size:14px;font-weight:700;color:#071a5e;margin:20px 0;text-align:center}
+.btn-sign{display:block;width:100%;margin-top:22px;padding:18px;background:linear-gradient(135deg,#059669,#047857);color:#fff;border:none;border-radius:16px;font-size:17px;font-weight:800;cursor:pointer;font-family:inherit;transition:all .3s;box-shadow:0 6px 24px rgba(5,150,105,.25);position:relative;overflow:hidden}
+.btn-sign::after{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent);transition:left .5s}
+.btn-sign:hover::after{left:100%}
+.btn-sign:hover{transform:translateY(-2px);box-shadow:0 10px 36px rgba(5,150,105,.35)}
+.footer{text-align:center;padding:32px 24px;color:rgba(255,255,255,.35);font-size:12px;border-top:1px solid rgba(255,255,255,.08);margin-top:48px;z-index:1;position:relative}
+.scroll-top{position:fixed;bottom:24px;left:24px;width:50px;height:50px;background:rgba(26,86,219,.8);color:#fff;border:1px solid rgba(255,255,255,.2);border-radius:50%;font-size:24px;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.2);z-index:999;display:none;align-items:center;justify-content:center;font-family:inherit}
+.scroll-top.show{display:flex}
+.scroll-top:hover{background:#1a56db}
+</style>
+</head>
+<body>
+<div class="demo-banner">⚡ תצוגה מקדימה — עיצוב חדש לאישור ⚡</div>
+<canvas id="starsCanvas"></canvas>
+<div style="padding-top:36px">
+<div class="hero"><div class="hero-inner">
+<img src="https://agreements.yedalms.io/logos/yeda-logo.png" class="logo-img" alt="Yeda" onerror="this.outerHTML='<div style=font-size:2.5rem;font-weight:900;margin-bottom:12px>yeda</div>'">
+<div class="company-info">ידע פיתוח סביבות למידה בע"מ · ח.פ 516072253 · יגאל אלון 123, תל אביב</div>
+<h1>הצעת מחיר – פיתוח מערכת מותאמת אישית</h1>
+<div class="matara-text">פיתוח מערכת מותאמת אישית ליצירת תכנים עם AI לפי אפיון מאושר מראש, הקמת אתר לניהול למידה ומעקב ביצועים תחת מערכת Yeda.</div>
+<div class="client-bar">עבור: לקוח לדוגמא</div>
+</div></div>
+<div class="container">
+<div class="section" data-sec="ms"><div class="section-title"><span class="sec-badge"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></span>אבני דרך</div><div class="ms-wrap" id="msWrap"></div></div>
+<div class="section" data-sec="why"><div class="section-title"><span class="sec-badge"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z"/></svg></span>למה אנחנו?</div><div class="why-intro" id="whyIntro"></div><div class="why-grid" id="whyGrid"></div></div>
+<div class="section" data-sec="clients"><div class="section-title"><span class="sec-badge"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22V12h6v10"/></svg></span>עובדים עם Yeda:</div><div class="cl-grid" id="clGrid"></div></div>
+<div class="section" data-sec="costs"><div class="section-title"><span class="sec-badge"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span>עלויות ותנאי תשלום</div><div class="glass-card"><p style="color:#6b7280;margin-bottom:16px;font-size:14.5px" id="costsSubtitle"></p><table class="cost-tbl"><thead><tr><th>פריט</th><th>עלות</th></tr></thead><tbody id="costsTbody"></tbody></table><div id="paysContainer"></div><div class="note-vat">⚡ כל המחירים ללא מע״מ</div></div></div>
+<div class="section" data-sec="opt"><div class="section-title"><span class="sec-badge"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg></span>שירותים אופציונליים</div><div class="opt-box" id="optBox"></div></div>
+<div class="section" data-sec="tok"><div class="section-title"><span class="sec-badge"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><rect x="3" y="8" width="18" height="12" rx="3"/><path d="M12 2v6"/></svg></span>חבילות טוקנים</div><div class="tp-grid" id="tpGrid"></div><div class="tp-examples" id="tpExamples"></div></div>
+<div class="section" data-sec="terms"><div class="section-title"><span class="sec-badge"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h8"/></svg></span>תנאי ההסכם</div><div id="termsList"></div></div>
+<div class="agreement"><h2>הסכם התקשרות</h2><div style="font-size:15px;line-height:1.85;color:#1f2937"><strong>בין:</strong> חברת ידע פיתוח סביבות לימוד בע"מ</div><div class="ag-line">ח.פ 516072253</div><div class="ag-line">כתובת: יגאל אלון 123, תל אביב</div><div style="font-size:15px;margin-top:28px;color:#1f2937"><strong>לבין:</strong> <input class="ag-input" placeholder="שם החברה"></div><div class="ag-line">ח.פ: <input class="ag-input" placeholder="ח.פ"></div></div>
+<div class="sign-section"><h2>פרטי איש קשר וחתימה</h2><div class="sign-row"><div><label>שם מלא *</label><input placeholder="שם מלא"></div><div><label>תפקיד</label><input placeholder="תפקיד"></div></div><div class="sign-row"><div><label>מייל *</label><input placeholder="email@example.com"></div><div><label>ת.ז / ח.פ *</label><input placeholder="מספר"></div></div><div class="decl">הנני מצהיר/ה כי כל הפרטים שמסרתי נכונים ומחייבים.</div><label>חתימה *</label><div class="sig-wrap"><div class="sig-placeholder">חתום כאן</div></div><button class="btn-sign">אני מאשר/ת ומסכים/ה לתנאי ההסכם ✍️</button></div>
+</div>
+<div class="footer">ידע פיתוח סביבות למידה בע"מ | ח.פ. 516072253 | יגאל אלון 123, תל אביב | coo@yedalms.io</div>
+</div>
+<button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+<script>
+var c=document.getElementById('starsCanvas'),ctx=c.getContext('2d'),w,h,mouseX=-9999,mouseY=-9999,stars=[];
+function resize(){w=c.width=window.innerWidth;h=c.height=window.innerHeight;if(!stars.length){for(var i=0;i<30;i++)stars.push({x:Math.random()*w,y:Math.random()*h,r:12+Math.random()*10,a:.4+Math.random()*.3,ph:Math.random()*6.28,vx:0,vy:0,t:0});for(var i=0;i<60;i++)stars.push({x:Math.random()*w,y:Math.random()*h,r:5+Math.random()*5,a:.3+Math.random()*.25,ph:Math.random()*6.28,vx:0,vy:0,t:1});for(var i=0;i<110;i++)stars.push({x:Math.random()*w,y:Math.random()*h,r:1.5+Math.random()*3,a:.15+Math.random()*.2,ph:Math.random()*6.28,vx:0,vy:0,t:2});}}
+resize();window.addEventListener('resize',resize);
+document.addEventListener('mousemove',function(e){mouseX=e.clientX;mouseY=e.clientY;});
+document.addEventListener('mouseleave',function(){mouseX=-9999;mouseY=-9999;});
+function drawStars(){ctx.clearRect(0,0,w,h);var tm=Date.now()/2000;for(var i=0;i<stars.length;i++){var s=stars[i],dx=s.x-mouseX,dy=s.y-mouseY,dist=Math.sqrt(dx*dx+dy*dy),rep=s.t===0?220:s.t===1?160:110;if(dist<rep&&dist>0){var f=(rep-dist)/rep,str=s.t===0?3:s.t===1?2:1.2;s.vx+=dx/dist*f*str;s.vy+=dy/dist*f*str;}s.vx*=.93;s.vy*=.93;s.x+=s.vx;s.y+=s.vy;if(s.x<-40)s.x=w+30;if(s.x>w+40)s.x=-30;if(s.y<-40)s.y=h+30;if(s.y>h+40)s.y=-30;var alpha=s.a+Math.sin(tm+s.ph)*.15;ctx.save();ctx.translate(s.x,s.y);ctx.globalAlpha=alpha>0?alpha:0;if(s.t===0){ctx.shadowBlur=28;ctx.shadowColor='rgba(147,197,253,.8)';}else if(s.t===1){ctx.shadowBlur=12;ctx.shadowColor='rgba(147,197,253,.5)';}ctx.fillStyle='#fff';ctx.beginPath();for(var j=0;j<4;j++){var a=j*Math.PI/2;ctx.lineTo(Math.cos(a)*s.r,Math.sin(a)*s.r);ctx.lineTo(Math.cos(a+Math.PI/4)*s.r*.25,Math.sin(a+Math.PI/4)*s.r*.25);}ctx.closePath();ctx.fill();ctx.restore();}requestAnimationFrame(drawStars);}
+drawStars();
+
+var obs=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add(‘visible’);obs.unobserve(e.target);}});},{threshold:0.1});
+document.querySelectorAll(’.section,.ms-item’).forEach(function(el){obs.observe(el);});
+window.addEventListener(‘scroll’,function(){document.getElementById(‘scrollTop’).classList.toggle(‘show’,window.scrollY>400);});
+
+var esc=function(s){var d=document.createElement(‘div’);d.textContent=s;return d.innerHTML;};
+var LOGOS=‘https://agreements.yedalms.io/logos/’;
+var D={milestones:[{num:‘0’,title:‘חתימה והעברת תשלום ראשון’,desc:‘חתימת חוזה בין הצדדים והעברת התשלום הראשון.’},{num:‘1’,title:‘פגישת אפיון’,desc:‘פגישה מקיפה עם נציגי הלקוח לתיאור מלא של דרישות המערכת.’},{num:‘2’,title:‘אישור אפיון’,desc:‘הכנת מסמך אפיון מפורט. אישור מטעם הלקוח.’},{num:‘3’,title:‘הקמת אתר’,desc:‘חיבור טכני, עיצוב והתאמת הפורטל למיתוג.’},{num:‘4’,title:‘פיתוח’,desc:‘פיתוח מערכת יצירת חומרי למידה עם AI והעלאה לאוויר.’}],why_intro:‘הפלטפורמה מאפשרת למכללות להקים ולהפעיל מערך קורסים דיגיטליים ופרונטליים, תוך שילוב כלים מתקדמים למעקב אחר התקדמות.’,why_items:[‘פתרון מלא לבניית קורסים דיגיטליים’,‘זמינות גבוהה ומענה מהיר’,‘אבטחת מידע ברמה גבוהה’,‘מנהל תיק אישי זמין’,‘דוחות מעקב בהתאמה אישית’,‘קבוצת Whatsapp ייחודית’],clients:[{name:‘HackerU’,desc:‘סייבר והייטק’,logo:‘client1.png’},{name:‘מכללת IPC’,desc:‘הכשרות מקצועיות’,logo:‘client2.png’},{name:‘מכללת אורין שפלטר’,desc:‘הוראה פיננסית’,logo:‘client3.png’},{name:‘ThriveDX’,desc:‘הכשרות דיגיטליות’,logo:‘client4.png’},{name:‘מרכז גומא גבים’,desc:‘גישור ואימון’,logo:‘client5.png’},{name:‘מכללת קול המס’,desc:‘רואי חשבון’,logo:‘client6.png’},{name:‘HIGHQ’,desc:‘בגרות ופסיכומטרי’,logo:‘client7.png’},{name:‘פירמת פישר’,desc:‘עורכי דין’,logo:‘client8.png’}],costs_subtitle:‘מחירון — הקמת מערכת ניהול למידה’,costs_rows:[[‘פיתוח’,‘250₪ לשעה’],[‘מערכת ניהול למידה’,‘11,988₪’],[‘קרדיטים AI’,‘2,310₪’]],payments:[{label:‘תשלום 1’,title:‘חתימה’,desc:‘100 שעות פיתוח + 1/3 מערכת’,total:‘28,996₪’},{label:‘תשלום 2’,title:‘אישור אפיון’,desc:‘1/3 מערכת’,total:‘3,996₪’},{label:‘תשלום 3’,title:‘הקמת אתר’,desc:‘1/3 מערכת + קרדיטים’,total:‘6,306₪’}],optional:[{title:‘אחסון נוסף עד 1TB’,price:‘250₪ לחודש’},{title:‘תעבורה נוספת עד 2TB’,price:‘250₪ לחודש’},{title:‘טוקנים נוספים’,price:‘0.07$ × 3.3₪’}],token_packages:[{amount:‘10,000 טוקנים’,original:‘3,600₪’,sale:‘3,420₪’},{amount:‘20,000 טוקנים’,original:‘7,200₪’,sale:‘6,480₪’,featured:true},{amount:‘40,000 טוקנים’,original:‘14,400₪’,sale:‘12,960₪’}],token_examples:[‘יצירת 10 סילבוסים = 20-40 טוקנים AI’,‘100 שקופיות = 20-25 טוקנים AI’,‘כתוביות לשעה = 15-30 טוקנים AI’,‘שאלות לשעה = 10-15 טוקנים AI’,‘חלוקה לפרקים = 5-10 טוקנים AI’,‘תרגום כתוביות = 80-130 טוקנים AI’,‘לומדה מקבצים = 300-500 טוקנים AI’,‘3 שאלות לעוזר = 1 טוקן AI’],terms:[{title:‘מערכת ניהול למידה’,text:‘הלקוח יקבל אתרים על פלטפורמת Yeda. שימוש ללא הגבלה למשך 3 שנים.’},{title:‘פלטפורמת AI’,text:‘גישה לבנייה, עיצוב ואחסון מצגות, וידאו ולומדות.’},{title:‘הגבלת אחריות’,text:‘חברת ידע אינה נושאת אחריות לתביעות הקשורות בדיני אינטרנט.’},{title:‘קניין רוחני’,text:‘הקניין הרוחני שייך ללקוח.’},{title:‘סודיות’,text:‘חברת ידע מתחייבת לשמירה על סודיות.’}]};
+
+function render(){
+var wrap=document.getElementById(‘msWrap’);wrap.innerHTML=’<div class="ms-line"></div>’;
+D.milestones.forEach(function(m,i){var el=document.createElement(‘div’);el.className=‘ms-item’;el.style.justifyContent=‘center’;el.style.transitionDelay=(i*.12)+‘s’;var card=document.createElement(‘div’);card.className=‘ms-card’;card.innerHTML=’<div class="ms-card-title">’+esc(m.title)+’</div><div class="ms-card-desc">’+esc(m.desc)+’</div>’;var center=document.createElement(‘div’);center.className=‘ms-center’;center.innerHTML=’<div class="ms-num">’+m.num+’</div>’;var spacer=document.createElement(‘div’);spacer.className=‘ms-spacer’;if(i%2===0){el.appendChild(card);el.appendChild(center);el.appendChild(spacer);}else{el.appendChild(spacer);el.appendChild(center);el.appendChild(card);}wrap.appendChild(el);obs.observe(el);});
+document.getElementById(‘whyIntro’).textContent=D.why_intro;
+document.getElementById(‘whyGrid’).innerHTML=D.why_items.map(function(it){return’<div class="why-item"><span class="why-check">✔</span>’+esc(it)+’</div>’;}).join(’’);
+document.getElementById(‘clGrid’).innerHTML=D.clients.map(function(c){return’<a class="cl-card" href="#"><img src="'+LOGOS+c.logo+'" onerror="this.remove()" alt="'+esc(c.name)+'"><div class="cl-name">’+esc(c.name)+’</div><div class="cl-desc">’+esc(c.desc)+’</div></a>’;}).join(’’);
+document.getElementById(‘costsSubtitle’).textContent=D.costs_subtitle;
+document.getElementById(‘costsTbody’).innerHTML=D.costs_rows.map(function(r){return’<tr><td>’+esc(r[0])+’</td><td>’+esc(r[1])+’</td></tr>’;}).join(’’);
+document.getElementById(‘paysContainer’).innerHTML=D.payments.map(function(p){return’<div class="pay-card"><div class="pay-title">’+esc(p.label)+’ — ‘+esc(p.title)+’</div><div class="pay-desc">’+esc(p.desc)+’</div><div class="pay-total">’+esc(p.total)+’</div></div>’;}).join(’’);
+document.getElementById(‘optBox’).innerHTML=D.optional.map(function(it){return’<div class="opt-item"><strong>’+esc(it.title)+’:</strong> ‘+esc(it.price)+’</div>’;}).join(’’);
+document.getElementById(‘tpGrid’).innerHTML=D.token_packages.map(function(p){return’<div class="tp-card'+(p.featured?' featured':'')+'"><div class="tp-amount">’+esc(p.amount)+’</div><div class="tp-prices"><span class="tp-orig">’+esc(p.original)+’</span> <span class="tp-sale">’+esc(p.sale)+’</span></div></div>’;}).join(’’);
+document.getElementById(‘tpExamples’).innerHTML=’<strong style="color:#93c5fd">דוגמת פירוט שימוש בטוקנים:</strong><br>’+D.token_examples.map(function(ex){return’<span class="tp-bullet">✦</span> ‘+esc(ex)+’<br>’;}).join(’’);
+document.getElementById(‘termsList’).innerHTML=D.terms.map(function(t){return’<div class="term-item"><span class="term-bullet">●</span><strong>’+esc(t.title)+’</strong> — ‘+esc(t.text)+’</div>’;}).join(’’);
+setTimeout(function(){document.querySelectorAll(’.section’).forEach(function(el){if(el.getBoundingClientRect().top<window.innerHeight)el.classList.add(‘visible’);});},100);
+}
+render();
+</script>
+
+</body>
+</html>
