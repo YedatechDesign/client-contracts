@@ -800,18 +800,30 @@ async function runAiFill(){
   status.textContent='🔄 AI מנתח את הטקסט...';
   status.style.color='#4f46e5';
   
-  // Collect current form data
   const current=buildPayload();
   delete current.password;
   delete current._loaded;
   
   try{
+    status.textContent='🔄 שולח לשרת...';
     const r=await fetch(N8N+'/yeda-ai-fill',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({password:pw, text:text, current_data:current})
     });
-    const data=await r.json();
+    status.textContent='🔄 מעבד תשובה...';
+    const raw=await r.text();
+    console.log('AI raw response:', raw);
+    
+    let data;
+    try{ data=JSON.parse(raw); }catch(pe){
+      status.textContent='שגיאה בפענוח: '+raw.slice(0,100);
+      status.style.color='var(--red)';
+      btn.disabled=false;
+      return;
+    }
+    
+    console.log('AI parsed:', data);
     
     if(data.error){
       status.textContent='שגיאה: '+data.error;
@@ -821,15 +833,17 @@ async function runAiFill(){
     }
     
     if(data.success && data.fields){
+      console.log('AI fields:', JSON.stringify(data.fields).slice(0,500));
+      status.textContent='🔄 ממלא שדות...';
       applyAiFields(data.fields);
-      status.textContent='✅ השדות עודכנו בהצלחה!';
+      status.textContent='✅ עודכנו '+Object.keys(data.fields).length+' שדות: '+Object.keys(data.fields).join(', ');
       status.style.color='var(--green)';
-      setTimeout(()=>status.textContent='',4000);
     } else {
-      status.textContent='לא נמצאו שדות רלוונטיים';
+      status.textContent='תשובת AI: '+JSON.stringify(data).slice(0,150);
       status.style.color='var(--muted)';
     }
   }catch(e){
+    console.error('AI fill error:', e);
     status.textContent='שגיאת חיבור: '+e.message;
     status.style.color='var(--red)';
   }
