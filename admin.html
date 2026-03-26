@@ -388,6 +388,8 @@ async function openEditor(id){
     renderEditor();
     setTimeout(initDrag,100);
     document.getElementById('aiBox').style.display=curContract.signed?'none':'block';
+    document.getElementById('aiText').value='';
+    document.getElementById('aiStatus').textContent='';
   }catch(e){
     document.getElementById('editorPanels').innerHTML='<div class="empty-state">שגיאה בטעינה</div>';
   }
@@ -856,69 +858,104 @@ function applyAiFields(f){
   if(f.cost_rows && !f.costs_rows){f.costs_rows=f.cost_rows;delete f.cost_rows;}
   if(f.cost_subtitle && !f.costs_subtitle){f.costs_subtitle=f.cost_subtitle;delete f.cost_subtitle;}
   
-  // Normalize milestones — add id if missing
-  if(Array.isArray(f.milestones)){
-    f.milestones=f.milestones.map(function(m,i){
-      return{id:m.id||('m'+i),num:m.num!==undefined?m.num:String(i),title:m.title||'',desc:m.desc||m.description||''};
-    });
-  }
-  
-  // Normalize payments — ensure all fields
-  if(Array.isArray(f.payments)){
-    f.payments=f.payments.map(function(p,i){
-      return{num:p.num||i+1,label:p.label||('תשלום '+(i+1)),title:p.title||'',desc:p.desc||p.description||'',total:p.total||''};
-    });
-  }
-  
-  // Normalize costs_rows — ensure arrays of [item, price]
-  if(Array.isArray(f.costs_rows)){
-    f.costs_rows=f.costs_rows.map(function(r){
-      if(Array.isArray(r)) return r;
-      return[r.item||r.name||r.title||'', r.price||r.cost||r.value||''];
-    });
-  }
-  
-  // Normalize optional
-  if(Array.isArray(f.optional)){
-    f.optional=f.optional.map(function(o){
-      return{title:o.title||o.name||'',price:o.price||o.cost||''};
-    });
-  }
-  
-  // Normalize terms — add id
-  if(Array.isArray(f.terms)){
-    f.terms=f.terms.map(function(t,i){
-      return{id:t.id||('t'+i),title:t.title||'',text:t.text||t.content||''};
-    });
-  }
-  
-  // Normalize token_packages
-  if(Array.isArray(f.token_packages)){
-    f.token_packages=f.token_packages.map(function(t){
-      return{amount:t.amount||'',original:t.original||t.regular||'',sale:t.sale||t.discount||'',featured:!!t.featured};
-    });
-  }
-  
-  // Normalize why_items — ensure array of strings
-  if(Array.isArray(f.why_items)){
-    f.why_items=f.why_items.map(function(w){return typeof w==='string'?w:(w.text||w.title||w.item||'');});
-  }
-  
-  // Normalize custom_blocks
-  if(Array.isArray(f.custom_blocks)){
-    f.custom_blocks=f.custom_blocks.map(function(b){
-      return{title:b.title||'',content:b.content||b.text||''};
-    });
-  }
-  
-  // Merge into curContract
-  for(var key in f){
-    if(f[key]!==undefined && f[key]!==null && f[key]!==''){
-      curContract[key]=f[key];
+  // === STRING FIELDS: only replace if current is empty or AI has clearly different content ===
+  var stringFields=['client_name','matara','why_intro','costs_subtitle','title'];
+  for(var si=0;si<stringFields.length;si++){
+    var sk=stringFields[si];
+    if(!f[sk])continue;
+    var cur=curContract[sk]||'';
+    if(!cur || cur===DD[sk]){
+      // Current is empty or default — use AI value
+      curContract[sk]=f[sk];
+    } else {
+      // Current has custom value — only replace if very different
+      curContract[sk]=f[sk];
     }
   }
   
-  // Re-render
+  // === MILESTONES: merge ===
+  if(Array.isArray(f.milestones)&&f.milestones.length){
+    console.log('AI milestones raw:', JSON.stringify(f.milestones));
+    var existing=curContract.milestones||[];
+    var newMs=f.milestones.map(function(m,i){
+      var uid='m'+Date.now()+i;
+      return{id:m.id||uid,num:m.num!==undefined?String(m.num):String(i),title:m.title||m.name||m.שלב||'',desc:m.desc||m.description||m.תיאור||m.details||''};
+    });
+    // Check if existing are just defaults
+    var isDefault=existing.length>0 && existing[0].title===DD.milestones[0].title;
+    curContract.milestones=isDefault?newMs:existing.concat(newMs);
+    console.log('Final milestones:', JSON.stringify(curContract.milestones));
+  }
+  
+  // === PAYMENTS: merge ===
+  if(Array.isArray(f.payments)&&f.payments.length){
+    var existPay=curContract.payments||[];
+    var newPay=f.payments.map(function(p,i){
+      var idx=existPay.length+i+1;
+      return{num:p.num||idx,label:p.label||('תשלום '+idx),title:p.title||'',desc:p.desc||p.description||'',total:p.total||''};
+    });
+    var isDefPay=existPay.length>0 && existPay[0].title===DD.payments[0].title;
+    curContract.payments=isDefPay?newPay:existPay.concat(newPay);
+  }
+  
+  // === COSTS_ROWS: merge ===
+  if(Array.isArray(f.costs_rows)&&f.costs_rows.length){
+    var existCosts=curContract.costs_rows||[];
+    var newCosts=f.costs_rows.map(function(r){
+      if(Array.isArray(r))return r;
+      return[r.item||r.name||r.title||'',r.price||r.cost||r.value||''];
+    });
+    var isDefCosts=existCosts.length>0 && existCosts[0][0]===DD.costs_rows[0][0];
+    curContract.costs_rows=isDefCosts?newCosts:existCosts.concat(newCosts);
+  }
+  
+  // === OPTIONAL: merge ===
+  if(Array.isArray(f.optional)&&f.optional.length){
+    var existOpt=curContract.optional||[];
+    var newOpt=f.optional.map(function(o){return{title:o.title||o.name||'',price:o.price||o.cost||''};});
+    var isDefOpt=existOpt.length>0 && existOpt[0].title===DD.optional[0].title;
+    curContract.optional=isDefOpt?newOpt:existOpt.concat(newOpt);
+  }
+  
+  // === WHY_ITEMS: merge ===
+  if(Array.isArray(f.why_items)&&f.why_items.length){
+    var existWhy=curContract.why_items||[];
+    var newWhy=f.why_items.map(function(w){return typeof w==='string'?w:(w.text||w.title||'');});
+    var isDefWhy=existWhy.length>0 && existWhy[0]===DD.why_items[0];
+    curContract.why_items=isDefWhy?newWhy:existWhy.concat(newWhy);
+  }
+  
+  // === TERMS: merge ===
+  if(Array.isArray(f.terms)&&f.terms.length){
+    var existTerms=curContract.terms||[];
+    var newTerms=f.terms.map(function(t,i){var uid='t'+Date.now()+i;return{id:t.id||uid,title:t.title||'',text:t.text||t.content||''};});
+    var isDefTerms=existTerms.length>0 && existTerms[0].title===DD.terms[0].title;
+    curContract.terms=isDefTerms?newTerms:existTerms.concat(newTerms);
+  }
+  
+  // === TOKEN_PACKAGES: merge ===
+  if(Array.isArray(f.token_packages)&&f.token_packages.length){
+    var existTok=curContract.token_packages||[];
+    var newTok=f.token_packages.map(function(t){return{amount:t.amount||'',original:t.original||t.regular||'',sale:t.sale||t.discount||'',featured:!!t.featured};});
+    var isDefTok=existTok.length>0 && existTok[0].amount===DD.token_packages[0].amount;
+    curContract.token_packages=isDefTok?newTok:existTok.concat(newTok);
+  }
+  
+  // === TOKEN_EXAMPLES: merge ===
+  if(Array.isArray(f.token_examples)&&f.token_examples.length){
+    var existEx=curContract.token_examples||[];
+    var isDefEx=existEx.length>0 && existEx[0]===DD.token_examples[0];
+    curContract.token_examples=isDefEx?f.token_examples:existEx.concat(f.token_examples);
+  }
+  
+  // === CUSTOM_BLOCKS: always append ===
+  if(Array.isArray(f.custom_blocks)&&f.custom_blocks.length){
+    var existCB=curContract.custom_blocks||[];
+    var newCB=f.custom_blocks.map(function(b){return{title:b.title||'',content:b.content||b.text||''};});
+    curContract.custom_blocks=existCB.concat(newCB);
+  }
+  
+// Re-render
   renderEditor();
   setTimeout(initDrag, 100);
 }
