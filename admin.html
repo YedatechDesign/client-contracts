@@ -851,11 +851,74 @@ async function runAiFill(){
 }
 
 function applyAiFields(f){
-  for (var key in f) {
-    if (f[key] !== undefined && f[key] !== null && f[key] !== '') {
-      curContract[key] = f[key];
+  // Fix common AI field name mistakes
+  if(f.why_intr && !f.why_intro){f.why_intro=f.why_intr;delete f.why_intr;}
+  if(f.cost_rows && !f.costs_rows){f.costs_rows=f.cost_rows;delete f.cost_rows;}
+  if(f.cost_subtitle && !f.costs_subtitle){f.costs_subtitle=f.cost_subtitle;delete f.cost_subtitle;}
+  
+  // Normalize milestones — add id if missing
+  if(Array.isArray(f.milestones)){
+    f.milestones=f.milestones.map(function(m,i){
+      return{id:m.id||('m'+i),num:m.num!==undefined?m.num:String(i),title:m.title||'',desc:m.desc||m.description||''};
+    });
+  }
+  
+  // Normalize payments — ensure all fields
+  if(Array.isArray(f.payments)){
+    f.payments=f.payments.map(function(p,i){
+      return{num:p.num||i+1,label:p.label||('תשלום '+(i+1)),title:p.title||'',desc:p.desc||p.description||'',total:p.total||''};
+    });
+  }
+  
+  // Normalize costs_rows — ensure arrays of [item, price]
+  if(Array.isArray(f.costs_rows)){
+    f.costs_rows=f.costs_rows.map(function(r){
+      if(Array.isArray(r)) return r;
+      return[r.item||r.name||r.title||'', r.price||r.cost||r.value||''];
+    });
+  }
+  
+  // Normalize optional
+  if(Array.isArray(f.optional)){
+    f.optional=f.optional.map(function(o){
+      return{title:o.title||o.name||'',price:o.price||o.cost||''};
+    });
+  }
+  
+  // Normalize terms — add id
+  if(Array.isArray(f.terms)){
+    f.terms=f.terms.map(function(t,i){
+      return{id:t.id||('t'+i),title:t.title||'',text:t.text||t.content||''};
+    });
+  }
+  
+  // Normalize token_packages
+  if(Array.isArray(f.token_packages)){
+    f.token_packages=f.token_packages.map(function(t){
+      return{amount:t.amount||'',original:t.original||t.regular||'',sale:t.sale||t.discount||'',featured:!!t.featured};
+    });
+  }
+  
+  // Normalize why_items — ensure array of strings
+  if(Array.isArray(f.why_items)){
+    f.why_items=f.why_items.map(function(w){return typeof w==='string'?w:(w.text||w.title||w.item||'');});
+  }
+  
+  // Normalize custom_blocks
+  if(Array.isArray(f.custom_blocks)){
+    f.custom_blocks=f.custom_blocks.map(function(b){
+      return{title:b.title||'',content:b.content||b.text||''};
+    });
+  }
+  
+  // Merge into curContract
+  for(var key in f){
+    if(f[key]!==undefined && f[key]!==null && f[key]!==''){
+      curContract[key]=f[key];
     }
   }
+  
+  // Re-render
   renderEditor();
   setTimeout(initDrag, 100);
 }
