@@ -142,6 +142,15 @@ textarea.fi{resize:vertical;min-height:80px}
 @media(max-width:600px){.pcl-item{grid-template-columns:1fr}}
 .pcl-item input{font-size:12px}
 .pcl-item .pdel{background:none;border:none;color:var(--red);font-size:16px;cursor:pointer}
+/* AI Fill */
+.ai-box{background:linear-gradient(135deg,#eff6ff,#f0f4ff);border:1.5px solid #bfdbfe;border-radius:12px;padding:16px;margin-bottom:16px}
+.ai-box textarea{width:100%;min-height:80px;border:1.5px solid var(--bdr);border-radius:8px;padding:10px;font-family:inherit;font-size:13px;resize:vertical;direction:rtl}
+.ai-box textarea:focus{border-color:var(--blue);outline:none}
+.ai-row{display:flex;gap:8px;margin-top:10px;align-items:center}
+.ai-btn{background:linear-gradient(135deg,#6366f1,#4f46e5);color:#fff;border:none;padding:8px 18px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .2s;display:flex;align-items:center;gap:6px}
+.ai-btn:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(79,70,229,.3)}
+.ai-btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
+.ai-status{font-size:12px;color:var(--muted)}
 /* Loading */
 .loading{text-align:center;padding:60px;color:var(--muted)}
 .loading-spin{width:40px;height:40px;border:3px solid var(--bdr);border-top-color:var(--blue);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 16px}
@@ -208,6 +217,14 @@ textarea.fi{resize:vertical;min-height:80px}
       </div>
     </div>
     <div id="saveMsg" class="save-msg" style="margin-bottom:12px"></div>
+    <div class="ai-box" id="aiBox" style="display:none">
+      <div style="font-size:13px;font-weight:700;color:#4f46e5;margin-bottom:8px">🤖 מילוי חכם עם AI</div>
+      <textarea id="aiText" placeholder="הדבק כאן טקסט חופשי — AI ימלא את השדות הרלוונטיים אוטומטית...&#10;&#10;לדוגמה: הצעת מחיר לאוניברסיטת תל אביב. 200 שעות פיתוח ב-300₪ לשעה. שלב 1 אפיון, שלב 2 פיתוח..."></textarea>
+      <div class="ai-row">
+        <button class="ai-btn" id="aiBtn" onclick="runAiFill()">🤖 מלא עם AI</button>
+        <span class="ai-status" id="aiStatus"></span>
+      </div>
+    </div>
     <div id="editorPanels"></div>
   </div>
 </div>
@@ -370,6 +387,7 @@ async function openEditor(id){
     curContract.id=curContract.id||id;
     renderEditor();
     setTimeout(initDrag,100);
+    document.getElementById('aiBox').style.display=curContract.signed?'none':'block';
   }catch(e){
     document.getElementById('editorPanels').innerHTML='<div class="empty-state">שגיאה בטעינה</div>';
   }
@@ -770,6 +788,195 @@ async function previewContract(){
   const slug=payload.slug||payload.contract_id||payload.id||editorContractId;
   window.open(PROP_URL+'?id='+slug+'&preview=1','_blank');
 }
+
+// ── AI FILL ──────────────────────────────────────────────────
+async function runAiFill(){
+  const text=document.getElementById('aiText').value.trim();
+  if(!text){document.getElementById('aiStatus').textContent='נא להדביק טקסט';return;}
+  
+  const btn=document.getElementById('aiBtn');
+  const status=document.getElementById('aiStatus');
+  btn.disabled=true;
+  status.textContent='🔄 AI מנתח את הטקסט...';
+  status.style.color='#4f46e5';
+  
+  // Collect current form data
+  const current=buildPayload();
+  delete current.password;
+  delete current._loaded;
+  
+  try{
+    const r=await fetch(N8N+'/yeda-ai-fill',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({password:pw, text:text, current_data:current})
+    });
+    const data=await r.json();
+    
+    if(data.error){
+      status.textContent='שגיאה: '+data.error;
+      status.style.color='var(--red)';
+      btn.disabled=false;
+      return;
+    }
+    
+    if(data.success && data.fields){
+      applyAiFields(data.fields);
+      status.textContent='✅ השדות עודכנו בהצלחה!';
+      status.style.color='var(--green)';
+      setTimeout(()=>status.textContent='',4000);
+    } else {
+      status.textContent='לא נמצאו שדות רלוונטיים';
+      status.style.color='var(--muted)';
+    }
+  }catch(e){
+    status.textContent='שגיאת חיבור: '+e.message;
+    status.style.color='var(--red)';
+  }
+  btn.disabled=false;
+}
+
+function applyAiFields(f){
+  // Simple fields
+  if(f.client_name) setVal('e-cname', f.client_name);
+  if(f.matara) setVal('e-matara', f.matara);
+  if(f.why_intro) setVal('e-whyintro', f.why_intro);
+  if(f.costs_subtitle) setVal('e-csubt', f.costs_subtitle);
+  if(f.title) setVal('e-title', f.title);
+  
+  // Milestones
+  if(Array.isArray(f.milestones) && f.milestones.length){
+    // Clear existing
+    document.getElementById('msList').innerHTML='';
+    f.milestones.forEach(m=>{
+      addMs();
+      const cards=document.querySelectorAll('[id^="ms-"]');
+      const last=cards[cards.length-1];
+      if(!last)return;
+      const id=last.id.slice(3);
+      setVal('mst-'+id, m.title||'');
+      setVal('msd-'+id, m.desc||'');
+    });
+  }
+  
+  // Why items
+  if(Array.isArray(f.why_items) && f.why_items.length){
+    document.getElementById('whyList').innerHTML='';
+    f.why_items.forEach(item=>{
+      addWhy();
+      const inputs=document.querySelectorAll('[id^="wi-"]');
+      const last=inputs[inputs.length-1];
+      if(last)last.value=item;
+    });
+  }
+  
+  // Costs rows
+  if(Array.isArray(f.costs_rows) && f.costs_rows.length){
+    document.getElementById('costsList').innerHTML='';
+    f.costs_rows.forEach(row=>{
+      addCostRow();
+      const rows=document.querySelectorAll('[id^="cr-"]');
+      const last=rows[rows.length-1];
+      if(!last)return;
+      const id=last.id.split('-')[1];
+      setVal('ci-'+id, Array.isArray(row)?row[0]:(row.item||''));
+      setVal('cp-'+id, Array.isArray(row)?row[1]:(row.price||''));
+    });
+  }
+  
+  // Payments
+  if(Array.isArray(f.payments) && f.payments.length){
+    document.getElementById('paysList').innerHTML='';
+    f.payments.forEach(p=>{
+      addPay();
+      const pays=document.querySelectorAll('.pay-row');
+      const last=pays[pays.length-1];
+      if(!last)return;
+      const id=last.id.split('-')[1];
+      setVal('pl-'+id, p.label||'תשלום '+(parseInt(id)+1));
+      setVal('pt-'+id, p.title||'');
+      setVal('pd-'+id, p.desc||'');
+      setVal('pp-'+id, p.total||'');
+    });
+  }
+  
+  // Optional services
+  if(Array.isArray(f.optional) && f.optional.length){
+    document.getElementById('optList').innerHTML='';
+    f.optional.forEach(opt=>{
+      addOpt();
+      const opts=document.querySelectorAll('[id^="opt-"]');
+      const last=opts[opts.length-1];
+      if(!last)return;
+      const id=last.id.split('-')[1];
+      setVal('ot-'+id, opt.title||'');
+      setVal('op-'+id, opt.price||'');
+    });
+  }
+  
+  // Token packages
+  if(Array.isArray(f.token_packages) && f.token_packages.length){
+    document.getElementById('tokList').innerHTML='';
+    f.token_packages.forEach(tp=>{
+      const i=document.querySelectorAll('[id^="tp-"]').length/3;
+      const idx=Math.floor(i);
+      const l=document.getElementById('tokList');
+      const el=document.createElement('div');el.className='tok-row';el.id='tp-'+idx;
+      el.innerHTML='<div class="frow"><div><div class="fl">כמות</div><input class="fi" id="tp-'+idx+'-a" value="'+(tp.amount||'')+'"></div><div><div class="fl">מחיר רגיל</div><input class="fi" id="tp-'+idx+'-o" value="'+(tp.original||'')+'"></div><div><div class="fl">מחיר מבצע</div><input class="fi" id="tp-'+idx+'-s" value="'+(tp.sale||'')+'"></div></div>';
+      l.appendChild(el);
+    });
+  }
+  
+  // Token examples
+  if(Array.isArray(f.token_examples) && f.token_examples.length){
+    document.getElementById('tokExList').innerHTML='';
+    f.token_examples.forEach(ex=>{
+      addTokEx();
+      const inputs=document.querySelectorAll('[id^="te-"]');
+      const last=inputs[inputs.length-1];
+      if(last)last.value=ex;
+    });
+  }
+  
+  // Terms
+  if(Array.isArray(f.terms) && f.terms.length){
+    document.getElementById('termsList').innerHTML='';
+    f.terms.forEach(t=>{
+      addTerm();
+      const cards=document.querySelectorAll('[id^="trm-"]');
+      const last=cards[cards.length-1];
+      if(!last)return;
+      const id=last.id.slice(4);
+      setVal('trt-'+id, t.title||'');
+      setVal('trb-'+id, t.text||'');
+    });
+  }
+  
+  // Custom blocks
+  if(Array.isArray(f.custom_blocks) && f.custom_blocks.length){
+    f.custom_blocks.forEach(b=>{
+      addCB();
+      const cards=document.querySelectorAll('[id^="cb-"]');
+      const last=cards[cards.length-1];
+      if(!last)return;
+      const id=last.id.slice(3);
+      setVal('cbt-'+id, b.title||'');
+      setVal('cbc-'+id, b.content||'');
+    });
+  }
+  
+  // Update curContract
+  Object.assign(curContract, f);
+}
+
+function setVal(id, val){
+  const el=document.getElementById(id);
+  if(el){
+    el.value=val;
+    el.dispatchEvent(new Event('input',{bubbles:true}));
+  }
+}
+
 // ── SAVE ──────────────────────────────────────────────────────────
 async function saveContract(){
   const btn=document.getElementById('sbtn'),sp=document.getElementById('ssp'),tx=document.getElementById('stxt'),msg=document.getElementById('saveMsg');
